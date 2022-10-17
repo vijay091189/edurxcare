@@ -9,4 +9,5 @@ class EduwebController extends Controller
     public function homepage(Request $request){
         return view("welcome");
     }
+    
 }
