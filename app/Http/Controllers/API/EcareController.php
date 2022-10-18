@@ -72,10 +72,13 @@ class EcareController extends BaseController
         $username = $input['username'];
         $userpassword = $input['password'];
         $encpassword = EncDecHelper::enc_string($userpassword);
+        echo "select l.*, au.name from login l 
+        inner join app_users au on au.user_id=l.user_id
+        where l.username='".$username."' and l.password='".$encpassword."' and au.status=1"; die;
         $checkUserLogin = DB::select("select l.*, au.name from login l 
                                     inner join app_users au on au.user_id=l.user_id
                                     where l.username='".$username."' and l.password='".$encpassword."' and au.status=1");
-        if(count($checkUserLogin)>0){
+        if(isset($checkUserLogin[0])){
             $res_data['user_id'] = (string)$checkUserLogin[0]->user_id;
             $res_data['role_id'] = (string)$checkUserLogin[0]->role_id;
             $res_data['name'] = (string)$checkUserLogin[0]->name;
