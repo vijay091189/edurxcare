@@ -13,7 +13,7 @@ use App\Helpers\Helper as Helper;
 
 class EcareController extends BaseController
 {
-    public function sendotp(Request $request){
+    public function user_registration(Request $request){
         $input = $request->all();
         $name = isset($input['name'])?$input['name']:'';
         $user_type = isset($input['user_type'])?$input['user_type']:'';
@@ -67,7 +67,7 @@ class EcareController extends BaseController
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
-    public function checkLogin(Request $request){
+    public function check_user_login(Request $request){
         $input = $request->all();
         $username = $input['username'];
         $userpassword = $input['password'];
