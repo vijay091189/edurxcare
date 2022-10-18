@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Validator;
 use DB, Config;
+use DateTime;
+use DateTimeZone;
+use App\Helpers\EncDecHelper;
+use App\Helpers\Helper as Helper; 
 
 class EcareController extends BaseController
 {
@@ -20,14 +24,14 @@ class EcareController extends BaseController
         $address = isset($input['address'])?$input['address']:'';
         $password = isset($input['password'])?$input['password']:'';
         //check duplicate mobile
-        $check_mobile = DB::select("select id from app_users where mobile='$mobile_number'");
+        $check_mobile = DB::select("select user_id from app_users where mobile='$mobile_number'");
         if(isset($check_mobile[0])){
             $res_data['status'] = "Failed";
             $res_data['message'] = "Mobile number already exists";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
         }
         //check email
-        $check_email = DB::select("select id from app_users where email='$email_id'");
+        $check_email = DB::select("select user_id from app_users where email='$email_id'");
         if(isset($check_email[0])){
             $res_data['status'] = "Failed";
             $res_data['message'] = "Email ID already exists";
@@ -73,7 +77,7 @@ class EcareController extends BaseController
                                     where l.username='".$username."' and l.password='".$encpassword."' and u.status=1");
         if(count($checkUserLogin)>0){
             $res_data['user_id'] = (string)$checkUserLogin[0]->user_id;
-            $res_data['role_id'] = (string)$checkUserLogin[0]->user_id;
+            $res_data['role_id'] = (string)$checkUserLogin[0]->role_id;
             $res_data['name'] = (string)$checkUserLogin[0]->name;
             $res_data['status'] = 'Success';
             $res_data['message'] = 'Logged in successfully';
@@ -93,7 +97,7 @@ class EcareController extends BaseController
         $role_id = isset($input['role_id'])?$input['role_id']:'';
         $get_user_details = DB::select("select u.user_id, u.name, u.gender, u.dob, u.mobile, u.email, u.address from users where user_id='$user_id'");
         $res_data['user_id'] = (string)$get_user_details[0]->user_id;
-        $res_data['name'] = (string)$get_user_details[0]->user_id;
+        $res_data['name'] = (string)$get_user_details[0]->name;
         $res_data['gender'] = (string)$get_user_details[0]->gender;
         $res_data['dob'] = (string)$get_user_details[0]->dob;
         $res_data['mobile'] = (string)$get_user_details[0]->mobile;
@@ -114,14 +118,14 @@ class EcareController extends BaseController
         $email = isset($input['email'])?$input['email']:'';
         $address = isset($input['address'])?$input['address']:'';
         //check duplicate mobile
-        $check_mobile = DB::select("select id from app_users where mobile='$mobile' and user_id!='$user_id'");
+        $check_mobile = DB::select("select user_id from app_users where mobile='$mobile' and user_id!='$user_id'");
         if(isset($check_mobile[0])){
             $res_data['status'] = "Failed";
             $res_data['message'] = "Mobile number already exists";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
         }
         //check email
-        $check_email = DB::select("select id from app_users where email='$email' and user_id!='$user_id'");
+        $check_email = DB::select("select user_id from app_users where email='$email' and user_id!='$user_id'");
         if(isset($check_email[0])){
             $res_data['status'] = "Failed";
             $res_data['message'] = "Email ID already exists";
