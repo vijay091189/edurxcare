@@ -95,7 +95,8 @@ class EcareController extends BaseController
         $input = $request->all();
         $user_id = isset($input['user_id'])?$input['user_id']:'';
         $role_id = isset($input['role_id'])?$input['role_id']:'';
-        $get_user_details = DB::select("select u.user_id, u.name, u.gender, u.dob, u.mobile, u.email, u.address from users where user_id='$user_id'");
+        $get_user_details = DB::select("select user_id, name, gender, dob, mobile, email, address from app_users 
+                                        where user_id='$user_id'");
         $res_data['user_id'] = (string)$get_user_details[0]->user_id;
         $res_data['name'] = (string)$get_user_details[0]->name;
         $res_data['gender'] = (string)$get_user_details[0]->gender;
