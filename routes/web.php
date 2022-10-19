@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::get('/','App\Http\Controllers\EduwebController@homepage');
 
+Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');
+Route::get('/admindashboard','App\Http\Controllers\AnalyticsController@admindashboard');
+Route::get('/changePassword','App\Http\Controllers\AnalyticsController@changePassword');
+Route::post('/saveChangePassword','App\Http\Controllers\AnalyticsController@saveChangePassword');
+
 
 
 
