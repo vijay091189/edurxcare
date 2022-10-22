@@ -185,6 +185,7 @@ class EcareController extends BaseController
         $input = $request->all();
         $email = $input['email'];
         $mobile = $input['mobile'];
+        $res_data['user_id'] = '';
         $res_data['security_code'] = '';
         $res_data['status'] = "Failed";
         $res_data['message'] = "Invalid Mobile Number or Email ID. Please try again";
@@ -194,6 +195,7 @@ class EcareController extends BaseController
                 $gen_code = rand(1111,9999);
                 $update_code['forgot_password_code'] = $gen_code;
                 DB::table('app_users')->where(array('user_id'=>$get_user_details[0]->user_id))->update($update_code);
+                $res_data['user_id'] = (string)$get_user_details[0]->user_id;
                 $res_data['security_code'] = (string)$gen_code;
                 $res_data['status'] = "Success";
                 $res_data['message'] = "Security code sent successfully";
@@ -235,5 +237,19 @@ class EcareController extends BaseController
         $res_data['status'] = "Success";
         $res_data['message'] = "Life style details saved successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function save_forgot_password(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $new_password = $input['new_password'];
+        //check old password
+        $new_encpassword = EncDecHelper::enc_string($new_password);
+        $update_password['password'] = $new_encpassword;
+        DB::table('login')->where(array('user_id'=>$user_id))->update($update_password);
+        $res_data['status'] = "Success";
+        $res_data['message'] = "Password changed successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+       
     }
 }
