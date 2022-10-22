@@ -223,7 +223,17 @@ class EcareController extends BaseController
         $user_id = $input['user_id'];
         $question_data = $input['question_data'];
         foreach($question_data as $question_dat){
-            echo $question_dat['question_id'].'---'.$question_dat['answer'].'<br>';
+            $question_id = $question_dat['question_id'];
+            $answer = $question_dat['answer'];
+            $get_question = DB::table('patient_lifestyle_questions')->select("question")
+                                            ->where('question_id',$question_id)->first();
+            $insert_data['user_id'] = $user_id;
+            $insert_data['question'] = $get_question->question;
+            $insert_data['answer'] = $answer;
+            DB::table('patient_lifestyle_answers')->insert($insert_data);
         }
+        $res_data['status'] = "Success";
+        $res_data['message'] = "Life style details saved successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 }
