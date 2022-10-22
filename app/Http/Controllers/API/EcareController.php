@@ -222,7 +222,6 @@ class EcareController extends BaseController
         $input = $request->all();
         $user_id = $input['user_id'];
         $question_data = $input['question_data'];
-        echo '<pre>'; print_r($input); die;
         foreach($question_data as $question_dat){
             echo $question_dat['question_id'].'---'.$question_dat['answer'].'<br>';
         }
