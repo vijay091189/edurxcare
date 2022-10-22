@@ -194,7 +194,7 @@ class EcareController extends BaseController
                 $gen_code = rand(1111,9999);
                 $update_code['forgot_password_code'] = $gen_code;
                 DB::table('app_users')->where(array('user_id'=>$get_user_details[0]->user_id))->update($update_code);
-                $res_data['security_code'] = $gen_code;
+                $res_data['security_code'] = (string)$gen_code;
                 $res_data['status'] = "Success";
                 $res_data['message'] = "Security code sent successfully";
             }
@@ -209,7 +209,7 @@ class EcareController extends BaseController
         $data = array();
         $key = 0;
         foreach($life_style_questions as $life_style_q){
-            $data[$key]['question_id'] = $life_style_q->question_id;
+            $data[$key]['question_id'] = (string)$life_style_q->question_id;
             $data[$key]['question'] = $life_style_q->question;
             $key++;
         }
@@ -220,5 +220,6 @@ class EcareController extends BaseController
 
     public function save_patient_lifestyle(Request $request){
         $input = $request->all();
+        echo '<pre>'; print_r($input); die;
     }
 }
