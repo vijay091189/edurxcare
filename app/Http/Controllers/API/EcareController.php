@@ -72,19 +72,29 @@ class EcareController extends BaseController
         $username = $input['username'];
         $userpassword = $input['password'];
         $encpassword = EncDecHelper::enc_string($userpassword);
-        $checkUserLogin = DB::select("select l.*, au.name from login l 
+        $checkUserLogin = DB::select("select l.*, au.* from login l 
                                     inner join app_users au on au.user_id=l.user_id
                                     where l.username='".$username."' and l.password='".$encpassword."' and l.status=1");
         if(isset($checkUserLogin[0])){
             $res_data['user_id'] = (string)$checkUserLogin[0]->user_id;
             $res_data['role_id'] = (string)$checkUserLogin[0]->role_id;
             $res_data['name'] = (string)$checkUserLogin[0]->name;
+            $res_data['gender'] = (string)$checkUserLogin[0]->gender;
+            $res_data['dob'] = (string)$checkUserLogin[0]->dob;
+            $res_data['mobile'] = (string)$checkUserLogin[0]->mobile;
+            $res_data['email'] = (string)$checkUserLogin[0]->email;
+            $res_data['address'] = (string)$checkUserLogin[0]->address;
             $res_data['status'] = 'Success';
             $res_data['message'] = 'Logged in successfully';
         } else {
             $res_data['user_id'] = '';
             $res_data['role_id'] = '';
             $res_data['name'] = '';
+            $res_data['gender'] = '';
+            $res_data['dob'] = '';
+            $res_data['mobile'] = '';
+            $res_data['email'] = '';
+            $res_data['address'] = '';
             $res_data['status'] = 'Failed';
             $res_data['message'] = 'Invalid username or password';
         }
@@ -147,5 +157,68 @@ class EcareController extends BaseController
         $res_data['status'] = "Success";
         $res_data['message'] = "Profile updated successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function change_password(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $old_password = $input['old_password'];
+        $new_password = $input['new_password'];
+        //check old password
+        $old_encpassword = EncDecHelper::enc_string($old_password);
+        $check_old_password = DB::select("select username from login where user_id='$user_id' and password='$old_encpassword'");
+        if(isset($check_old_password[0])){
+            $new_encpassword = EncDecHelper::enc_string($new_password);
+            $update_password['password'] = $new_encpassword;
+            DB::table('login')->where(array('user_id'=>$user_id))->update($update_password);
+            $res_data['status'] = "Success";
+            $res_data['message'] = "Password changed successfully";
+            return $this->sendResponse($res_data, 'Data fetched successfully.');
+        } else {
+            $res_data['status'] = "Failed";
+            $res_data['message'] = "Incorrect old password. Please try again";
+            return $this->sendResponse($res_data, 'Data fetched successfully.');
+        }
+    }
+
+    public function forgot_password(Request $request){
+        $input = $request->all();
+        $email = $input['email'];
+        $mobile = $input['mobile'];
+        $res_data['security_code'] = '';
+        $res_data['status'] = "Failed";
+        $res_data['message'] = "Invalid Mobile Number or Email ID. Please try again";
+        if($email!='' || $mobile!=''){
+            $get_user_details = DB::select("SELECT user_id FROM app_users where mobile='$mobile' or email='$email'");
+            if(isset($get_user_details[0])){
+                $gen_code = rand(1111,9999);
+                $update_code['forgot_password_code'] = $gen_code;
+                DB::table('app_users')->where(array('user_id'=>$get_user_details[0]->user_id))->update($update_code);
+                $res_data['security_code'] = $gen_code;
+                $res_data['status'] = "Success";
+                $res_data['message'] = "Security code sent successfully";
+            }
+        }
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function patient_lifestyle_questions(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $life_style_questions = DB::select("select question_id, question from patient_lifestyle_questions where status=1");
+        $data = array();
+        $key = 0;
+        foreach($life_style_questions as $life_style_q){
+            $data[$key]['question_id'] = $life_style_q->question_id;
+            $data[$key]['question'] = $life_style_q->question;
+            $key++;
+        }
+        $res_data['status'] = "Success";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function save_patient_lifestyle(Request $request){
+        $input = $request->all();
     }
 }

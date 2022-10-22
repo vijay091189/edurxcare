@@ -24,4 +24,8 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('check_user_login', 'App\Http\Controllers\API\EcareController@check_user_login');
 	Route::post('edit_profile', 'App\Http\Controllers\API\EcareController@edit_profile');
 	Route::post('update_profile', 'App\Http\Controllers\API\EcareController@update_profile');
+	Route::post('change_password', 'App\Http\Controllers\API\EcareController@change_password');
+	Route::post('forgot_password', 'App\Http\Controllers\API\EcareController@forgot_password');
+	Route::post('patient_lifestyle_questions', 'App\Http\Controllers\API\EcareController@patient_lifestyle_questions');
+	Route::post('save_patient_lifestyle', 'App\Http\Controllers\API\EcareController@save_patient_lifestyle');
 });
