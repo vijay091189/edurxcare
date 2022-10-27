@@ -29,4 +29,8 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('save_forgot_password', 'App\Http\Controllers\API\EcareController@save_forgot_password');
 	Route::post('patient_lifestyle_questions', 'App\Http\Controllers\API\EcareController@patient_lifestyle_questions');
 	Route::post('save_patient_lifestyle', 'App\Http\Controllers\API\EcareController@save_patient_lifestyle');
+	Route::post('search_medicines', 'App\Http\Controllers\API\EcareController@search_medicines');
+	Route::post('seacrh_allergies', 'App\Http\Controllers\API\EcareController@seacrh_allergies');
+	Route::post('search_medicalconditions', 'App\Http\Controllers\API\EcareController@search_medicalconditions');
+
 });

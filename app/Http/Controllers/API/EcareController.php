@@ -250,6 +250,50 @@ class EcareController extends BaseController
         $res_data['status'] = "Success";
         $res_data['message'] = "Password changed successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
-       
+    }
+
+    public function search_medicines(Request $request){
+        $input = $request->all();
+        $query = $input['query'];
+        $search_data = DB::select("select medicine as name from medicines_master where medicine like '%$query%'");
+        $data = array();
+        $key = 0;
+        foreach($search_data as $search_d){
+            $data[$key]['name'] = (string)$search_d->name;
+            $key++;
+        }
+        $res_data['status'] = "Success";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function search_medicalconditions(Request $request){
+        $input = $request->all();
+        $query = $input['query'];
+        $search_data = DB::select("select medical_condition as name from medical_conditions where medical_condition like '%$query%'");
+        $data = array();
+        $key = 0;
+        foreach($search_data as $search_d){
+            $data[$key]['name'] = (string)$search_d->name;
+            $key++;
+        }
+        $res_data['status'] = "Success";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function seacrh_allergies(Request $request){
+        $input = $request->all();
+        $query = $input['query'];
+        $search_data = DB::select("select allergy_name as name from allergies where allergy_name like '%$query%'");
+        $data = array();
+        $key = 0;
+        foreach($search_data as $search_d){
+            $data[$key]['name'] = (string)$search_d->name;
+            $key++;
+        }
+        $res_data['status'] = "Success";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 }
