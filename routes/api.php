@@ -32,5 +32,5 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('search_medicines', 'App\Http\Controllers\API\EcareController@search_medicines');
 	Route::post('seacrh_allergies', 'App\Http\Controllers\API\EcareController@seacrh_allergies');
 	Route::post('search_medicalconditions', 'App\Http\Controllers\API\EcareController@search_medicalconditions');
-
+	Route::post('save_request', 'App\Http\Controllers\API\EcareController@save_request');
 });

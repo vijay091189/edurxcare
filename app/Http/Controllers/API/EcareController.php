@@ -296,4 +296,9 @@ class EcareController extends BaseController
         $res_data['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
+
+    public function save_request(Request $request){
+        print_r($_REQUEST);
+        print_r($_FILES);
+    }
 }
