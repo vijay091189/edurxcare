@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
       <meta charset="utf-8">
-      <title> Ezglam - Login </title>
+      <title> Edurxcare - Login </title>
        
       <!-- <link rel="stylesheet" type="text/css" href="{{ URL::to('css/style.css') }}">
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
@@ -67,7 +67,7 @@
 							</div>
 						@endif
 						<h3 class="text-center txt-primary">
-						<img style='width:130px' src="{{ URL::to('public/assets/images/logo.jpeg')}}"/><br>
+						<img style='width:130px' src="{{ URL::to('public/assets/images/logo-colored.png')}}"/><br>
 							Sign In to your account
 						</h3>
 						<div class="row">
