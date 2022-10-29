@@ -29,6 +29,7 @@ class AnalyticsController extends Controller
                                   'loginid'=>$checkUserLogin[0]->loginid,
                                   'username'=>$checkUserLogin[0]->username,
                                   'role_id'=>$checkUserLogin[0]->role_id,
+                                  'profile_picture'=>'',
                                   'display_name'=>$checkUserLogin[0]->display_name
                                 );
         session()->put('LoginUserSession', $UserSessionData);
@@ -42,7 +43,7 @@ class AnalyticsController extends Controller
           return Redirect::to('changePassword');
         }
       } else {
-        return Redirect::to('admin?status=error');
+        return Redirect::to('edurxcare_admin?status=error');
       }
     }
     public function adminLogin(Request $request){
@@ -107,6 +108,76 @@ class AnalyticsController extends Controller
       echo 'success'; die;
     } else {
       echo 'fail'; die;
+    }
+  }
+
+  public function patientslist(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['users_count']=DB::select("select * from app_users where role_id='2'");
+      return view("reports/patientslist")->with($data);
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function pharmacistslist(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['users_count']=DB::select("select * from app_users where role_id='3'");
+      return view("reports/pharmacistslist")->with($data);
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function requestslist(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['users_count']=DB::select("select * from app_users where role_id='3'");
+      return view("reports/pharmacistslist")->with($data);
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function appointmentslist(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['users_count']=DB::select("select * from app_users where role_id='3'");
+      return view("reports/pharmacistslist")->with($data);
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function medicationslist(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['categories']=DB::select("select * from medicines_master");
+      return view("reports/medicationslist")->with($data);
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function allergies(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['categories']=DB::select("select * from allergies");
+      return view("reports/allergies")->with($data);
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function medicalconditions(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['categories']=DB::select("select * from medical_conditions");
+      return view("reports/medicalconditions")->with($data);
+    } else {
+      return Redirect::to('admin');
     }
   }
 }

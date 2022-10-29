@@ -7,7 +7,7 @@ $last_element = end($split_url);
 <html>
    <head>
       <meta charset="utf-8">
-      <title> Ezglam </title>
+      <title> Edurxcare </title>
        
       <!-- <link rel="stylesheet" type="text/css" href="{{ URL::to('css/style.css') }}">
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
@@ -59,13 +59,9 @@ $last_element = end($split_url);
    </head>
    <body>
    <div class="wrapper">
-      <header class="main-header-top hidden-print" style="background-color:#ec216d;">
-         @if($session_details['role_id']==1)
-            <a href="{{ URl::to('/admindashboard') }}" class="logo"><img style='width:130px' src="{{ URL::to('public/assets/images/logo.jpeg')}}"/></a>
-         @else 
-            <a href="{{ URl::to('/distributordashboard') }}" class="logo"><img style='width:130px' src="{{ URL::to('public/assets/images/logo.jpeg')}}"/></a>
-         @endif
-         <nav class="navbar navbar-static-top" style="background-color:#ec216d;">
+      <header class="main-header-top hidden-print" style="background-color:#21ac3d;">
+         <a href="{{ URl::to('/admindashboard') }}" class="logo"><img src="{{ URL::to('public/assets/images/logo-colored.png')}}"/></a>
+         <nav class="navbar navbar-static-top" style="background-color:#21ac3d;">
             <!-- Sidebar toggle button-->
             <a href="#!" data-toggle="offcanvas" class="sidebar-toggle"></a>
             <!-- <ul class="top-nav lft-nav">
@@ -149,64 +145,12 @@ $last_element = end($split_url);
                         <!-- @if($session_details['role_id']==1)
                            <li><a href="{{ URl::to('/adminEditProfile') }}"><i class="icon-lock"></i> Edit Profile</a></li> 
                         @endif -->
-                        <li><a href="{{ URl::to('/adminEditProfile') }}"><i class="icon-lock"></i> Edit Profile</a></li> 
                         <li><a href="{{ URl::to('/changePassword') }}"><i class="icon-lock"></i> Change Password</a></li> 
                         <li><a href="{{ URl::to('/logout') }}"><i class="icon-logout"></i> Logout</a></li>
 
                      </ul>
                   </li>
                </ul>
-
-               <!-- search -->
-               <div id="morphsearch" class="morphsearch">
-                  <form class="morphsearch-form">
-
-                     <input class="morphsearch-input" type="search" placeholder="Search..." />
-
-                     <button class="morphsearch-submit" type="submit">Search</button>
-
-                  </form>
-                  <div class="morphsearch-content">
-                     <div class="dummy-column">
-                        <h2>People</h2>
-                        <a class="dummy-media-object" href="#!">
-                           <img class="round" src="http://0.gravatar.com/avatar/81b58502541f9445253f30497e53c280?s=50&d=identicon&r=G" alt="Sara Soueidan" />
-                           <h3>Sara Soueidan</h3>
-                        </a>
-
-                        <a class="dummy-media-object" href="#!">
-                           <img class="round" src="http://1.gravatar.com/avatar/9bc7250110c667cd35c0826059b81b75?s=50&d=identicon&r=G" alt="Shaun Dona" />
-                           <h3>Shaun Dona</h3>
-                        </a>
-                     </div>
-                     <div class="dummy-column">
-                        <h2>Popular</h2>
-                        <a class="dummy-media-object" href="#!">
-                           <img src="public/assets/images/avatar-1.png" alt="PagePreloadingEffect" />
-                           <h3>Page Preloading Effect</h3>
-                        </a>
-
-                        <a class="dummy-media-object" href="#!">
-                           <img src="public/assets/images/avatar-1.png" alt="DraggableDualViewSlideshow" />
-                           <h3>Draggable Dual-View Slideshow</h3>
-                        </a>
-                     </div>
-                     <div class="dummy-column">
-                        <h2>Recent</h2>
-                        <a class="dummy-media-object" href="#!">
-                           <img src="public/assets/images/avatar-1.png" alt="TooltipStylesInspiration" />
-                           <h3>Tooltip Styles Inspiration</h3>
-                        </a>
-                        <a class="dummy-media-object" href="#!">
-                           <img src="public/assets/images/avatar-1.png" alt="NotificationStyles" />
-                           <h3>Notification Styles Inspiration</h3>
-                        </a>
-                     </div>
-                  </div>
-                  <!-- /morphsearch-content -->
-                  <span class="morphsearch-close"><i class="icofont icofont-search-alt-1"></i></span>
-               </div>
-               <!-- search end -->
             </div>
          </nav>
       </header>
@@ -214,192 +158,60 @@ $last_element = end($split_url);
          <section class="sidebar" id="sidebar-scroll">
             
             <!-- Sidebar Menu-->
-            @if($session_details['role_id']==1)
                <ul class="sidebar-menu">
 
-                  <!-- <li class="nav-level" style="color: #ec216d">--- Navigation</li> -->
+                  <!-- <li class="nav-level" style="color: #21ac3d">--- Navigation</li> -->
                   <li class="treeview">
                      <a class="waves-effect waves-dark" href="{{ URl::to('/admindashboard') }}">
                            <i class="icon-speedometer"></i><span> Dashboard</span>
                      </a>                
                   </li>
 
-                  <li class="treeview <?php if(in_array('typeslist',$split_url) || in_array('categoriesList',$split_url) 
-                  || in_array('categoriesList',$split_url) || in_array('productsList',$split_url) || in_array('hubsList',$split_url) 
-                  || in_array('servicesList',$split_url) || in_array('configurations',$split_url) 
-                  || in_array('servicesFeedback',$split_url) || in_array('paymentTransactions',$split_url)
-                  || in_array('manageBanners',$split_url)){ echo 'active';} ?>">
+                  <li class="treeview active">
                      <a class="waves-effect waves-dark" href="#">
                            <i class="icon-speedometer"></i><span> Administration	</span><i class="icon-arrow-down"></i>
                      </a> 
                      <ul class="treeview-menu">
-                        <li <?php if(in_array('typeslist',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/typeslist') }}">
-                           <i class="icon-arrow-right"></i><span> Types</span>
+                        <li <?php if(in_array('patientslist',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/patientslist') }}">
+                           <i class="icon-arrow-right"></i><span> Patients</span>
                            </a>                
                         </li>
-                        <li <?php if(in_array('categoriesList',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/categoriesList') }}">
-                           <i class="icon-arrow-right"></i><span> Categories</span>
+                        <li <?php if(in_array('pharmacistslist',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/pharmacistslist') }}">
+                           <i class="icon-arrow-right"></i><span> Pharmacists</span>
                            </a>                
                         </li>
-                        <li <?php if(in_array('productsList',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/productsList') }}">
-                           <i class="icon-arrow-right"></i><span> Products</span>
+                        <li <?php if(in_array('requestslist',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/requestslist') }}">
+                           <i class="icon-arrow-right"></i><span> Requests</span>
                            </a>                
                         </li>
-                        <li <?php if(in_array('servicesList',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/servicesList') }}">
-                           <i class="icon-arrow-right"></i><span> Services</span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('hubsList',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/hubsList') }}">
-                           <i class="icon-arrow-right"></i><span> Hub Management</span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('configurations',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/configurations') }}">
-                           <i class="icon-arrow-right"></i><span> Configuration Settings</span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('servicesFeedback',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/servicesFeedback') }}">
-                           <i class="icon-arrow-right"></i><span> Services Feedback</span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('paymentTransactions',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/paymentTransactions') }}">
-                           <i class="icon-arrow-right"></i><span> Payment Transactions</span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('manageBanners',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/manageBanners') }}">
-                           <i class="icon-arrow-right"></i><span> Banners</span>
-                           </a>                
-                        </li>
-                        
-                     </ul>               
-                  </li>
-
-                  <li class="treeview <?php if(in_array('appointmentsList',$split_url) || in_array('appUsersList',$split_url) 
-                  || in_array('patnerOrders',$split_url) || in_array('customerOrders',$split_url)){ echo 'active';} ?>">
-                     <a class="waves-effect waves-dark" href="#">
-                           <i class="icon-speedometer"></i><span> Manage Orders	</span><i class="icon-arrow-down"></i>
-                     </a> 
-                     <ul class="treeview-menu">
-                        <!-- <li <?php //if(in_array('appointmentsList',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/appointmentsList') }}">
+                        <li <?php if(in_array('appointmentslist',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/appointmentslist') }}">
                            <i class="icon-arrow-right"></i><span> Appointments</span>
                            </a>                
                         </li>
-                        <li <?php //if(in_array('appUsersList',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/appUsersList') }}">
-                           <i class="icon-arrow-right"></i><span> Registered Users</span>
-                           </a>                
-                        </li> -->
-						      <li <?php if(in_array('patnerOrders',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/patnerOrders') }}">
-                           <i class="icon-arrow-right"></i><span> Partner Orders</span>
+                        <li <?php if(in_array('medicationslist',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/medicationslist') }}">
+                           <i class="icon-arrow-right"></i><span> Medications</span>
                            </a>                
                         </li>
-                        <li <?php if(in_array('customerOrders',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/customerOrders') }}">
-                           <i class="icon-arrow-right"></i><span> Customer Orders</span>
+                        <li <?php if(in_array('allergies',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/allergies') }}">
+                           <i class="icon-arrow-right"></i><span> Allergies</span>
                            </a>                
                         </li>
+                        <li <?php if(in_array('medicalconditions',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/medicalconditions') }}">
+                           <i class="icon-arrow-right"></i><span> Medical Conditions</span>
+                           </a>                
+                        </li>
+                       
                      </ul>               
-                  </li>
-
-                  <li class="treeview <?php if(in_array('partnersList',$split_url) || in_array('adminsList',$split_url) 
-                  || in_array('distributorsList',$split_url)){ echo 'active';} ?>">
-                     <a class="waves-effect waves-dark" href="#">
-                           <i class="icon-speedometer"></i><span> Registration</span><i class="icon-arrow-down"></i>
-                     </a> 
-                     <ul class="treeview-menu">
-                        <li <?php if(in_array('adminsList',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/adminsList') }}">
-                           <i class="icon-arrow-right"></i><span> Manage Admins</span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('partnersList',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/partnersList') }}">
-                           <i class="icon-arrow-right"></i><span> Partners </span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('distributorsList',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/distributorsList') }}">
-                           <i class="icon-arrow-right"></i><span> Distirbutors</span>
-                           </a>                
-                        </li>
-                        
-                     </ul>               
-                  </li>
-				  
-				   <li class="treeview <?php if(strpos($last_element, 'appointmentReports') !== false || 
-                                             strpos($last_element, 'userReports') !== false || 
-                                             strpos($last_element, 'partnerReports') !== false || 
-                                             strpos($last_element, 'distributorReports') !== false 
-                                             || in_array('distributorProductsLog',$split_url) 
-                                             || in_array('partnerProductsLog',$split_url)){ echo 'active';} ?>">
-                     <a class="waves-effect waves-dark" href="#">
-                           <i class="icon-speedometer"></i><span> Reports</span><i class="icon-arrow-down"></i>
-                     </a> 
-                     <ul class="treeview-menu">
-                        <li <?php if(strpos($last_element, 'appointmentReports') !== false){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/appointmentReports') }}">
-                           <i class="icon-arrow-right"></i><span> Appointments</span>
-                           </a>                
-                        </li>
-                        <li <?php if(strpos($last_element, 'userReports') !== false){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/userReports') }}">
-                           <i class="icon-arrow-right"></i><span> Registered Users</span>
-                           </a>                
-                        </li>
-                        <li <?php if(strpos($last_element, 'partnerReports') !== false){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/partnerReports') }}">
-                           <i class="icon-arrow-right"></i><span> Partners</span>
-                           </a>                
-                        </li>
-                        <li <?php if(strpos($last_element, 'distributorReports') !== false){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/distributorReports') }}">
-                           <i class="icon-arrow-right"></i><span> Distributors</span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('distributorProductsLog',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/distributorProductsLog') }}">
-                           <i class="icon-arrow-right"></i><span> Distributors Products Log</span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('partnerProductsLog',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/partnerProductsLog') }}">
-                           <i class="icon-arrow-right"></i><span> Partners Products Log</span>
-                           </a>                
-                        </li>
-                     </ul>               
-                  </li>
-                  
-               </ul>
-            @elseif($session_details['role_id']==4)
-               <ul class="sidebar-menu">
-                  <!-- <li class="nav-level" style="color: #ec216d">--- Navigation</li> -->
-                  <li class="treeview">
-                     <a class="waves-effect waves-dark" href="{{ URl::to('/distributordashboard') }}">
-                           <i class="icon-speedometer"></i><span> Dashboard</span>
-                     </a>                
-                  </li>
-                  <li class="treeview">
-                     <a class="waves-effect waves-dark" href="{{ URl::to('/distributorPartnersList') }}">
-                           <i class="icon-speedometer"></i><span> Assign Products</span>
-                     </a>                
-                  </li>
-                  <li class="treeview">
-                     <a class="waves-effect waves-dark" href="{{ URl::to('/dispatchedProductsList') }}">
-                           <i class="icon-speedometer"></i><span> Dispatched Products</span>
-                     </a>                
                   </li>
                </ul>
-            @endif
+            
          </section>
       </aside>
       <div class="content-wrapper">

@@ -1,5 +1,5 @@
 @extends('reports/layout.app')
-@section('title', 'Ezglam - Change Password')
+@section('title', 'Edurxcare - Change Password')
 @section('content')
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="{{ URL::to('public/assets/css/flatpickr.min.css') }}">
@@ -54,7 +54,7 @@
                            <div class="form-group row">
                               <div class="col-sm-12" style="float: left; width: 100%; text-align: center" >
                                  <button type="button" class="btn btn-primary" id="saveMeds" onclick="checkChangePassword();">Submit</button>
-                                 @if($role_id==1){
+                                 @if($role_id==1)
                                     <a href="{{ URL::to('/admindashboard')}}" class="btn btn-danger">Cancel</a>
                                  @else
                                     <a href="{{ URL::to('/distributordashboard')}}" class="btn btn-danger">Cancel</a>
