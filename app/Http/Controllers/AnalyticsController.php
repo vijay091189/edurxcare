@@ -29,7 +29,6 @@ class AnalyticsController extends Controller
                                   'loginid'=>$checkUserLogin[0]->loginid,
                                   'username'=>$checkUserLogin[0]->username,
                                   'role_id'=>$checkUserLogin[0]->role_id,
-                                  'profile_picture'=>$checkUserLogin[0]->profile_picture,
                                   'display_name'=>$checkUserLogin[0]->display_name
                                 );
         session()->put('LoginUserSession', $UserSessionData);
@@ -49,11 +48,7 @@ class AnalyticsController extends Controller
     public function adminLogin(Request $request){
       $session_details = session()->get('LoginUserSession');
       if(isset($session_details['loginid']) && $session_details['loginid']!=''){
-        if($session_details['role_id']==1){
-          return Redirect::to('admindashboard');
-        } else if($session_details['role_id']==4){
-          return Redirect::to('distributordashboard');
-        }
+        return Redirect::to('admindashboard');
       } else {
         $input = $request->all();
         if(isset($input['status'])){
@@ -69,56 +64,8 @@ class AnalyticsController extends Controller
     public function admindashboard(){
       $session_details = session()->get('LoginUserSession');
       if(isset($session_details['loginid']) && $session_details['loginid']!=''){
-        $data['categories']=DB::select("select * from categories c
-        inner join types t on t.type_id=c.type_id;");
-        $data['types']=DB::select("select * from types where status=1");
-      
-        // $data['data']= DB::SELECT("select (select count(*) as types from types where status=1) as types,(select count(*) as categories from categories where status=1) as categories,
-        //                         (select count(*) as app_users from app_users where status=1) as app_users,
-        //                         (select count(*) as partners from partners where status=1) as partners,
-        //                         (select count(*) as products from products where status=1) as products,
-        //                         (select count(*) as services from products where status=1) as services,
-        //                         (SELECT sum(paid_amount) FROM partner_cart_payments) as total_revenue from partners limit 1"); 
-
-
-        $data['types_count'] = DB::select("select count(*) as types from types where is_delete=0");
-        $data['categories_count'] = DB::select("select count(*) as categories from categories where is_delete=0");
-        $data['app_users_count'] = DB::select("select count(*) as app_users from app_users where status=1");
-        $data['partners_count'] = DB::select("select count(*) as partners from partners where is_delete=0");
-        $data['products_count'] = DB::select("select count(*) as products from products where is_delete=0");
-        $data['services_count'] = DB::select("select count(*) as service_cnt from services where is_delete=0");
-        $data['total_hubs'] = DB::select("select count(*) as hubs_count from hubs where is_delete=0");
-        $data['dispatch_prod_count'] = DB::select("SELECT sum(no_of_items) as dispatched_products FROM customer_carts 
-                                                    where status=1 and order_id in (select order_id from customer_cart_payments 
-                                                    where dispatched_status=1)");
-        $partner_total_revenue = DB::select("select sum(amount) as part_paid_amount from partner_payment_transactions ppt 
-                                              inner join partners au on au.partner_id=ppt.user_id
-                                              where transaction_number is not null and ppt.status='success'");
-        $customer_total_revenue = DB::select("select sum(amount) as cust_paid_amount from customer_payment_transactions cpt 
-                                              inner join app_users au on au.user_id=cpt.user_id
-                                              where transaction_number is not null and cpt.status='success'");
-
-        $app_users = DB::select("SELECT count(*) as user_count, DATE(registered_date) as registered_date FROM app_users where status=1 
-                                  group by DATE(registered_date) order by registered_date desc limit 7");
-        $user_dates = array();
-        $user_counts=array();
-        foreach($app_users as $app_user){
-          $user_dates[] = '"'.date('d-M-Y', strtotime($app_user->registered_date)).'"';
-          $user_counts[] = (int)$app_user->user_count;
-        }
-        $appoints_count = DB::select("select count(*) as appoint_count, appointment_date from appointments 
-                                      group by appointment_date order by appointment_date desc limit 7");
-        $appoint_dates = array();
-        $appoint_counts=array();
-        foreach($appoints_count as $appoint_count){
-          $appoint_dates[] = '"'.date('d-M-Y', strtotime($appoint_count->appointment_date)).'"';
-          $appoint_counts[] = (int)$appoint_count->appoint_count;
-        }
-        $data['user_dates_str'] = implode(',',$user_dates);
-        $data['user_counts_str'] = implode(',',$user_counts);
-        $data['appoint_dates_str'] = implode(',',$appoint_dates);
-        $data['appoint_counts_str'] = implode(',',$appoint_counts);
-        $data['total_revenue'] = $partner_total_revenue[0]->part_paid_amount + $customer_total_revenue[0]->cust_paid_amount;
+        $data['users_count']=DB::select("select count(case when role_id=2 then 1 end) as patient_count,
+                                          count(case when role_id=3 then 1 end) as pharmacist_count from app_users");
         return view("reports/admindashboard")->with($data);
       } else {
         return Redirect::to('admin');

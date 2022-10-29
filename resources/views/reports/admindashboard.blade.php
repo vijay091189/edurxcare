@@ -13,7 +13,7 @@
          <a href="{{ URL::to('/typeslist') }}">
             <div class="card dashboard-product">
                <span>Patients</span>
-               <h2 class="dashboard-total-products">19</h2>
+               <h2 class="dashboard-total-products">{{ $users_count[0]->patient_count }}</h2>
                <div class="side-box">
                   <i class="ti-signal text-warning-color"></i>
                </div>
@@ -24,7 +24,7 @@
          <a href="{{ URL::to('/categoriesList') }}">
             <div class="card dashboard-product">
                <span>Pharmacists</span>
-               <h2 class="dashboard-total-products">34</h2>
+               <h2 class="dashboard-total-products">{{ $users_count[0]->patient_count }}</h2>
                <div class="side-box ">
                   <i class="ti-gift text-primary-color"></i>
                </div>
