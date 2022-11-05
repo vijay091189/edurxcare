@@ -1,5 +1,5 @@
 @extends('reports/layout.app')
-@section('title', 'Edurxcare - Medical Conditions')
+@section('title', 'Edurxcare - Pharmacist Questions')
 @section('content')
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
@@ -9,7 +9,7 @@
             <div class="row">
                <div class="col-sm-12 p-0">
                   <div class="main-header">
-                     <h4>Medical Conditions</h4>
+                     <h4>Pharmacist Questions</h4>
                   </div>
                </div>
             </div>
@@ -23,7 +23,7 @@
                   <!-- Basic Table starts -->
                   <div class="card">
                      <div class="col-sm-12">
-                        <a class="btn btn-primary add_new_btn" onclick="modalpopup();">Add Medical Condition</a>
+                        <a class="btn btn-primary add_new_btn" onclick="modalpopup();">Add Question</a>
                      </div>
                      <div class="card-block">
                         <div class="row">
@@ -32,7 +32,11 @@
                                  <thead>
                                     <tr>
                                        <th>#</th>
-                                       <th>Medical Condition</th>
+                                       <th>Question</th>
+                                       <th>Option 1</th>
+                                       <th>Option 2</th>
+                                       <th>Option 3</th>
+                                       <th>Option 4</th>
                                        <th>Edit</th>
                                        <th>Action</th>
                                     </tr>
@@ -44,9 +48,13 @@
                                     @foreach($categories as $category)
                                        <tr>
                                           <td>{{ $key }}</td>
-                                          <td>{{ $category->medical_condition }}</td>
+                                          <td>{{ $category->question }}</td>
+                                          <td>{{ $category->option_1 }}</td>
+                                          <td>{{ $category->option_2 }}</td>
+                                          <td>{{ $category->option_3 }}</td>
+                                          <td>{{ $category->option_4 }}</td>
                                           <td>
-                                             <a href="#!" onclick="edit_category('{{ $category->id }}','{{ $category->medical_condition }}');">
+                                             <a href="#!" onclick="edit_category('{{ $category->id }}','{{ $category->question }}','{{ $category->option_1 }}','{{ $category->option_2 }}','{{ $category->option_3 }}','{{ $category->option_4 }}');">
                                                 <i class="icon-pencil"></i>
                                              </a>
                                           </td>
@@ -84,24 +92,56 @@
 
          <!-- Container-fluid ends -->
       </div>
-      <div class="modal fade" id="exampleModalSizeLg" tabindex="-1" role="dialog" aria-labelledby="exampleModalSizeLg" aria-hidden="true">
+<div class="modal fade" id="exampleModalSizeLg" tabindex="-1" role="dialog" aria-labelledby="exampleModalSizeLg" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 <div class="modal-content">
    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Add Medical Condition</h5>
+      <h5 class="modal-title" id="exampleModalLabel">Add Medication</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <i aria-hidden="true" class="ki ki-close"></i>
       </button>
    </div>
    <div class="modal-body">
       <form action="#" method="post" name="categoryform" id="categoryform">
-         <input type="hidden" value="" name="category_id" id="category_id">
+         <input type="hidden" value="" name="id" id="id">
          <div class="form-group row">
             <div class="col-sm-3">
-               <label>Medical Condition <span class="text-danger">*</span></label>
+               <label>Question <span class="text-danger">*</span></label>
             </div>
             <div class="col-sm-6">
-               <input type="text" name="category_name" id="category_name" class="form-control">   
+               <textarea name="question" id="question" class="form-control"></textarea>   
+            </div>
+         </div>
+         <div class="form-group row">
+            <div class="col-sm-3">
+               <label>Option 1 <span class="text-danger">*</span></label>
+            </div>
+            <div class="col-sm-6">
+               <input type="text" name="option_1" id="option_1" class="form-control">   
+            </div>
+         </div>
+         <div class="form-group row">
+            <div class="col-sm-3">
+               <label>Option 2 <span class="text-danger">*</span></label>
+            </div>
+            <div class="col-sm-6">
+               <input type="text" name="option_2" id="option_2" class="form-control">   
+            </div>
+         </div>
+         <div class="form-group row">
+            <div class="col-sm-3">
+               <label>Option 3 <span class="text-danger">*</span></label>
+            </div>
+            <div class="col-sm-6">
+               <input type="text" name="option_3" id="option_3" class="form-control">   
+            </div>
+         </div>
+         <div class="form-group row">
+            <div class="col-sm-3">
+               <label>Option 4 <span class="text-danger">*</span></label>
+            </div>
+            <div class="col-sm-6">
+               <input type="text" name="option_4" id="option_4" class="form-control">   
             </div>
          </div>
          <div class="form-group row">
@@ -149,27 +189,44 @@ $('.list_table').DataTable({
             "</select>&nbsp;&nbsp;"},
             "iDisplayLength": 10,
    });
-   function modalpopup(){ 
-   $('#category_id').val('');
-   $('#category_name').val('');
-   $('#exampleModalLabel').html('Add Medical Condition');
+function modalpopup(){ 
+   $('#id').val('');
+   $('#question').val('');
+   $('#option_1').val('');
+   $('#option_2').val('');
+   $('#option_3').val('');
+   $('#option_4').val('');
+   $('#exampleModalLabel').html('Add Question');
    $('#exampleModalSizeLg').modal();
 }
-function edit_category(category_id,category_name,type_id){
-   $('#category_id').val(category_id);
-   $('#category_name').val(category_name);
-   $('#exampleModalLabel').html('Edit Medical Condition');
+function edit_category(category_id,question,option1,option2,option3,option4){
+   $('#id').val(category_id);
+   $('#question').val(question);
+   $('#option_1').val(option1);
+   $('#option_2').val(option2);
+   $('#option_3').val(option3);
+   $('#option_4').val(option4);
+   $('#exampleModalLabel').html('Edit Question');
    $('#exampleModalSizeLg').modal();
 }
 function savecategory(){
    var formData = new FormData();
    formData = new FormData($('#categoryform')[0]);
    formData.append( "_token", '{{csrf_token()}}' ); 
-   var post_url = "{{URL::to('/saveMedConditions')}}";
-   var category_name = $('#category_name').val();
-   var category_id = $('#category_id').val();
-   if(category_name==''){
-      alert("Please enter Medical Condition name");
+   var post_url = "{{URL::to('/savePharmacistQuestion')}}";
+   
+   var id = $('#id').val();
+   var question = $('#question').val();
+   var option_1 = $('#option_1').val();
+   var option_2 = $('#option_2').val();
+   var option_3 = $('#option_3').val();
+   var option_4 = $('#option_4').val();
+   if(question==''){
+      alert("Please enter question");
+      return false;
+   }
+   if(option_1=='' && option_2=='' && option_3=='' && option_4==''){
+      alert("Please enter atleast one option");
       return false;
    }
    $.ajax({
@@ -180,13 +237,13 @@ function savecategory(){
       processData: false,
       success : function(result){
          if(result=='exist'){
-            alert("Record already exists with the Medical Condition '"+category_name+"'");
+            alert("Record already exists");
             return false;
          }	
-         if(category_id==''){
-            alert("Medical condition saved successfully");
+         if(id==''){
+            alert("Question saved successfully");
          } else {
-            alert("Medical condition updated successfully");
+            alert("Question updated successfully");
          }
          location.reload();
       }
@@ -194,31 +251,19 @@ function savecategory(){
 }
 
 function deleteCategory(unique_id,status){
-   var post_url = "{{URL::to('/deleteMedConditions')}}?category_id="+category_id+"&status="+status;
-   // if (confirm('Are you sure you want to delete this category?')) {
-   //    $.ajax({
-   //       url : post_url,
-   //       success : function(result){	
-   //          alert("Category deleted successfully");
-   //          location.reload();
-   //       }
-   //    });
-   // } else {
-   //    return false;
-   // }
-
+   var post_url = "{{URL::to('/deletePharmacistQuestion')}}?category_id="+unique_id+"&status="+status;
    if(status=='0'){
-      var message = 'Are you sure you want to make this Medical Condition Inactive?';
+      var message = 'Are you sure you want to make this question Inactive?';
       var status_text = 'Inactive';
    } else {
-      var message = 'Are you sure you want to make this Medical Condition Active?';
+      var message = 'Are you sure you want to make this question Active?';
       var status_text = 'Active';
    }
    if (confirm(message)) {
       $.ajax({
          url : post_url,
          success : function(result){	
-            alert("Medical Condition made "+status_text+" successfully");
+            alert("Question made "+status_text+" successfully");
             //location.reload();
             if(status=='0'){
                $('#'+unique_id+'_active').hide();

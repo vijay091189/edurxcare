@@ -182,16 +182,6 @@ $last_element = end($split_url);
                            <i class="icon-arrow-right"></i><span> Pharmacists</span>
                            </a>                
                         </li>
-                        <li <?php if(in_array('requestslist',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/requestslist') }}">
-                           <i class="icon-arrow-right"></i><span> Requests</span>
-                           </a>                
-                        </li>
-                        <li <?php if(in_array('appointmentslist',$split_url)){ echo 'class="active"';} ?>>
-                           <a class="waves-effect waves-dark" href="{{ URl::to('/appointmentslist') }}">
-                           <i class="icon-arrow-right"></i><span> Appointments</span>
-                           </a>                
-                        </li>
                         <li <?php if(in_array('medicationslist',$split_url)){ echo 'class="active"';} ?>>
                            <a class="waves-effect waves-dark" href="{{ URl::to('/medicationslist') }}">
                            <i class="icon-arrow-right"></i><span> Medications</span>
@@ -207,7 +197,33 @@ $last_element = end($split_url);
                            <i class="icon-arrow-right"></i><span> Medical Conditions</span>
                            </a>                
                         </li>
-                       
+
+                        <li <?php if(in_array('faqsList',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/faqsList') }}">
+                           <i class="icon-arrow-right"></i><span> FAQs</span>
+                           </a>                
+                        </li>
+                        <li <?php if(in_array('patientQuestions',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/patientQuestions') }}">
+                           <i class="icon-arrow-right"></i><span> Patient Questions</span>
+                           </a>                
+                        </li>
+                        <li <?php if(in_array('pharmacistQuestions',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/pharmacistQuestions') }}">
+                           <i class="icon-arrow-right"></i><span> Pharmacist Questions</span>
+                           </a>                
+                        </li>
+
+                        <li <?php if(in_array('requestslist',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/requestslist') }}">
+                           <i class="icon-arrow-right"></i><span> Requests</span>
+                           </a>                
+                        </li>
+                        <li <?php if(in_array('appointmentslist',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/appointmentslist') }}">
+                           <i class="icon-arrow-right"></i><span> Appointments</span>
+                           </a>                
+                        </li>
                      </ul>               
                   </li>
                </ul>

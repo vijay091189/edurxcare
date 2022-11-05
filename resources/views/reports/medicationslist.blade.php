@@ -49,9 +49,6 @@
                                              <a href="#!" onclick="edit_category('{{ $category->medicine_id }}','{{ $category->medicine }}');">
                                                 <i class="icon-pencil"></i>
                                              </a>
-                                             &nbsp;&nbsp;<a href="#!" onclick="delete_item('{{ $category->medicine_id }}','{{ $category->medicine }}');">
-                                                <i class="icon-trash"></i>
-                                             </a>
                                           </td>
                                           <td>
                                              @if($category->status==1)
@@ -101,19 +98,10 @@
          <input type="hidden" value="" name="category_id" id="category_id">
          <div class="form-group row">
             <div class="col-sm-3">
-               <label>Category <span class="text-danger">*</span></label>
+               <label>Medication <span class="text-danger">*</span></label>
             </div>
             <div class="col-sm-6">
                <input type="text" name="category_name" id="category_name" class="form-control">   
-            </div>
-         </div>
-        
-         <div class="form-group row">
-            <div class="col-sm-3">
-               <label>Image <span class="text-danger">*</span></label>
-            </div>
-            <div class="col-sm-6">
-               <input type="file" name="image" id="image" class="form-control">   
             </div>
          </div>
          <div class="form-group row">
@@ -164,39 +152,25 @@ $('.list_table').DataTable({
 function modalpopup(){ 
    $('#category_id').val('');
    $('#category_name').val('');
-   $('#type_id').val('');
-   $('#exampleModalLabel').html('Add Category');
+   $('#exampleModalLabel').html('Add Medication');
    $('#exampleModalSizeLg').modal();
 }
 function edit_category(category_id,category_name,type_id){
    $('#category_id').val(category_id);
    $('#category_name').val(category_name);
-   $('#type_id').val(type_id);
-   $('#exampleModalLabel').html('Edit Category');
+   $('#exampleModalLabel').html('Edit Medication');
    $('#exampleModalSizeLg').modal();
 }
 function savecategory(){
    var formData = new FormData();
    formData = new FormData($('#categoryform')[0]);
    formData.append( "_token", '{{csrf_token()}}' ); 
-   var post_url = "{{URL::to('/saveCategory')}}";
+   var post_url = "{{URL::to('/saveMedication')}}";
    var category_name = $('#category_name').val();
-   var type_id = $('#type_id').val();
    var category_id = $('#category_id').val();
-   var image = $('#image').val();
    if(category_name==''){
-      alert("Please enter category");
+      alert("Please enter medication name");
       return false;
-   }
-   if(type_id==''){
-      alert("Please select type");
-      return false;
-   }
-   if(category_id==''){
-      if(image==''){
-         alert("Please upload category image");
-         return false;
-      }
    }
    $.ajax({
       type : "POST",
@@ -206,21 +180,21 @@ function savecategory(){
       processData: false,
       success : function(result){
          if(result=='exist'){
-            alert("Record already exists with the category name '"+category_name+"'");
+            alert("Record already exists with the Medicine name '"+category_name+"'");
             return false;
          }	
          if(category_id==''){
-            alert("Category saved successfully");
+            alert("Medicine saved successfully");
          } else {
-            alert("Category updated successfully");
+            alert("Medicine updated successfully");
          }
          location.reload();
       }
    });
 }
 
-function deleteCategory(category_id,status,unique_id, name){
-   var post_url = "{{URL::to('/deleteCategory')}}?category_id="+category_id+"&status="+status;
+function deleteCategory(unique_id,status){
+   var post_url = "{{URL::to('/deleteMedicines')}}?category_id="+unique_id+"&status="+status;
    // if (confirm('Are you sure you want to delete this category?')) {
    //    $.ajax({
    //       url : post_url,
@@ -234,17 +208,17 @@ function deleteCategory(category_id,status,unique_id, name){
    // }
 
    if(status=='0'){
-      var message = 'Are you sure you want to make the category "'+name+'" Inactive?';
+      var message = 'Are you sure you want to make this medicine Inactive?';
       var status_text = 'Inactive';
    } else {
-      var message = 'Are you sure you want to make the category "'+name+'" Active?';
+      var message = 'Are you sure you want to make this medicine Active?';
       var status_text = 'Active';
    }
    if (confirm(message)) {
       $.ajax({
          url : post_url,
          success : function(result){	
-            alert("Category made "+status_text+" successfully");
+            alert("Medication made "+status_text+" successfully");
             //location.reload();
             if(status=='0'){
                $('#'+unique_id+'_active').hide();

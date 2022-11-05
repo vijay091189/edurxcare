@@ -180,4 +180,303 @@ class AnalyticsController extends Controller
       return Redirect::to('admin');
     }
   }
+
+  public function saveMedication(Request $request){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $input = $request->all();
+      $category_id = $input['category_id'];
+      $category_name = $input['category_name'];
+      if($category_id==''){
+        $check_exists = DB::select("select medicine_id from medicines_master where medicine='$category_name'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $insert_data['medicine'] = $category_name;
+          DB::table('medicines_master')->insert($insert_data);
+        }
+      } else {
+        $check_exists = DB::select("select medicine_id from medicines_master where medicine='$category_name' and medicine_id!='$category_id'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $update_data['medicine'] = $category_name;
+          DB::table('medicines_master')->where(array('medicine_id'=>$category_id))->update($update_data);
+        }
+      }
+      echo 'Inserted';
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function saveAllergies(Request $request){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $input = $request->all();
+      $category_id = $input['category_id'];
+      $category_name = $input['category_name'];
+      if($category_id==''){
+        $check_exists = DB::select("select id from allergies where allergy_name='$category_name'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $insert_data['allergy_name'] = $category_name;
+          DB::table('allergies')->insert($insert_data);
+        }
+      } else {
+        $check_exists = DB::select("select id from allergies where allergy_name='$category_name' and id!='$category_id'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $update_data['allergy_name'] = $category_name;
+          DB::table('allergies')->where(array('id'=>$category_id))->update($update_data);
+        }
+      }
+      echo 'Inserted';
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function saveMedConditions(Request $request){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $input = $request->all();
+      $category_id = $input['category_id'];
+      $category_name = $input['category_name'];
+      
+      if($category_id==''){
+        $check_exists = DB::select("select id from medical_conditions where medical_condition='$category_name'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $insert_data['medical_condition'] = $category_name;
+          DB::table('medical_conditions')->insert($insert_data);
+        }
+      } else {
+        $check_exists = DB::select("select id from medical_conditions where medical_condition='$category_name' and id!='$category_id'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $update_data['medical_condition'] = $category_name;
+          DB::table('medical_conditions')->where(array('id'=>$category_id))->update($update_data);
+        }
+      }
+      echo 'Inserted';
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function deleteMedicines(Request $request){
+    $input = $request->all();
+    $category_id = $input['category_id'];
+    $status = $input['status'];
+    $data=array(
+      "status"=>$status
+    );
+    DB::table('medicines_master')->where(array('medicine_id'=>$category_id))->update($data);
+    echo 'updated';
+  }
+
+  public function deleteAllergies(Request $request){
+    $input = $request->all();
+    $category_id = $input['category_id'];
+    $status = $input['status'];
+    $data=array(
+      "status"=>$status
+    );
+    DB::table('allergies')->where(array('id'=>$category_id))->update($data);
+    echo 'updated';
+  }
+
+  public function deleteMedConditions(Request $request){
+    $input = $request->all();
+    $category_id = $input['category_id'];
+    $status = $input['status'];
+    $data=array(
+      "status"=>$status
+    );
+    DB::table('medical_conditions')->where(array('id'=>$category_id))->update($data);
+    echo 'updated';
+  }
+
+  public function updateUserStatus(Request $request){
+    $input = $request->all();
+    $user_id = $input['user_id'];
+    $status = $input['status'];
+    $data=array(
+      "status"=>$status
+    );
+    DB::table('app_users')->where(array('user_id'=>$user_id))->update($data);
+    echo 'updated';
+  }
+
+  public function faqsList(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['categories']=DB::select("select * from faqs");
+      return view("reports/faqsList")->with($data);
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function patientQuestions(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['categories']=DB::select("select * from patient_lifestyle_questions");
+      return view("reports/patientQuestions")->with($data);
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function pharmacistQuestions(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['categories']=DB::select("select * from pharmacist_questions");
+      return view("reports/pharmacistQuestions")->with($data);
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function saveFaq(Request $request){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $input = $request->all();
+      $faq_id = $input['faq_id'];
+      $question = $input['question'];
+      $answer = $input['answer'];
+      if($faq_id==''){
+        $check_exists = DB::select("select faq_id from faqs where question='$question'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $insert_data['question'] = $question;
+          $insert_data['answer'] = $answer;
+          $insert_data['status'] = '1';
+          DB::table('faqs')->insert($insert_data);
+        }
+      } else {
+        $check_exists = DB::select("select faq_id from faqs where question='$question' and faq_id!='$faq_id'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $update_data['question'] = $question;
+          $update_data['answer'] = $answer;
+          DB::table('faqs')->where(array('faq_id'=>$faq_id))->update($update_data);
+        }
+      }
+      echo 'Inserted';
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function savePatientQuestion(Request $request){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $input = $request->all();
+      $question_id = $input['question_id'];
+      $question = $input['question'];
+      if($question_id==''){
+        $check_exists = DB::select("select question_id from patient_lifestyle_questions where question='$question'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $insert_data['question'] = $question;
+          DB::table('patient_lifestyle_questions')->insert($insert_data);
+        }
+      } else {
+        $check_exists = DB::select("select question_id from patient_lifestyle_questions where question='$question' and question_id!='$question_id'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $update_data['question'] = $question;
+          DB::table('patient_lifestyle_questions')->where(array('question_id'=>$question_id))->update($update_data);
+        }
+      }
+      echo 'Inserted';
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function savePharmacistQuestion(Request $request){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $input = $request->all();
+      $category_id = $input['id'];
+      $question = $input['question'];
+      $option_1 = $input['option_1'];
+      $option_2 = $input['option_2'];
+      $option_3 = $input['option_3'];
+      $option_4 = $input['option_4'];
+
+      if($category_id==''){
+        $check_exists = DB::select("select id from pharmacist_questions where question='$question'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $insert_data['question'] = $question;
+          $insert_data['option_1'] = $option_1;
+          $insert_data['option_2'] = $option_2;
+          $insert_data['option_3'] = $option_3;
+          $insert_data['option_4'] = $option_4;
+          DB::table('pharmacist_questions')->insert($insert_data);
+        }
+      } else {
+        $check_exists = DB::select("select id from pharmacist_questions where question='$question' and id!='$category_id'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $update_data['question'] = $question;
+          $update_data['option_1'] = $option_1;
+          $update_data['option_2'] = $option_2;
+          $update_data['option_3'] = $option_3;
+          $update_data['option_4'] = $option_4;
+          DB::table('pharmacist_questions')->where(array('id'=>$category_id))->update($update_data);
+        }
+      }
+      echo 'Inserted';
+    } else {
+      return Redirect::to('admin');
+    }
+  }
+
+  public function deleteFaq(Request $request){
+    $input = $request->all();
+    $category_id = $input['category_id'];
+    $status = $input['status'];
+    $data=array(
+      "status"=>$status
+    );
+    DB::table('faqs')->where(array('faq_id'=>$category_id))->update($data);
+    echo 'updated';
+  }
+
+  public function deletePatientQuestion(Request $request){
+    $input = $request->all();
+    $category_id = $input['category_id'];
+    $status = $input['status'];
+    $data=array(
+      "status"=>$status
+    );
+    DB::table('patient_lifestyle_questions')->where(array('question_id'=>$category_id))->update($data);
+    echo 'updated';
+  }
+
+  public function deletePharmacistQuestion(Request $request){
+    $input = $request->all();
+    $category_id = $input['category_id'];
+    $status = $input['status'];
+    $data=array(
+      "status"=>$status
+    );
+    DB::table('pharmacist_questions')->where(array('id'=>$category_id))->update($data);
+    echo 'updated';
+  }
 }

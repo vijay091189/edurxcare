@@ -1,5 +1,5 @@
 @extends('reports/layout.app')
-@section('title', 'Edurxcare - Medical Conditions')
+@section('title', 'Edurxcare - FAQs')
 @section('content')
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
@@ -9,7 +9,7 @@
             <div class="row">
                <div class="col-sm-12 p-0">
                   <div class="main-header">
-                     <h4>Medical Conditions</h4>
+                     <h4>Frequently Asked Questions</h4>
                   </div>
                </div>
             </div>
@@ -23,7 +23,7 @@
                   <!-- Basic Table starts -->
                   <div class="card">
                      <div class="col-sm-12">
-                        <a class="btn btn-primary add_new_btn" onclick="modalpopup();">Add Medical Condition</a>
+                        <a class="btn btn-primary add_new_btn" onclick="modalpopup();">Add FAQ</a>
                      </div>
                      <div class="card-block">
                         <div class="row">
@@ -32,7 +32,8 @@
                                  <thead>
                                     <tr>
                                        <th>#</th>
-                                       <th>Medical Condition</th>
+                                       <th>Question</th>
+                                       <th>Answer</th>
                                        <th>Edit</th>
                                        <th>Action</th>
                                     </tr>
@@ -44,25 +45,26 @@
                                     @foreach($categories as $category)
                                        <tr>
                                           <td>{{ $key }}</td>
-                                          <td>{{ $category->medical_condition }}</td>
+                                          <td>{{ $category->question }}</td>
+                                          <td>{{ $category->answer }}</td>
                                           <td>
-                                             <a href="#!" onclick="edit_category('{{ $category->id }}','{{ $category->medical_condition }}');">
+                                             <a href="#!" onclick="edit_category('{{ $category->faq_id }}','{{ $category->question }}','{{ $category->answer }}');">
                                                 <i class="icon-pencil"></i>
                                              </a>
                                           </td>
                                           <td>
                                              @if($category->status==1)
-                                                <a id="{{ $category->id }}_active" href="javascript:void(0)" onclick="deleteCategory('{{$category->id}}','0')">
+                                                <a id="{{ $category->faq_id }}_active" href="javascript:void(0)" onclick="deleteCategory('{{$category->faq_id}}','0')">
                                                    <button class="btn btn-danger">CHANGE TO Inactive</button>
                                                 </a>
-                                                <a style="display:none;" id="{{ $category->id }}_inactive" href="javascript:void(0)" onclick="deleteCategory('{{$category->id}}','1')">
+                                                <a style="display:none;" id="{{ $category->faq_id }}_inactive" href="javascript:void(0)" onclick="deleteCategory('{{$category->faq_id}}','1')">
                                                    <button class="btn btn-success">CHANGE TO Active</button>
                                                 </a>
                                              @else
-                                                <a style="display:none;" id="{{ $category->id }}_active" href="javascript:void(0)" onclick="deleteCategory('{{$category->id}}','0')">
+                                                <a style="display:none;" id="{{ $category->faq_id }}_active" href="javascript:void(0)" onclick="deleteCategory('{{$category->faq_id}}','0')">
                                                    <button class="btn btn-danger">CHANGE TO Inactive</button>
                                                 </a>
-                                                <a id="{{ $category->id }}_inactive" href="javascript:void(0)" onclick="deleteCategory('{{$category->id}}','1')">
+                                                <a id="{{ $category->faq_id }}_inactive" href="javascript:void(0)" onclick="deleteCategory('{{$category->faq_id}}','1')">
                                                    <button class="btn btn-success">CHANGE TO Active</button>
                                                 </a>
                                              @endif
@@ -84,24 +86,32 @@
 
          <!-- Container-fluid ends -->
       </div>
-      <div class="modal fade" id="exampleModalSizeLg" tabindex="-1" role="dialog" aria-labelledby="exampleModalSizeLg" aria-hidden="true">
+<div class="modal fade" id="exampleModalSizeLg" tabindex="-1" role="dialog" aria-labelledby="exampleModalSizeLg" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 <div class="modal-content">
    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Add Medical Condition</h5>
+      <h5 class="modal-title" id="exampleModalLabel">Add Medication</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <i aria-hidden="true" class="ki ki-close"></i>
       </button>
    </div>
    <div class="modal-body">
       <form action="#" method="post" name="categoryform" id="categoryform">
-         <input type="hidden" value="" name="category_id" id="category_id">
+         <input type="hidden" value="" name="faq_id" id="faq_id">
          <div class="form-group row">
             <div class="col-sm-3">
-               <label>Medical Condition <span class="text-danger">*</span></label>
+               <label>Question <span class="text-danger">*</span></label>
             </div>
             <div class="col-sm-6">
-               <input type="text" name="category_name" id="category_name" class="form-control">   
+               <textarea name="question" id="question" class="form-control"></textarea>   
+            </div>
+         </div>
+         <div class="form-group row">
+            <div class="col-sm-3">
+               <label>Answer <span class="text-danger">*</span></label>
+            </div>
+            <div class="col-sm-6">
+               <textarea name="answer" id="answer" class="form-control"></textarea>   
             </div>
          </div>
          <div class="form-group row">
@@ -149,27 +159,35 @@ $('.list_table').DataTable({
             "</select>&nbsp;&nbsp;"},
             "iDisplayLength": 10,
    });
-   function modalpopup(){ 
-   $('#category_id').val('');
-   $('#category_name').val('');
-   $('#exampleModalLabel').html('Add Medical Condition');
+function modalpopup(){ 
+   $('#faq_id').val('');
+   $('#question').val('');
+   $('#answer').val('');
+   $('#exampleModalLabel').html('Add Question');
    $('#exampleModalSizeLg').modal();
 }
-function edit_category(category_id,category_name,type_id){
-   $('#category_id').val(category_id);
-   $('#category_name').val(category_name);
-   $('#exampleModalLabel').html('Edit Medical Condition');
+function edit_category(category_id,question,answer){
+   $('#faq_id').val(category_id);
+   $('#question').val(question);
+   $('#answer').val(answer);
+   $('#exampleModalLabel').html('Edit Question');
    $('#exampleModalSizeLg').modal();
 }
 function savecategory(){
    var formData = new FormData();
    formData = new FormData($('#categoryform')[0]);
    formData.append( "_token", '{{csrf_token()}}' ); 
-   var post_url = "{{URL::to('/saveMedConditions')}}";
-   var category_name = $('#category_name').val();
-   var category_id = $('#category_id').val();
-   if(category_name==''){
-      alert("Please enter Medical Condition name");
+   var post_url = "{{URL::to('/saveFaq')}}";
+   
+   var faq_id = $('#faq_id').val();
+   var question = $('#question').val();
+   var answer = $('#answer').val();
+   if(question==''){
+      alert("Please enter question");
+      return false;
+   }
+   if(answer==''){
+      alert("Please enter answer");
       return false;
    }
    $.ajax({
@@ -180,13 +198,13 @@ function savecategory(){
       processData: false,
       success : function(result){
          if(result=='exist'){
-            alert("Record already exists with the Medical Condition '"+category_name+"'");
+            alert("Record already exists");
             return false;
          }	
-         if(category_id==''){
-            alert("Medical condition saved successfully");
+         if(faq_id==''){
+            alert("FAQ saved successfully");
          } else {
-            alert("Medical condition updated successfully");
+            alert("FAQ updated successfully");
          }
          location.reload();
       }
@@ -194,31 +212,19 @@ function savecategory(){
 }
 
 function deleteCategory(unique_id,status){
-   var post_url = "{{URL::to('/deleteMedConditions')}}?category_id="+category_id+"&status="+status;
-   // if (confirm('Are you sure you want to delete this category?')) {
-   //    $.ajax({
-   //       url : post_url,
-   //       success : function(result){	
-   //          alert("Category deleted successfully");
-   //          location.reload();
-   //       }
-   //    });
-   // } else {
-   //    return false;
-   // }
-
+   var post_url = "{{URL::to('/deleteFaq')}}?category_id="+unique_id+"&status="+status;
    if(status=='0'){
-      var message = 'Are you sure you want to make this Medical Condition Inactive?';
+      var message = 'Are you sure you want to make this question Inactive?';
       var status_text = 'Inactive';
    } else {
-      var message = 'Are you sure you want to make this Medical Condition Active?';
+      var message = 'Are you sure you want to make this question Active?';
       var status_text = 'Active';
    }
    if (confirm(message)) {
       $.ajax({
          url : post_url,
          success : function(result){	
-            alert("Medical Condition made "+status_text+" successfully");
+            alert("Question made "+status_text+" successfully");
             //location.reload();
             if(status=='0'){
                $('#'+unique_id+'_active').hide();

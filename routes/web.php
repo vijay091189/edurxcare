@@ -31,8 +31,25 @@ Route::get('/appointmentslist','App\Http\Controllers\AnalyticsController@appoint
 Route::get('/medicationslist','App\Http\Controllers\AnalyticsController@medicationslist');
 Route::get('/allergies','App\Http\Controllers\AnalyticsController@allergies');
 Route::get('/medicalconditions','App\Http\Controllers\AnalyticsController@medicalconditions');
+Route::post('/saveMedication','App\Http\Controllers\AnalyticsController@saveMedication');
+Route::post('/saveAllergies','App\Http\Controllers\AnalyticsController@saveAllergies');
+Route::post('/saveMedConditions','App\Http\Controllers\AnalyticsController@saveMedConditions');
+Route::get('/updateUserStatus','App\Http\Controllers\AnalyticsController@updateUserStatus');
+Route::get('/deleteMedicines','App\Http\Controllers\AnalyticsController@deleteMedicines');
+Route::get('/deleteAllergies','App\Http\Controllers\AnalyticsController@deleteAllergies');
+Route::get('/deleteMedConditions','App\Http\Controllers\AnalyticsController@deleteMedConditions');
 
+Route::get('/faqsList','App\Http\Controllers\AnalyticsController@faqsList');
+Route::get('/patientQuestions','App\Http\Controllers\AnalyticsController@patientQuestions');
+Route::get('/pharmacistQuestions','App\Http\Controllers\AnalyticsController@pharmacistQuestions');
 
+Route::post('/saveFaq','App\Http\Controllers\AnalyticsController@saveFaq');
+Route::post('/savePatientQuestion','App\Http\Controllers\AnalyticsController@savePatientQuestion');
+Route::post('/savePharmacistQuestion','App\Http\Controllers\AnalyticsController@savePharmacistQuestion');
+
+Route::get('/deleteFaq','App\Http\Controllers\AnalyticsController@deleteFaq');
+Route::get('/deletePatientQuestion','App\Http\Controllers\AnalyticsController@deletePatientQuestion');
+Route::get('/deletePharmacistQuestion','App\Http\Controllers\AnalyticsController@deletePharmacistQuestion');
 
 
 
