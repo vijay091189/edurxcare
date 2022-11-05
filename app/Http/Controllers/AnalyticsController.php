@@ -69,7 +69,7 @@ class AnalyticsController extends Controller
                                           count(case when role_id=3 then 1 end) as pharmacist_count from app_users");
         return view("reports/admindashboard")->with($data);
       } else {
-        return Redirect::to('admin');
+        return Redirect::to('edurxcare_admin');
       }
     }
 
@@ -87,7 +87,7 @@ class AnalyticsController extends Controller
         $data['role_id'] = $session_details['role_id'];
         return view("reports/changePassword")->with($data);
       } else {
-        return Redirect::to('admin');
+        return Redirect::to('edurxcare_admin');
       }
     }
 
@@ -117,7 +117,7 @@ class AnalyticsController extends Controller
       $data['users_count']=DB::select("select * from app_users where role_id='2'");
       return view("reports/patientslist")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -127,7 +127,7 @@ class AnalyticsController extends Controller
       $data['users_count']=DB::select("select * from app_users where role_id='3'");
       return view("reports/pharmacistslist")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -137,7 +137,7 @@ class AnalyticsController extends Controller
       $data['users_count']=DB::select("select * from app_users where role_id='3'");
       return view("reports/pharmacistslist")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -147,7 +147,7 @@ class AnalyticsController extends Controller
       $data['users_count']=DB::select("select * from app_users where role_id='3'");
       return view("reports/pharmacistslist")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -157,7 +157,7 @@ class AnalyticsController extends Controller
       $data['categories']=DB::select("select * from medicines_master");
       return view("reports/medicationslist")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -167,7 +167,7 @@ class AnalyticsController extends Controller
       $data['categories']=DB::select("select * from allergies");
       return view("reports/allergies")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -177,7 +177,7 @@ class AnalyticsController extends Controller
       $data['categories']=DB::select("select * from medical_conditions");
       return view("reports/medicalconditions")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -206,7 +206,7 @@ class AnalyticsController extends Controller
       }
       echo 'Inserted';
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -235,7 +235,7 @@ class AnalyticsController extends Controller
       }
       echo 'Inserted';
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -265,7 +265,7 @@ class AnalyticsController extends Controller
       }
       echo 'Inserted';
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -319,7 +319,7 @@ class AnalyticsController extends Controller
       $data['categories']=DB::select("select * from faqs");
       return view("reports/faqsList")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -329,7 +329,7 @@ class AnalyticsController extends Controller
       $data['categories']=DB::select("select * from patient_lifestyle_questions");
       return view("reports/patientQuestions")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -339,7 +339,7 @@ class AnalyticsController extends Controller
       $data['categories']=DB::select("select * from pharmacist_questions");
       return view("reports/pharmacistQuestions")->with($data);
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -372,7 +372,7 @@ class AnalyticsController extends Controller
       }
       echo 'Inserted';
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -401,7 +401,7 @@ class AnalyticsController extends Controller
       }
       echo 'Inserted';
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
@@ -443,7 +443,7 @@ class AnalyticsController extends Controller
       }
       echo 'Inserted';
     } else {
-      return Redirect::to('admin');
+      return Redirect::to('edurxcare_admin');
     }
   }
 
