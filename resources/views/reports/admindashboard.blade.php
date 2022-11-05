@@ -58,6 +58,7 @@
       </div>
    </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="{{ URL::to('public/assets/js/highcharts/highcharts.js') }}"></script>
 <script type="text/javascript" src="{{ URL::to('public/assets/js/highcharts/data.js') }}"></script>
 <script type="text/javascript" src="{{ URL::to('public/assets/js/highcharts/drilldown.js') }}"></script>
