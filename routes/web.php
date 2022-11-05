@@ -23,7 +23,6 @@ Route::post('/checkLogin','App\Http\Controllers\AnalyticsController@checkLogin')
 Route::get('/admindashboard','App\Http\Controllers\AnalyticsController@admindashboard');
 Route::get('/changePassword','App\Http\Controllers\AnalyticsController@changePassword');
 Route::post('/saveChangePassword','App\Http\Controllers\AnalyticsController@saveChangePassword');
-
 Route::get('/patientslist','App\Http\Controllers\AnalyticsController@patientslist');
 Route::get('/pharmacistslist','App\Http\Controllers\AnalyticsController@pharmacistslist');
 Route::get('/requestslist','App\Http\Controllers\AnalyticsController@requestslist');
@@ -38,18 +37,17 @@ Route::get('/updateUserStatus','App\Http\Controllers\AnalyticsController@updateU
 Route::get('/deleteMedicines','App\Http\Controllers\AnalyticsController@deleteMedicines');
 Route::get('/deleteAllergies','App\Http\Controllers\AnalyticsController@deleteAllergies');
 Route::get('/deleteMedConditions','App\Http\Controllers\AnalyticsController@deleteMedConditions');
-
 Route::get('/faqsList','App\Http\Controllers\AnalyticsController@faqsList');
 Route::get('/patientQuestions','App\Http\Controllers\AnalyticsController@patientQuestions');
 Route::get('/pharmacistQuestions','App\Http\Controllers\AnalyticsController@pharmacistQuestions');
-
 Route::post('/saveFaq','App\Http\Controllers\AnalyticsController@saveFaq');
 Route::post('/savePatientQuestion','App\Http\Controllers\AnalyticsController@savePatientQuestion');
 Route::post('/savePharmacistQuestion','App\Http\Controllers\AnalyticsController@savePharmacistQuestion');
-
 Route::get('/deleteFaq','App\Http\Controllers\AnalyticsController@deleteFaq');
 Route::get('/deletePatientQuestion','App\Http\Controllers\AnalyticsController@deletePatientQuestion');
 Route::get('/deletePharmacistQuestion','App\Http\Controllers\AnalyticsController@deletePharmacistQuestion');
+Route::get('/appUsersList','App\Http\Controllers\AnalyticsController@appUsersList');
+Route::get('/logout','App\Http\Controllers\AnalyticsController@logout');
 
 
 
