@@ -16,8 +16,23 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+//frontend routes
 Route::get('/','App\Http\Controllers\EduwebController@homepage');
+Route::get('/loginpage','App\Http\Controllers\EduwebController@loginpage');
+Route::get('/signup','App\Http\Controllers\EduwebController@signup');
+Route::get('/category','App\Http\Controllers\EduwebController@category');
+Route::get('/signupForm','App\Http\Controllers\EduwebController@signupForm');
+Route::post('/registerUser','App\Http\Controllers\EduwebController@registerUser');
+Route::post('/checkUserLogin','App\Http\Controllers\EduwebController@checkUserLogin');
 
+//dashboard apis after login
+Route::get('/patientDashboard','App\Http\Controllers\EduwebController@patientDashboard');
+Route::get('/phamacistDashboard','App\Http\Controllers\EduwebController@signphamacistDashboardupForm');
+Route::get('/newRequest','App\Http\Controllers\EduwebController@newRequest');
+Route::post('/saveNewRequest','App\Http\Controllers\EduwebController@saveNewRequest');
+Route::get('/add_requestmedications','App\Http\Controllers\EduwebController@add_requestmedications');
+
+//Admin routes
 Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');
 Route::post('/checkLogin','App\Http\Controllers\AnalyticsController@checkLogin');
 Route::get('/admindashboard','App\Http\Controllers\AnalyticsController@admindashboard');
