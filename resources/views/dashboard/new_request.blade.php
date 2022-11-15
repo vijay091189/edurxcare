@@ -7,8 +7,9 @@
       <div class="row" style="padding:15px;margin-left: 10px;">
         <div class="col-lg-12 col-md-6 col-sm-12 mt-2">
           <form id="new_request_comments" name="new_request_comments" method="post">
+            <input type="hidden" name="vir_request_id" id="vir_request_id" value="{{ $vir_request_id }}">
             <div class="form-group">
-              <textarea class="form-control" id="request_comments" rows="3" name="request_comments" placeholder="Please enter comments about reuqest"></textarea>
+              <textarea class="form-control" id="request_comments" rows="3" name="request_comments" placeholder="Please enter comments about reuqest">{{ isset($patient_requests[0])?$patient_requests[0]->comments:'' }}</textarea>
             </div>
             <div class="text-center dh-none">
               <button type="button" onclick="save_comments()" class="btn btn-primary text-center ml-auto mr-auto" style="border-radius: 10px;background-color: #00aaca;border: 1px solid #00aaca;width: 230px;">Save & Continue</button>

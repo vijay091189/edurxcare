@@ -31,6 +31,21 @@ Route::get('/phamacistDashboard','App\Http\Controllers\EduwebController@signpham
 Route::get('/newRequest','App\Http\Controllers\EduwebController@newRequest');
 Route::post('/saveNewRequest','App\Http\Controllers\EduwebController@saveNewRequest');
 Route::get('/add_requestmedications','App\Http\Controllers\EduwebController@add_requestmedications');
+Route::post('/saveRequestMedication','App\Http\Controllers\EduwebController@saveRequestMedication');
+Route::get('/deleteRequestMedication','App\Http\Controllers\EduwebController@deleteRequestMedication');
+Route::get('/add_requestallergies','App\Http\Controllers\EduwebController@add_requestallergies');
+Route::post('/saveRequestAllergy','App\Http\Controllers\EduwebController@saveRequestAllergy');
+Route::get('/deleteRequestAllergy','App\Http\Controllers\EduwebController@deleteRequestAllergy');
+Route::get('/add_requestmedcond','App\Http\Controllers\EduwebController@add_requestmedcond');
+Route::post('/saveRequestMedcond','App\Http\Controllers\EduwebController@saveRequestMedcond');
+Route::get('/deleteRequestMedcond','App\Http\Controllers\EduwebController@deleteRequestMedcond');
+Route::get('/add_labreports','App\Http\Controllers\EduwebController@add_labreports');
+Route::post('/saveLabReports','App\Http\Controllers\EduwebController@saveLabReports');
+Route::get('/deleteLabReport','App\Http\Controllers\EduwebController@deleteLabReport');
+Route::get('/add_prescriptions','App\Http\Controllers\EduwebController@add_prescriptions');
+Route::post('/savePrescription','App\Http\Controllers\EduwebController@savePrescription');
+Route::get('/deletePrescription','App\Http\Controllers\EduwebController@deletePrescription');
+Route::get('/submitRequest','App\Http\Controllers\EduwebController@submitRequest');
 
 //Admin routes
 Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');

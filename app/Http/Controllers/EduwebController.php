@@ -100,7 +100,7 @@ class EduwebController extends Controller
     public function patientDashboard(Request $request){
         $session_details = session()->get('LoginUserSession');
         if(isset($session_details['loginid']) && $session_details['loginid']!=''){
-            $patient_id = $session_details['loginid'];
+            $patient_id = $session_details['user_id'];
             $data['patient_requests'] = DB::select("select * from patient_requests where patient_id='$patient_id'");
             return view("dashboard/patient_dashboard")->with($data);
         } else {
@@ -111,7 +111,15 @@ class EduwebController extends Controller
     public function newRequest(Request $request){
         $session_details = session()->get('LoginUserSession');
         if(isset($session_details['loginid']) && $session_details['loginid']!=''){
-            return view("dashboard/new_request");
+            $input = $request->all();
+            $vir_request_id = isset($input['vir_request_id'])?$input['vir_request_id']:'';
+            if($vir_request_id!=''){
+                $data['patient_requests'] = DB::select("select * from virtual_patient_requests where request_id='$vir_request_id'");
+            } else {
+                $data['patient_requests'] = array();
+            }
+            $data['vir_request_id'] = $vir_request_id;
+            return view("dashboard/new_request")->with($data);
         } else {
             return Redirect::to('loginpage');
         }
@@ -121,11 +129,17 @@ class EduwebController extends Controller
         $session_details = session()->get('LoginUserSession');
         $input = $request->all();
         $data['patient_id'] = $session_details['user_id'];
-        $data['comments'] = $input['request_comments'];
-        $data['status'] = 'pending';
-        $data['created_date'] = date('Y-m-d H:i:s');
-        $data['modified_date'] = date('Y-m-d H:i:s');
-        $vir_request_id = DB::table('virtual_patient_requests')->insertGetId($data);
+        $vir_request_id = isset($input['vir_request_id'])?$input['vir_request_id']:'';
+        if($vir_request_id==''){
+            $data['comments'] = $input['request_comments'];
+            $data['status'] = 'pending';
+            $data['created_date'] = date('Y-m-d H:i:s');
+            $data['modified_date'] = date('Y-m-d H:i:s');
+            $vir_request_id = DB::table('virtual_patient_requests')->insertGetId($data);
+        } else {
+            $updatedata['comments'] = $input['request_comments'];
+            DB::table('virtual_patient_requests')->where(array('request_id'=>$vir_request_id))->update($updatedata);
+        }
         echo $vir_request_id;
     }
 
@@ -135,10 +149,254 @@ class EduwebController extends Controller
             $input = $request->all();
             $vir_request_id = $input['vir_request_id'];
             $data['vir_request_id'] = $vir_request_id;
-            $data['request_medications'] = DB::select("select * from virtual_request_medications where request_medication_id='$vir_request_id'");
+            $data['request_medications'] = DB::select("select * from virtual_request_medications 
+                                                        where request_id='$vir_request_id' and status=1");
             return view("dashboard/add_requestmedications")->with($data);
         } else {
             return Redirect::to('loginpage');
         }
+    }
+
+    public function saveRequestMedication(Request $request){
+        $input = $request->all();
+        $data['request_id'] = $input['vir_request_id'];
+        $data['medication_name'] = $input['medication_name'];
+        $data['diagnosis'] = $input['diagnosis'];
+        $data['frequency'] = implode(',',$input['frequency']);
+        $data['start_date'] = $input['start_date'];
+        $data['created_date'] = date('Y-m-d H:i:s');
+        $data['status'] = 1;
+        DB::table('virtual_request_medications')->insertGetId($data);
+        echo $input['vir_request_id'];
+    }
+
+    public function deleteRequestMedication(Request $request){
+        $input = $request->all();
+        $med_id = $input['med_id'];
+        $data['status'] = 0;
+        DB::table('virtual_request_medications')->where(array('request_medication_id'=>$med_id))->update($data);
+        echo 'success';
+    }
+
+    public function add_requestallergies(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $input = $request->all();
+            $vir_request_id = $input['vir_request_id'];
+            $data['vir_request_id'] = $vir_request_id;
+            $data['request_allergies'] = DB::select("select * from virtual_request_allergies 
+                                                        where request_id='$vir_request_id' and status=1");
+            return view("dashboard/add_requestallergies")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
+    }
+
+    public function saveRequestAllergy(Request $request){
+        $input = $request->all();
+        $data['request_id'] = $input['vir_request_id'];
+        $data['allergy_name'] = $input['allergy_name'];
+        $data['allergy_description'] = $input['allergy_description'];
+        $data['created_date'] = date('Y-m-d H:i:s');
+        $data['status'] = 1;
+        DB::table('virtual_request_allergies')->insertGetId($data);
+        echo $input['vir_request_id'];
+    }
+
+    public function deleteRequestAllergy(Request $request){
+        $input = $request->all();
+        $allergy_id = $input['allergy_id'];
+        $data['status'] = 0;
+        DB::table('virtual_request_allergies')->where(array('request_allergy_id'=>$allergy_id))->update($data);
+        echo 'success';
+    }
+
+    public function add_requestmedcond(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $input = $request->all();
+            $vir_request_id = $input['vir_request_id'];
+            $data['vir_request_id'] = $vir_request_id;
+            $data['request_medconds'] = DB::select("select * from virtual_request_medical_conditions 
+                                                        where request_id='$vir_request_id' and status=1");
+            return view("dashboard/add_requestmedcond")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
+    }
+
+    public function saveRequestMedcond(Request $request){
+        $input = $request->all();
+        $data['request_id'] = $input['vir_request_id'];
+        $data['request_medical_condition'] = $input['request_medical_condition'];
+        $data['request_med_decription'] = $input['request_med_decription'];
+        $data['created_date'] = date('Y-m-d H:i:s');
+        $data['status'] = 1;
+        DB::table('virtual_request_medical_conditions')->insertGetId($data);
+        echo $input['vir_request_id'];
+    }
+
+    public function deleteRequestMedcond(Request $request){
+        $input = $request->all();
+        $medcond_id = $input['medcond_id'];
+        $data['status'] = 0;
+        DB::table('virtual_request_medical_conditions')->where(array('request_medical_cond_id'=>$medcond_id))->update($data);
+        echo 'success';
+    }
+
+    public function add_labreports(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $input = $request->all();
+            $vir_request_id = $input['vir_request_id'];
+            $data['vir_request_id'] = $vir_request_id;
+            $data['request_reports'] = DB::select("select * from virtual_request_lab_documents 
+                                                        where request_id='$vir_request_id' and status=1");
+            return view("dashboard/add_labreports")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
+    }
+
+    public function saveLabReports(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $patient_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['request_id'] = $input['vir_request_id'];
+        $file_doc_name='';
+        $mime_type = '';
+        $file_doc_path = public_path().'/labreports';
+        if($request->hasfile('lab_report')){
+            $extension = $request->file('lab_report')->extension();
+            $mime_type = $request->file('lab_report')->getMimeType();
+            $file_doc_name = $patient_id.'_labreport_'.time().'.'.$extension;
+            $dep_file_upload = $request->lab_report->move($file_doc_path, $file_doc_name);
+        }
+        $data['file_path'] = $file_doc_name;
+        $data['mime_type'] = $mime_type;
+        $data['created_date'] = date('Y-m-d H:i:s');
+        $data['status'] = 1;
+        DB::table('virtual_request_lab_documents')->insertGetId($data);
+        echo $input['vir_request_id'];
+    }
+
+    public function deleteLabReport(Request $request){
+        $input = $request->all();
+        $report_id = $input['report_id'];
+        $data['status'] = 0;
+        DB::table('virtual_request_lab_documents')->where(array('request_lab_docs_id'=>$report_id))->update($data);
+        echo 'success';
+    }
+
+    public function add_prescriptions(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $input = $request->all();
+            $vir_request_id = $input['vir_request_id'];
+            $data['vir_request_id'] = $vir_request_id;
+            $data['request_reports'] = DB::select("select * from virtual_request_prescriptions 
+                                                        where request_id='$vir_request_id' and status=1");
+            return view("dashboard/add_prescriptions")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
+    }
+
+    public function savePrescription(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $patient_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['request_id'] = $input['vir_request_id'];
+        $file_doc_name='';
+        $mime_type = '';
+        $file_doc_path = public_path().'/prescriptions';
+        if($request->hasfile('lab_report')){
+            $extension = $request->file('lab_report')->extension();
+            $mime_type = $request->file('lab_report')->getMimeType();
+            $file_doc_name = $patient_id.'_labreport_'.time().'.'.$extension;
+            $dep_file_upload = $request->lab_report->move($file_doc_path, $file_doc_name);
+        }
+        $data['file_path'] = $file_doc_name;
+        $data['mime_type'] = $mime_type;
+        $data['created_date'] = date('Y-m-d H:i:s');
+        $data['status'] = 1;
+        DB::table('virtual_request_prescriptions')->insertGetId($data);
+        echo $input['vir_request_id'];
+    }
+
+    public function deletePrescription(Request $request){
+        $input = $request->all();
+        $report_id = $input['report_id'];
+        $data['status'] = 0;
+        DB::table('virtual_request_prescriptions')->where(array('request_presc_id'=>$report_id))->update($data);
+        echo 'success';
+    }
+
+    public function submitRequest(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $patient_id = $session_details['user_id'];
+        $input = $request->all();
+        $vir_request_id = $input['vir_request_id'];
+        $request_data = DB::select("select * from virtual_patient_requests where request_id='$vir_request_id'");
+        $medications_data = DB::select("select * from virtual_request_medications where request_id='$vir_request_id'");
+        $allergies_data = DB::select("select * from virtual_request_allergies where request_id='$vir_request_id'");
+        $medcond_data = DB::select("select * from virtual_request_medical_conditions where request_id='$vir_request_id'");
+        $labreports_data = DB::select("select * from virtual_request_lab_documents where request_id='$vir_request_id'");
+        $prescriptions_data = DB::select("select * from virtual_request_prescriptions where request_id='$vir_request_id'");
+        //insert requests
+        $reqdata['patient_id'] = $patient_id;
+        $reqdata['comments'] = isset($request_data[0])?$request_data[0]->comments:'';
+        $reqdata['status'] = 'pending';
+        $reqdata['created_date'] = date('Y-m-d H:i:s');
+        $reqdata['modified_date'] = date('Y-m-d H:i:s');
+        $request_id = DB::table('patient_requests')->insertGetId($reqdata);
+        //insert medications
+        foreach($medications_data as $medications_dat){
+            $meddata['request_id'] = $request_id;
+            $meddata['medication_name'] = $medications_dat->medication_name;
+            $meddata['diagnosis'] = $medications_dat->diagnosis;
+            $meddata['frequency'] = $medications_dat->frequency;
+            $meddata['start_date'] = $medications_dat->start_date;
+            $meddata['created_date'] = date('Y-m-d H:i:s');
+            $meddata['status'] = 1;
+            DB::table('request_medications')->insertGetId($meddata);
+        }
+        //insert allergies
+        foreach($allergies_data as $allergies_dat){
+            $alldata['request_id'] = $request_id;
+            $alldata['allergy_name'] = $allergies_dat->allergy_name;
+            $alldata['allergy_description'] = $allergies_dat->allergy_description;
+            $alldata['created_date'] = date('Y-m-d H:i:s');
+            $alldata['status'] = 1;
+            DB::table('request_allergies')->insertGetId($alldata);
+        }
+        //insert medical conditions
+        foreach($medcond_data as $medcond_dat){
+            $medconddata['request_id'] = $request_id;
+            $medconddata['request_medical_condition'] = $medcond_dat->request_medical_condition;
+            $medconddata['request_med_decription'] = $medcond_dat->request_med_decription;
+            $medconddata['created_date'] = date('Y-m-d H:i:s');
+            $medconddata['status'] = 1;
+            DB::table('request_medical_conditions')->insertGetId($medconddata);
+        }
+        //insert lab reports
+        foreach($labreports_data as $labreports_dat){
+            $labdata['request_id'] = $request_id;
+            $labdata['file_path'] = $labreports_dat->file_path;
+            $labdata['mime_type'] = $labreports_dat->mime_type;
+            $labdata['created_date'] = date('Y-m-d H:i:s');
+            $labdata['status'] = 1;
+            DB::table('request_lab_documents')->insertGetId($labdata);
+        }
+        //insert prescriptions
+        foreach($prescriptions_data as $prescriptions_dat){
+            $presdata['request_id'] = $request_id;
+            $presdata['file_path'] = $prescriptions_dat->file_path;
+            $presdata['mime_type'] = $prescriptions_dat->mime_type;
+            $presdata['created_date'] = date('Y-m-d H:i:s');
+            $presdata['status'] = 1;
+            DB::table('request_prescriptions')->insertGetId($presdata);
+        }
+        echo 'success';
     }
 }
