@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Validator;
 use DB, Config;
+use URL, Session, Redirect;
 use DateTime;
 use DateTimeZone;
 use App\Helpers\EncDecHelper;
@@ -399,4 +400,90 @@ class EduwebController extends Controller
         }
         echo 'success';
     }
+
+    public function userlogout(){
+        Session::flush();
+        return redirect('/');
+    }
+
+    public function editPatientProfile(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['user_details'] = DB::select("select * from app_users where user_id='$user_id'");
+        return view("dashboard/edit_patient_profile")->with($data);
+    }
+
+    public function updatePatientProfile(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['name'] = $input['full_name'];
+        $data['gender'] = $input['gender'];
+        $data['dob'] = $input['dob'];
+        $data['mobile'] = $input['mobile'];
+        $data['email'] = $input['email_id'];
+        $data['address'] = $input['address'];
+        $data['modified_date'] = date('Y-m-d H:i:s');
+        DB::table('app_users')->where(array('user_id'=>$user_id))->update($data);
+        //insert into login  table
+        $login_data['username'] = $input['mobile'];
+        $login_data['display_name'] = $input['full_name'];
+        $login_data['user_id'] = $user_id;
+        $login_data['status'] = 1;
+        DB::table('login')->where(array('user_id'=>$user_id))->update($login_data);
+        echo 'inserted';
+    }
+
+    public function patientRecommendations(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['details'] = DB::select("select * from recommendations where status='1'");
+        return view("dashboard/patient_recommendations")->with($data);
+    }
+
+    public function patientFaqs(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['details'] = DB::select("select * from faqs where status='1'");
+        return view("dashboard/patient_faqs")->with($data);
+    }
+
+    public function patientNotifications(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['details'] = DB::select("select * from patient_notifications where patient_id='$user_id'");
+        return view("dashboard/patient_notifications")->with($data);
+    }
+
+    public function userChangePassword(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['details'] = DB::select("select * from patient_notifications where patient_id='$user_id'");
+        return view("dashboard/user_change_password")->with($data);
+    } 
+    
+    public function userUpdatePassword(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $username = $session_details['username'];
+        $input = $request->all();
+        $current_password = $input['old_password'];
+        $new_password = $input['new_password'];
+        $confirm_password = $input['confirm_password'];
+        $encpassword = EncDecHelper::enc_string($current_password);
+        $checkUserLogin = DB::select("select loginid from login where username='".$username."' and password='".$encpassword."' and status=1");
+        if(count($checkUserLogin)>0){
+          $new_endpassword = EncDecHelper::enc_string($new_password);
+          $update_data['password'] = $new_endpassword;
+          $update_data['is_password_update'] = 1;
+          DB::table('login')->where('username',$username)->update($update_data);
+          echo 'success'; die;
+        } else {
+          echo 'fail'; die;
+        }
+      }
 }

@@ -93,12 +93,12 @@
             </a>
           </li>
           <li class="nav-item top_color">
-            <a class="nav-link b-2" href="{{ URL::to('/recommendations') }}" style="">
+            <a class="nav-link b-2" href="{{ URL::to('/patientRecommendations') }}" style="">
               <i class="site-menu-icon wb-thumb-up" aria-hidden="true"></i>Recommendations
             </a>
           </li>
           <li class="nav-item top_color">
-            <a class="nav-link" href="{{ URL::to('/faqs') }}">
+            <a class="nav-link" href="{{ URL::to('/patientFaqs') }}">
               <i class="fa-solid fa-question"></i>FAQ
             </a>
           </li>
@@ -126,55 +126,55 @@
   <div class="site-menubar">
     <ul class="site-menu">
       <li class="site-menu-item has-sub">
-        <a href="javascript:void(0)">
+        <a href="{{ URL::to('/editPatientProfile') }}">
           <i class="fa-solid fa-user"></i>
           <span class="site-menu-title">Profile</span>
         </a>
       </li>
       <li class="site-menu-item has-sub ">
-        <a href="previousHistory.php">
+        <a href="{{ URL::to('/patientDashboard') }}">
           <i class="fa-solid fa-backward"></i>
           <span class="site-menu-title">Previous History</span>
         </a>
       </li>
       <li class="site-menu-item has-sub ">
-        <a href="notifications.php">
+        <a href="{{ URL::to('/patientNotifications') }}">
           <i class="site-menu-icon wb-bell" aria-hidden="true"></i>
           <span class="site-menu-title">Notifications</span>
         </a>
       </li>
       <li class="site-menu-item has-sub ">
-        <a href="pillsReminder.php">
+        <a href="{{ URL::to('/pillReminders') }}">
           <i class="fa-solid fa-calendar-check"></i>
           <span class="site-menu-title">Pill Reminders</span>
         </a>
       </li>
       <li class="site-menu-item has-sub ">
-        <a href="rating.php">
+        <a href="{{ URL::to('/reviewRatings') }}">
           <i class="fa-solid fa-star"></i>
           <span class="site-menu-title">Rating and Feedback</span>
         </a>
       </li>
       <li class="site-menu-item has-sub ">
-        <a href="reffer.php">
+        <a href="{{ URL::to('/referFriend') }}">
           <i class="fa-solid fa-user-group"></i>
-          <span class="site-menu-title">Reffer a Friend</span>
+          <span class="site-menu-title">Refer a Friend</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="javascript:void(0)">
+        <a href="{{ URL::to('/userChangePassword') }}">
           <i class="fa-solid fa-unlock"></i>
-          <span class="site-menu-title">Change a Password</span>
+          <span class="site-menu-title">Change Password</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="javascript:void(0)">
+        <a href="{{ URL::to('/patientAppointments') }}">
           <i class="fa-regular fa-calendar-days"></i>
           <span class="site-menu-title">Book a Appointment with pharmacist</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="javascript:void(0)">
+        <a href="{{ URL::to('/userlogout') }}">
           <i class="fa-solid fa-right-from-bracket"></i>
           <span class="site-menu-title">Logout</span>
         </a>

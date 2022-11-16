@@ -3,7 +3,7 @@
 @section('content')
 <div class="page">
     <div class="page-content container-fluid">
-    <h4 style="color: #232e74;padding-left:38px;"><strong>My Request</strong></h4>
+    <h4 style="color: #232e74;padding-left:38px;"><strong>My Requests</strong></h4>
       <div class="row" style="padding:15px;">
       @if(count($patient_requests)>0)
         @foreach($patient_requests as $patient_req)

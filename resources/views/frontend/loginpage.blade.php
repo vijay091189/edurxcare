@@ -48,8 +48,15 @@
       </section>
       <!-- section close -->
     </div>
-    
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript">
+    $(document).ready( function () {
+      $('input').on('keypress keydown keyup',function(e){
+        if (e.which == 13) {
+          checkuserlogin();
+        }
+      });
+    });
     function checkuserlogin(){
       var formData = new FormData();
       formData = new FormData($('#check_login')[0]);

@@ -85,74 +85,74 @@
       altFormat: "d/m/Y",
       dateFormat: "Y-m-d"
     });
-    function save_signup(){
-      var formData = new FormData();
-      formData = new FormData($('#signup_form')[0]);
-      formData.append( "_token", '{{csrf_token()}}' ); 
-      var post_url = "{{URL::to('/registerUser')}}";
-      var full_name = $('#full_name').val();
-      var gender = $('#gender').val();
-      var dob = $('#dob').val();
-      var mobile = $('#mobile').val();
-      var email = $('#email_id').val();
-      var address = $('#address').val();
-      var new_password = $('#new_password').val();
-      var confirm_password = $('#confirm_password').val();
-      if(full_name==''){
-        alert("Please enter first name");
-        return false;
-      }
-      if(gender==''){
-        alert("Please select gender");
-        return false;
-      }
-      if(dob==''){
-        alert("Please select date of birth");
-        return false;
-      }
-      if(mobile==''){
-        alert("Please enter mobile number");
-        return false;
-      }
-      if(isNaN(mobile) || mobile.length!=10){
-        alert("Please enter valid mobile number");
-        return false;
-      }
-      if(email==''){
-        alert("Please enter Email ID");
-        return false;
-      }
-      if(!validateEmail(email)) { 
-        alert("Please enter valid Email ID");
-        return false;
-      }
-      if(address==''){
-        alert("Please enter address");
-        return false;
-      }
-      if(new_password==''){
-        alert("Please enter new password");
-        return false;
-      }
-      if(confirm_password==''){
-        alert("Please confirm password");
-        return false;
-      }
-      if(new_password!=confirm_password){
-        alert("Password and confirm password should be same");
-        return false;
-      }
-      $.ajax({
-          type : "POST",
-          url : post_url,
-          data : formData,
-          contentType: false,
-          processData: false,
-          success : function(result){	
-              alert("You have registered successfully");
-              window.location.href="{{URL::to('/loginpage')}}";
-          }
-      });
+  function save_signup(){
+    var formData = new FormData();
+    formData = new FormData($('#signup_form')[0]);
+    formData.append( "_token", '{{csrf_token()}}' ); 
+    var post_url = "{{URL::to('/registerUser')}}";
+    var full_name = $('#full_name').val();
+    var gender = $('#gender').val();
+    var dob = $('#dob').val();
+    var mobile = $('#mobile').val();
+    var email = $('#email_id').val();
+    var address = $('#address').val();
+    var new_password = $('#new_password').val();
+    var confirm_password = $('#confirm_password').val();
+    if(full_name==''){
+      alert("Please enter first name");
+      return false;
+    }
+    if(gender==''){
+      alert("Please select gender");
+      return false;
+    }
+    if(dob==''){
+      alert("Please select date of birth");
+      return false;
+    }
+    if(mobile==''){
+      alert("Please enter mobile number");
+      return false;
+    }
+    if(isNaN(mobile) || mobile.length!=10){
+      alert("Please enter valid mobile number");
+      return false;
+    }
+    if(email==''){
+      alert("Please enter Email ID");
+      return false;
+    }
+    if(!validateEmail(email)) { 
+      alert("Please enter valid Email ID");
+      return false;
+    }
+    if(address==''){
+      alert("Please enter address");
+      return false;
+    }
+    if(new_password==''){
+      alert("Please enter new password");
+      return false;
+    }
+    if(confirm_password==''){
+      alert("Please confirm password");
+      return false;
+    }
+    if(new_password!=confirm_password){
+      alert("Password and confirm password should be same");
+      return false;
+    }
+    $.ajax({
+        type : "POST",
+        url : post_url,
+        data : formData,
+        contentType: false,
+        processData: false,
+        success : function(result){	
+            alert("You have registered successfully");
+            window.location.href="{{URL::to('/loginpage')}}";
+        }
+    });
   }
   function validateEmail($email) {
     var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;

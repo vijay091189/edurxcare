@@ -47,6 +47,19 @@ Route::post('/savePrescription','App\Http\Controllers\EduwebController@savePresc
 Route::get('/deletePrescription','App\Http\Controllers\EduwebController@deletePrescription');
 Route::get('/submitRequest','App\Http\Controllers\EduwebController@submitRequest');
 
+Route::get('/editPatientProfile','App\Http\Controllers\EduwebController@editPatientProfile');
+Route::post('/updatePatientProfile','App\Http\Controllers\EduwebController@updatePatientProfile');
+Route::get('/patientRecommendations','App\Http\Controllers\EduwebController@patientRecommendations');
+Route::get('/patientFaqs','App\Http\Controllers\EduwebController@patientFaqs');
+Route::get('/patientNotifications','App\Http\Controllers\EduwebController@patientNotifications');
+Route::get('/pillReminders','App\Http\Controllers\EduwebController@pillReminders');
+Route::get('/reviewRatings','App\Http\Controllers\EduwebController@reviewRatings');
+Route::get('/referFriend','App\Http\Controllers\EduwebController@referFriend');
+Route::get('/userChangePassword','App\Http\Controllers\EduwebController@userChangePassword');
+Route::post('/userUpdatePassword','App\Http\Controllers\EduwebController@userUpdatePassword');
+Route::get('/patientAppointments','App\Http\Controllers\EduwebController@patientAppointments');
+Route::get('/userlogout','App\Http\Controllers\EduwebController@userlogout');
+
 //Admin routes
 Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');
 Route::post('/checkLogin','App\Http\Controllers\AnalyticsController@checkLogin');
