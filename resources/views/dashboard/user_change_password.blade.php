@@ -50,47 +50,47 @@
       dateFormat: "Y-m-d"
     });
     function update_profile(){
-    var formData = new FormData();
-    formData = new FormData($('#signup_form')[0]);
-    formData.append( "_token", '{{csrf_token()}}' ); 
-    var post_url = "{{URL::to('/userUpdatePassword')}}";
-   
-    var old_password = $('#old_password').val();
-    var new_password = $('#new_password').val();
-    var confirm_password = $('#confirm_password').val();
-    if(old_password==''){
-      alert("Please enter Current password");
-      return false;
-    }
-    if(new_password==''){
-      alert("Please enter new password");
-      return false;
-    }
-    if(confirm_password==''){
-      alert("Please confirm password");
-      return false;
-    }
-    if(new_password!=confirm_password){
-      alert("New password and confirm password should be same");
-      return false;
-    }
-    $.ajax({
-        type : "POST",
-        url : post_url,
-        data : formData,
-        contentType: false,
-        processData: false,
-        success : function(result){	
-          if(result=='success'){
-            alert("Password updated successfully");
-            location.reload();
-          } else {
-              alert("Invalid current password. Please try again");
-              return false;
+      var formData = new FormData();
+      formData = new FormData($('#signup_form')[0]);
+      formData.append( "_token", '{{csrf_token()}}' ); 
+      var post_url = "{{URL::to('/userUpdatePassword')}}";
+    
+      var old_password = $('#old_password').val();
+      var new_password = $('#new_password').val();
+      var confirm_password = $('#confirm_password').val();
+      if(old_password==''){
+        alert("Please enter Current password");
+        return false;
+      }
+      if(new_password==''){
+        alert("Please enter new password");
+        return false;
+      }
+      if(confirm_password==''){
+        alert("Please confirm password");
+        return false;
+      }
+      if(new_password!=confirm_password){
+        alert("New password and confirm password should be same");
+        return false;
+      }
+      $.ajax({
+          type : "POST",
+          url : post_url,
+          data : formData,
+          contentType: false,
+          processData: false,
+          success : function(result){	
+            if(result=='success'){
+              alert("Password updated successfully");
+              location.reload();
+            } else {
+                alert("Invalid current password. Please try again");
+                return false;
+            }
           }
-        }
-    });
-  }
+      });
+    }
   function validateEmail($email) {
     var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     return emailReg.test( $email );

@@ -485,5 +485,139 @@ class EduwebController extends Controller
         } else {
           echo 'fail'; die;
         }
-      }
+    }
+
+    public function reviewRatings(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        return view("dashboard/review_ratings");
+    }
+
+    public function referFriend(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        return view("dashboard/refer_friend");
+    }
+
+    public function pillReminders(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $data['request_medications'] = DB::select("select * from patient_medications where patient_id='$user_id' and status=1");
+        return view("dashboard/pill_reminders")->with($data);
+    }
+
+    public function patientAppointments(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        return view("dashboard/patient_appointments")->with($data);
+    }
+
+    public function saveReviewRating(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['rating'] = $input['rating'];
+        $data['review'] = $input['sugestions'];
+        $data['description'] = $input['feedback'];
+        $data['user_id'] = $user_id;
+        $data['status'] = 1;
+        $data['created_date'] = date('Y-m-d H:i:s');
+        DB::table('review_rating')->insert($data);
+        return 'inserted';
+    }
+
+    public function saveReferFriend(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $email_id = $input['email_id'];
+        return 'inserted';
+    }
+
+    public function savePatientMedication(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['patient_id'] = $user_id;
+        $data['medication_name'] = $input['medication_name'];
+        $data['diagnosis'] = $input['diagnosis'];
+        $data['frequency'] = implode(',',$input['frequency']);
+        $data['start_date'] = $input['start_date'];
+        $data['created_date'] = date('Y-m-d H:i:s');
+        $data['status'] = 1;
+        $medication_id = DB::table('patient_medications')->insertGetId($data);
+        echo $medication_id;
+    }
+
+    public function deletePatientMedication(Request $request){
+        $input = $request->all();
+        $med_id = $input['med_id'];
+        $data['status'] = 0;
+        DB::table('patient_medications')->where(array('medication_id'=>$med_id))->update($data);
+        echo 'success';
+    }
+
+    public function userForgotPassword(Request $request){
+        return view("frontend/forgot_password");
+    }
+
+    public function checkForgotPassword(Request $request){
+        $input = $request->all();
+        $email = $input['email_id'];
+        $mobile = $input['mobile'];
+        $res_data['user_id'] = '';
+        $res_data['security_code'] = '';
+        if($email!='' || $mobile!=''){
+            $get_user_details = DB::select("SELECT user_id FROM app_users where mobile='$mobile' or email='$email'");
+            if(isset($get_user_details[0])){
+                $gen_code = rand(1111,9999);
+                $update_code['forgot_password_code'] = $gen_code;
+                DB::table('app_users')->where(array('user_id'=>$get_user_details[0]->user_id))->update($update_code);
+                $res_data['user_id'] = (string)$get_user_details[0]->user_id;
+                $res_data['security_code'] = (string)$gen_code;
+            }
+        }
+        echo json_encode($res_data);
+    }
+
+    public function verifyForgotpin(Request $request){
+        $input = $request->all();
+        $data['user_id'] = $input['user_id'];
+        return view("frontend/verify_forgotpin")->with($data);
+    }
+
+    public function saveForgotpin(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $pin_1 = $input['pin_1'];
+        $pin_2 = $input['pin_2'];
+        $pin_3 = $input['pin_3'];
+        $pin_4 = $input['pin_4'];
+        $security_pin = $pin_1.$pin_2.$pin_3.$pin_4;
+        $get_user_details = DB::select("SELECT user_id,forgot_password_code FROM app_users where user_id='$user_id'");
+        if(isset($get_user_details[0]) && $get_user_details[0]->forgot_password_code==$security_pin){
+            echo $user_id;
+        } else {
+            echo 'invalid';
+        }
+    }
+
+    public function userSetPassword(Request $request){
+        $input = $request->all();
+        $data['user_id'] = $input['user_id'];
+        return view("frontend/user_set_password")->with($data);
+    }
+
+    public function updateNewPassword(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $new_password = $input['new_password'];
+        $confirm_password = $input['confirm_password'];
+        $new_endpassword = EncDecHelper::enc_string($new_password);
+        $update_data['password'] = $new_endpassword;
+        $update_data['is_password_update'] = 1;
+        DB::table('login')->where('user_id',$user_id)->update($update_data);
+        echo 'success'; die;
+        
+    }
 }

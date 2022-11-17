@@ -31,14 +31,14 @@
                           <input type="checkbox" class="form-check-input" id="exampleCheck1">
                           <label class="form-check-label" for="exampleCheck1" style="color:#000">Remember me</label>
                         </div>
-                        <a href="#">Forgot Password?</a>
+                        <a href="{{ URL::to('/userForgotPassword') }}">Forgot Password?</a>
                       </div>
                       <div >
                         <a onclick="checkuserlogin();" class="nav-link btn btn-primary" href="#" style="color:#fff;margin-top: 40px;border-radius: 10px;" width="100%" >Login</a>
                       </div>
                     </div>
                   </form>
-                  <p class="text-center" style="color: #000;margin-top: 30px;">Don't have an account? <a href="signup.php" style="color: #00aaca;">Sign Up</a></p>
+                  <p class="text-center" style="color: #000;margin-top: 30px;">Don't have an account? <a href="{{ URL::to('/category') }}" style="color: #00aaca;">Sign Up</a></p>
                 </div>
                 <div class="col-md-4 col-sm-12"></div>
               </div>

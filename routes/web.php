@@ -46,7 +46,6 @@ Route::get('/add_prescriptions','App\Http\Controllers\EduwebController@add_presc
 Route::post('/savePrescription','App\Http\Controllers\EduwebController@savePrescription');
 Route::get('/deletePrescription','App\Http\Controllers\EduwebController@deletePrescription');
 Route::get('/submitRequest','App\Http\Controllers\EduwebController@submitRequest');
-
 Route::get('/editPatientProfile','App\Http\Controllers\EduwebController@editPatientProfile');
 Route::post('/updatePatientProfile','App\Http\Controllers\EduwebController@updatePatientProfile');
 Route::get('/patientRecommendations','App\Http\Controllers\EduwebController@patientRecommendations');
@@ -59,6 +58,16 @@ Route::get('/userChangePassword','App\Http\Controllers\EduwebController@userChan
 Route::post('/userUpdatePassword','App\Http\Controllers\EduwebController@userUpdatePassword');
 Route::get('/patientAppointments','App\Http\Controllers\EduwebController@patientAppointments');
 Route::get('/userlogout','App\Http\Controllers\EduwebController@userlogout');
+Route::post('/saveReviewRating','App\Http\Controllers\EduwebController@saveReviewRating');
+Route::post('/saveReferFriend','App\Http\Controllers\EduwebController@saveReferFriend');
+Route::post('/savePatientMedication','App\Http\Controllers\EduwebController@savePatientMedication');
+Route::get('/deletePatientMedication','App\Http\Controllers\EduwebController@deletePatientMedication');
+Route::get('/userForgotPassword','App\Http\Controllers\EduwebController@userForgotPassword');
+Route::post('/checkForgotPassword','App\Http\Controllers\EduwebController@checkForgotPassword');
+Route::get('/verifyForgotpin','App\Http\Controllers\EduwebController@verifyForgotpin');
+Route::post('/saveForgotpin','App\Http\Controllers\EduwebController@saveForgotpin');
+Route::get('/userSetPassword','App\Http\Controllers\EduwebController@userSetPassword');
+Route::post('/updateNewPassword','App\Http\Controllers\EduwebController@updateNewPassword');
 
 //Admin routes
 Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');
