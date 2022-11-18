@@ -68,6 +68,7 @@ Route::get('/verifyForgotpin','App\Http\Controllers\EduwebController@verifyForgo
 Route::post('/saveForgotpin','App\Http\Controllers\EduwebController@saveForgotpin');
 Route::get('/userSetPassword','App\Http\Controllers\EduwebController@userSetPassword');
 Route::post('/updateNewPassword','App\Http\Controllers\EduwebController@updateNewPassword');
+Route::post('/saveAppointment','App\Http\Controllers\EduwebController@saveAppointment');
 
 //Admin routes
 Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');

@@ -509,6 +509,20 @@ class EduwebController extends Controller
     public function patientAppointments(Request $request){
         $session_details = session()->get('LoginUserSession');
         $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $filter = isset($input['filter'])?$input['filter']:'today';
+        $cur_date = date('Y-m-d');
+        if($filter=='today'){
+            $cond = "and appointment_date='$cur_date'";
+        } else if($filter=='past'){
+            $cond = "and appointment_date<'$cur_date'";
+        } else {
+            $cond = "and appointment_date>'$cur_date'";
+        }
+        $data['filter'] = $filter;
+        $data['appointments'] = DB::select("select au.name as accepted_by, description, appointment_date, appointment_time, priority, a.status from appointments a
+                                            left join app_users au on au.user_id=a.accepted_by
+                                            where patient_id='$user_id' $cond");
         return view("dashboard/patient_appointments")->with($data);
     }
 
@@ -618,6 +632,21 @@ class EduwebController extends Controller
         $update_data['is_password_update'] = 1;
         DB::table('login')->where('user_id',$user_id)->update($update_data);
         echo 'success'; die;
-        
+    }
+
+    public function saveAppointment(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $data['patient_id'] = $user_id;
+        $data['appointment_date'] = $input['appointment_date'];
+        $data['appointment_time'] = date('H:i:s',strtotime($input['appointment_time']));
+        $data['description'] = $input['condition'];
+        $data['priority'] = $input['priority'];
+        $data['created_by'] = $user_id;
+        $data['created_date'] = date('Y-m-d H:i:s');
+        $data['status'] = 'pending';
+        $appointment_id = DB::table('appointments')->insertGetId($data);
+        echo $appointment_id;
     }
 }
