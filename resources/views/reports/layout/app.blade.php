@@ -128,11 +128,7 @@ $last_element = end($split_url);
                   <!-- User Menu-->
                   <li class="dropdown">
                      <a href="#!" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle drop icon-circle drop-image">
-                        @if($session_details['profile_picture']!='')
-                           <span><img class="img-circle " src="{{ url('/') }}/public/images/{{$session_details['profile_picture']}}" style="width:40px;" alt="User Image"></span>
-                        @else
-                           <span><img class="img-circle " src="{{ url('/') }}/public/assets/images/nouser.png" style="width:40px;" alt="User Image"></span>
-                        @endif
+                        <span><img class="img-circle " src="{{ url('/') }}/public/assets/images/nouser.png" style="width:40px;" alt="User Image"></span>
                         <span>{{ $session_details['display_name'] }} <i class=" icofont icofont-simple-down"></i></span>
                      </a>
                      <ul class="dropdown-menu settings-menu">

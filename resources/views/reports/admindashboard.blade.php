@@ -10,7 +10,7 @@
    <!-- 4-blocks row start -->
    <div class="row dashboard-header">
       <div class="col-lg-4 col-md-6">
-         <a href="{{ URL::to('/typeslist') }}">
+         <a href="{{ URL::to('/patientslist') }}">
             <div class="card dashboard-product">
                <span>Patients</span>
                <h2 class="dashboard-total-products">{{ $users_count[0]->patient_count }}</h2>
@@ -21,7 +21,7 @@
          </a>
       </div>
       <div class="col-lg-4 col-md-6">
-         <a href="{{ URL::to('/categoriesList') }}">
+         <a href="{{ URL::to('/pharmacistslist') }}">
             <div class="card dashboard-product">
                <span>Pharmacists</span>
                <h2 class="dashboard-total-products">{{ $users_count[0]->pharmacist_count }}</h2>
@@ -32,10 +32,21 @@
          </a>
       </div>
       <div class="col-lg-4 col-md-6">
-         <a href="{{ URL::to('/servicesList') }}">
+         <a href="{{ URL::to('/requestslist') }}">
             <div class="card dashboard-product">
                <span>Requests </span>
-               <h2 class="dashboard-total-products"><span>65</span></h2>
+               <h2 class="dashboard-total-products"><span>{{ $requests_count[0]->requests_count }}</span></h2>
+               <div class="side-box">
+                  <i class="ti-direction-alt text-success-color"></i>
+               </div>
+            </div>
+         </a>
+      </div>
+      <div class="col-lg-4 col-md-6">
+         <a href="{{ URL::to('/appointmentslist') }}">
+            <div class="card dashboard-product">
+               <span>Appointments </span>
+               <h2 class="dashboard-total-products"><span>{{ $appointments_count[0]->appointments_count }}</span></h2>
                <div class="side-box">
                   <i class="ti-direction-alt text-success-color"></i>
                </div>

@@ -66,7 +66,9 @@ class AnalyticsController extends Controller
       $session_details = session()->get('LoginUserSession');
       if(isset($session_details['loginid']) && $session_details['loginid']!=''){
         $data['users_count']=DB::select("select count(case when role_id=2 then 1 end) as patient_count,
-                                          count(case when role_id=3 then 1 end) as pharmacist_count from app_users");
+                                                count(case when role_id=3 then 1 end) as pharmacist_count from app_users");
+        $data['requests_count'] = DB::select("select count(*) as requests_count from patient_requests");
+        $data['appointments_count'] = DB::select("select count(*) as appointments_count from appointments");
         return view("reports/admindashboard")->with($data);
       } else {
         return Redirect::to('edurxcare_admin');
@@ -134,8 +136,11 @@ class AnalyticsController extends Controller
   public function requestslist(){
     $session_details = session()->get('LoginUserSession');
     if(isset($session_details['loginid']) && $session_details['loginid']!=''){
-      $data['users_count']=DB::select("select * from app_users where role_id='3'");
-      return view("reports/pharmacistslist")->with($data);
+      $data['patient_requests'] = DB::select("select pr.*, au.name, au.mobile, ap.name as pharmacist from patient_requests pr
+                                              inner join app_users au on au.user_id=pr.patient_id
+                                              left join app_users ap on ap.user_id=pr.accepted_by
+                                              order by created_date desc");
+      return view("reports/requestslist")->with($data);
     } else {
       return Redirect::to('edurxcare_admin');
     }
@@ -144,8 +149,11 @@ class AnalyticsController extends Controller
   public function appointmentslist(){
     $session_details = session()->get('LoginUserSession');
     if(isset($session_details['loginid']) && $session_details['loginid']!=''){
-      $data['users_count']=DB::select("select * from app_users where role_id='3'");
-      return view("reports/pharmacistslist")->with($data);
+      $data['patient_appointments']=DB::select("select pr.*, au.name, au.mobile, ap.name as pharmacist from appointments pr
+                                      inner join app_users au on au.user_id=pr.patient_id
+                                      left join app_users ap on ap.user_id=pr.accepted_by
+                                      order by created_date desc");
+      return view("reports/appointmentslist")->with($data);
     } else {
       return Redirect::to('edurxcare_admin');
     }
