@@ -103,7 +103,7 @@
           contentType: false,
           processData: false,
           success : function(result){	
-              alert("You have registered successfully");
+              alert("Profile updated successfully");
               window.location.href="{{URL::to('/patientDashboard')}}";
           }
       });

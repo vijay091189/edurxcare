@@ -102,7 +102,7 @@ class EduwebController extends Controller
         $session_details = session()->get('LoginUserSession');
         if(isset($session_details['loginid']) && $session_details['loginid']!=''){
             $patient_id = $session_details['user_id'];
-            $data['patient_requests'] = DB::select("select * from patient_requests where patient_id='$patient_id'");
+            $data['patient_requests'] = DB::select("select * from patient_requests where patient_id='$patient_id' order by created_date desc");
             return view("dashboard/patient_dashboard")->with($data);
         } else {
             return Redirect::to('loginpage');

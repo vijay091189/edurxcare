@@ -4,8 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{{ URL::to('public/assets/css/flatpickr.min.css') }}">
 <div class="page">
     <div class="page-content container-fluid">
-        
-      <p style="color: #232e74;border-bottom: 2px solid orange; color:#00aaca;float: right;"><b>Skip To Next</b></p><br><br>
+      <!-- <p style="color: #232e74;border-bottom: 2px solid orange; color:#00aaca;float: right;"><b>Skip To Next</b></p><br><br> -->
       <div class="d-flex justify-content-between">
         <div><h4 style="color: #232e74;padding-left:38px;"><strong>Allergies</strong></h4></div>
         <div><button type="button" onclick="add_allergy()" class="btn btn-primary rounded-pill" style="border-radius: 10px;background-color: #00aaca;border: 1px solid #00aaca;">+Add Allergy</button></div>

@@ -55,7 +55,7 @@
           </div>
         @endforeach
       @else
-        <div style="text-align:center;"><h4>No medications found</h4></div>
+        <div style="text-align:center;"><h4>No Appointments found</h4></div>
       @endif        
       </div>
     </div>
@@ -195,7 +195,6 @@
   }
 
   function get_filter_appointments(filter){
-    alert(filter);
     window.location.href="{{ URL::to('/patientAppointments') }}?filter="+filter;
   }
   </script>

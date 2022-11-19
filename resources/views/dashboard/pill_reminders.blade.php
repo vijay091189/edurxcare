@@ -18,8 +18,8 @@
 <div class="page">
     <div class="page-content container-fluid">
       <div class="d-flex justify-content-between">
-        <h4 style="color: #232e74;padding-left:38px;"><strong>Add Medicine</strong></h4>
-        <button type="button" onclick="add_medication()" href="javascript:void(0)" class="btn btn-primary rounded-pill" style="border-radius: 10px;background-color: #00aaca;border: 1px solid #00aaca;">+Add Medicine</button>
+        <h4 style="color: #232e74;padding-left:38px;"><strong>My Medications</strong></h4>
+        <button type="button" onclick="add_medication()" href="javascript:void(0)" class="btn btn-primary rounded-pill" style="border-radius: 10px;background-color: #00aaca;border: 1px solid #00aaca;">+Add Medication</button>
       </div>
       <!-- <h6 style="color: #232e74;padding-left:38px;"><strong>Your important notifications are shown here</strong></h6> -->
       <div class="row" style="padding:15px;margin-left: 10px;">

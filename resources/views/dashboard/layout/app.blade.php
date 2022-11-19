@@ -35,6 +35,9 @@
   <link rel="stylesheet" href="{{ URL::to('public/dashboardassets/global/fonts/weather-icons/weather-icons.min599c.css?v4.0.2') }}">
   <script src="{{ URL::to('public/dashboardassets/global/vendor/breakpoints/breakpoints.min599c.js?v4.0.2') }}"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <script src="{{ URL::to('public/dashboardassets/assets/js/jquery.min.js') }}?v={{ rand(11111,99999) }}"></script>
+  <script src="{{ URL::to('public/dashboardassets/assets/js/bootstrap.min.js') }}?v={{ rand(11111,99999) }}"></script>
   <style type="text/css">
     .modal-dialog {
       width: 60%;
@@ -125,55 +128,56 @@
   </nav>
   <div class="site-menubar">
     <ul class="site-menu">
-      <li class="site-menu-item has-sub">
+      <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="Edit Profile">
         <a href="{{ URL::to('/editPatientProfile') }}">
           <i class="fa-solid fa-user"></i>
           <span class="site-menu-title">Profile</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub ">
+      <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="My Requests">
         <a href="{{ URL::to('/patientDashboard') }}">
           <i class="fa-solid fa-backward"></i>
-          <span class="site-menu-title">Previous History</span>
+          <span class="site-menu-title">My Requests</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub ">
+      <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="Notifications">
         <a href="{{ URL::to('/patientNotifications') }}">
           <i class="site-menu-icon wb-bell" aria-hidden="true"></i>
           <span class="site-menu-title">Notifications</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub ">
+      <li class="site-menu-item has-sub " data-placement="right" data-toggle="tooltip" title="Pill Reminders">
         <a href="{{ URL::to('/pillReminders') }}">
           <i class="fa-solid fa-calendar-check"></i>
           <span class="site-menu-title">Pill Reminders</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub ">
-        <a href="{{ URL::to('/reviewRatings') }}">
-          <i class="fa-solid fa-star"></i>
-          <span class="site-menu-title">Rating and Feedback</span>
-        </a>
-      </li>
-      <li class="site-menu-item has-sub ">
-        <a href="{{ URL::to('/referFriend') }}">
-          <i class="fa-solid fa-user-group"></i>
-          <span class="site-menu-title">Refer a Friend</span>
-        </a>
-      </li>
-      <li class="site-menu-item has-sub">
-        <a href="{{ URL::to('/userChangePassword') }}">
-          <i class="fa-solid fa-unlock"></i>
-          <span class="site-menu-title">Change Password</span>
-        </a>
-      </li>
-      <li class="site-menu-item has-sub">
+      <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="Appointments">
         <a href="{{ URL::to('/patientAppointments') }}">
           <i class="fa-regular fa-calendar-days"></i>
           <span class="site-menu-title">Book a Appointment with pharmacist</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub">
+      <li class="site-menu-item has-sub " data-placement="right" data-toggle="tooltip" title="Rating and Review">
+        <a href="{{ URL::to('/reviewRatings') }}">
+          <i class="fa-solid fa-star"></i>
+          <span class="site-menu-title">Rating and Feedback</span>
+        </a>
+      </li>
+      <li class="site-menu-item has-sub " data-placement="right" data-toggle="tooltip" title="Refer a Friend">
+        <a href="{{ URL::to('/referFriend') }}">
+          <i class="fa-solid fa-user-group"></i>
+          <span class="site-menu-title">Refer a Friend</span>
+        </a>
+      </li>
+      <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="Change Password">
+        <a href="{{ URL::to('/userChangePassword') }}">
+          <i class="fa-solid fa-unlock"></i>
+          <span class="site-menu-title">Change Password</span>
+        </a>
+      </li>
+      
+      <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="Logout">
         <a href="{{ URL::to('/userlogout') }}">
           <i class="fa-solid fa-right-from-bracket"></i>
           <span class="site-menu-title">Logout</span>
@@ -229,7 +233,11 @@
   <script src="{{ URL::to('public/dashboardassets/global/js/Plugin/jvectormap.min599c.js?v4.0.2') }}"></script>
   <script src="{{ URL::to('public/dashboardassets/assets/examples/js/dashboard/v1.min599c.js?v4.0.2') }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js" integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+  <script>
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+  });
+</script>
   <!-- Google Analytics -->  <!-- Google Analytics -->
 </body>
 
