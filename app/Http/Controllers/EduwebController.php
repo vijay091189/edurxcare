@@ -55,14 +55,25 @@ class EduwebController extends Controller
         $data['address'] = $input['address'];
         $data['is_deleted'] = 0;
         $data['created_date'] = date('Y-m-d H:i:s');
+        $words = explode(" ", $input['full_name']);
+        $acronym = "";
+        foreach ($words as $w) {
+            $acronym .= mb_substr($w, 0, 1);
+        }
+        $unique_code = $acronym.date('H:i:s');
         if($reg_type=='patient'){
             $data['role_id'] = 2;
             $data['status'] = 'approved';
+            $unique_code = strtoupper($acronym.'P'.date('H:i:s'));
         } else {
             $data['role_id'] = 3;
             $data['status'] = 'pending';
+            $unique_code = strtoupper($acronym.'U'.date('H:i:s'));
         }
         $user_id = DB::table('app_users')->insertGetId($data);
+        //update code
+        $updatedata['unique_id'] = $unique_code.'-'.$user_id;
+        DB::table('app_users')->where(array('user_id'=>$user_id))->update($updatedata);
         //insert into login  table
         $encpassword = EncDecHelper::enc_string($new_password);
         $login_data['username'] = $input['mobile'];
@@ -351,6 +362,9 @@ class EduwebController extends Controller
         $reqdata['created_date'] = date('Y-m-d H:i:s');
         $reqdata['modified_date'] = date('Y-m-d H:i:s');
         $request_id = DB::table('patient_requests')->insertGetId($reqdata);
+        //update code
+        $updatedata['unique_id'] = 'REQ'.date('ymdHis').'-'.$request_id;
+        DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($request_id);
         //insert medications
         foreach($medications_data as $medications_dat){
             $meddata['request_id'] = $request_id;
@@ -639,6 +653,7 @@ class EduwebController extends Controller
         $user_id = $session_details['user_id'];
         $input = $request->all();
         $data['patient_id'] = $user_id;
+        $data['appointment_type'] = $input['appointment_type'];
         $data['appointment_date'] = $input['appointment_date'];
         $data['appointment_time'] = date('H:i:s',strtotime($input['appointment_time']));
         $data['description'] = $input['condition'];

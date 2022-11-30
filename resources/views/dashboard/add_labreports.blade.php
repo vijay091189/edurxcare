@@ -13,7 +13,7 @@
 <div class="page">
   <div class="page-content container-fluid">
     <h5 style="color: #232e74;color:#00aaca;float: right;"><button type="button" onclick="add_labreport()" class="btn btn-primary rounded-pill" style="border-radius: 10px;background-color: #00aaca;border: 1px solid #00aaca;">+Add Lab Report</button></h5>
-    <h5 style="color: #232e74;padding-left:38px;"><strong>Upload Lab Reports</strong></h5>
+    <h5 style="color: #232e74;padding-left:38px;"><strong>Upload Lab Reports&nbsp;<i class="fa fa-info-circle score_info" data-toggle="tooltip" title="" data-original-title="If any Lab reports or medical test documents"></i></strong></h5>
     <div class="row" style="padding:15px;margin-left: 10px;">
     @if(count($request_reports)>0)
       @foreach($request_reports as $request_report)

@@ -64,13 +64,26 @@
   <div class="modal-dialog modal-dialog-top modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Medication</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Schedule Appointment</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <i aria-hidden="true" class="ki ki-close"></i>
           </button>
       </div>
       <div class="modal-body">
           <form action="#" method="post" name="medication_form" id="medication_form">
+            <div class="form-group row">
+                <div class="col-sm-4">
+                  <label>Appointment Type<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-sm-6">
+                  <select name="appointment_type" id="appointment_type" class="form-control">   
+                    <option value="">Select</option>
+                    <option value="Inperson">Inperson</option>
+                    <option value="Virtual">Virtual</option>
+                  </select>
+                </div>
+            </div>
+
             <div class="form-group row">
                 <div class="col-sm-4">
                   <label>Title<span class="text-danger">*</span></label>
@@ -141,10 +154,16 @@
     formData = new FormData($('#medication_form')[0]);
     formData.append( "_token", '{{csrf_token()}}' ); 
     var post_url = "{{URL::to('/saveAppointment')}}";
+    
+    var appointment_type = $('#appointment_type').val();
     var condition = $('#condition').val();
     var appointment_date = $('#appointment_date').val();
     var appointment_time = $('#appointment_time').val();
     var priority = $('#priority').val();
+    if(appointment_type==''){
+      alert("Please select appointment type");
+      return false;
+    }
     if(condition==''){
       alert("Please enter title/description");
       return false;
