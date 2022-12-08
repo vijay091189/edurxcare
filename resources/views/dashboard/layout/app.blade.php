@@ -50,6 +50,9 @@
     Breakpoints();
   </script>
 </head>
+<?php 
+$session_details = session()->get('LoginUserSession');
+?>
 <body class="animsition site-navbar-small dashboard">
  
   <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation">
@@ -85,16 +88,29 @@
           </li>
         </ul>
         <ul class="nav navbar-toolbar top_bar">
-          <li class="nav-item top_color active">
-            <a class="nav-link b-2" href="{{ URL::to('/newRequest') }}" style="">
-              <i class="site-menu-icon wb-user-circle" aria-hidden="true"></i>New Request
-            </a>
-          </li>
-          <li class="nav-item top_color ">
-            <a class="nav-link b-2" href="{{ URL::to('/responses') }}" style="">
-              <i class="fa-solid fa-reply"></i>Response from Pharmacist
-            </a>
-          </li>
+          @if($session_details['role_id']=='2'){
+            <li class="nav-item top_color active">
+              <a class="nav-link b-2" href="{{ URL::to('/newRequest') }}" style="">
+                <i class="site-menu-icon wb-user-circle" aria-hidden="true"></i>New Request
+              </a>
+            </li>
+            <li class="nav-item top_color ">
+              <a class="nav-link b-2" href="{{ URL::to('/responses') }}" style="">
+                <i class="fa-solid fa-reply"></i>Response from Pharmacist
+              </a>
+            </li>
+          @else 
+            <li class="nav-item top_color active">
+              <a class="nav-link b-2" href="{{ URL::to('/phamacistDashboard') }}" style="">
+                <i class="site-menu-icon wb-user-circle" aria-hidden="true"></i>New Requests
+              </a>
+            </li>
+            <li class="nav-item top_color active">
+              <a class="nav-link b-2" href="{{ URL::to('/newPatientAppointments') }}" style="">
+                <i class="site-menu-icon wb-user-circle" aria-hidden="true"></i>New Appointments
+              </a>
+            </li>
+          @endif
           <li class="nav-item top_color">
             <a class="nav-link b-2" href="{{ URL::to('/patientRecommendations') }}" style="">
               <i class="site-menu-icon wb-thumb-up" aria-hidden="true"></i>Recommendations
@@ -134,30 +150,46 @@
           <span class="site-menu-title">Profile</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="My Requests">
-        <a href="{{ URL::to('/patientDashboard') }}">
-          <i class="fa-solid fa-backward"></i>
-          <span class="site-menu-title">My Requests</span>
-        </a>
-      </li>
+     
       <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="Notifications">
         <a href="{{ URL::to('/patientNotifications') }}">
           <i class="site-menu-icon wb-bell" aria-hidden="true"></i>
           <span class="site-menu-title">Notifications</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub " data-placement="right" data-toggle="tooltip" title="Pill Reminders">
-        <a href="{{ URL::to('/pillReminders') }}">
-          <i class="fa-solid fa-calendar-check"></i>
-          <span class="site-menu-title">Pill Reminders</span>
-        </a>
-      </li>
-      <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="Appointments">
-        <a href="{{ URL::to('/patientAppointments') }}">
-          <i class="fa-regular fa-calendar-days"></i>
-          <span class="site-menu-title">Book a Appointment with pharmacist</span>
-        </a>
-      </li>
+      @if($session_details['role_id']=='2'){
+        <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="My Requests">
+          <a href="{{ URL::to('/patientDashboard') }}">
+            <i class="fa-solid fa-backward"></i>
+            <span class="site-menu-title">My Requests</span>
+          </a>
+        </li>
+        <li class="site-menu-item has-sub " data-placement="right" data-toggle="tooltip" title="Pill Reminders">
+          <a href="{{ URL::to('/pillReminders') }}">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span class="site-menu-title">Pill Reminders</span>
+          </a>
+        </li>
+        <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="Appointments">
+          <a href="{{ URL::to('/patientAppointments') }}">
+            <i class="fa-regular fa-calendar-days"></i>
+            <span class="site-menu-title">My Appointments</span>
+          </a>
+        </li>
+      @else
+        <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="My Requests">
+          <a href="{{ URL::to('/pharmacistRequests') }}">
+            <i class="fa-solid fa-backward"></i>
+            <span class="site-menu-title">My Requests</span>
+          </a>
+        </li>
+        <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="Appointments">
+          <a href="{{ URL::to('/pharmacistAppointments') }}">
+            <i class="fa-regular fa-calendar-days"></i>
+            <span class="site-menu-title">My Appointments</span>
+          </a>
+        </li>
+      @endif
       <li class="site-menu-item has-sub " data-placement="right" data-toggle="tooltip" title="Rating and Review">
         <a href="{{ URL::to('/reviewRatings') }}">
           <i class="fa-solid fa-star"></i>
@@ -189,7 +221,7 @@
     </div>
     <script src="{{ URL::to('public/dashboardassets/https://kit.fontawesome.com/610c0fe1cf.js') }}" crossorigin="anonymous"></script>
   <script src="{{ URL::to('public/dashboardassets/global/vendor/babel-external-helpers/babel-external-helpers599c.js?v4.0.2') }}"></script>
-  <script src="{{ URL::to('public/dashboardassets/global/vendor/jquery/jquery.min599c.js?v4.0.2') }}"></script>
+  <!-- <script src="{{ URL::to('public/dashboardassets/global/vendor/jquery/jquery.min599c.js?v4.0.2') }}"></script> -->
   <script src="{{ URL::to('public/dashboardassets/global/vendor/popper-js/umd/popper.min599c.js?v4.0.2') }}"></script>
   <script src="{{ URL::to('public/dashboardassets/global/vendor/bootstrap/bootstrap.min599c.js?v4.0.2') }}"></script>
   <script src="{{ URL::to('public/dashboardassets/global/vendor/animsition/animsition.min599c.js?v4.0.2') }}"></script>

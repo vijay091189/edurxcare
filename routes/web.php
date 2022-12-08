@@ -27,7 +27,7 @@ Route::post('/checkUserLogin','App\Http\Controllers\EduwebController@checkUserLo
 
 //dashboard apis after login
 Route::get('/patientDashboard','App\Http\Controllers\EduwebController@patientDashboard');
-Route::get('/phamacistDashboard','App\Http\Controllers\EduwebController@signphamacistDashboardupForm');
+Route::get('/phamacistDashboard','App\Http\Controllers\EduwebController@phamacistDashboard');
 Route::get('/newRequest','App\Http\Controllers\EduwebController@newRequest');
 Route::post('/saveNewRequest','App\Http\Controllers\EduwebController@saveNewRequest');
 Route::get('/add_requestmedications','App\Http\Controllers\EduwebController@add_requestmedications');
@@ -69,6 +69,18 @@ Route::post('/saveForgotpin','App\Http\Controllers\EduwebController@saveForgotpi
 Route::get('/userSetPassword','App\Http\Controllers\EduwebController@userSetPassword');
 Route::post('/updateNewPassword','App\Http\Controllers\EduwebController@updateNewPassword');
 Route::post('/saveAppointment','App\Http\Controllers\EduwebController@saveAppointment');
+Route::get('/searchMedication','App\Http\Controllers\EduwebController@searchMedication');
+Route::get('/searchAllergies','App\Http\Controllers\EduwebController@searchAllergies');
+Route::get('/searchMedConditions','App\Http\Controllers\EduwebController@searchMedConditions');
+Route::get('/newPatientAppointments','App\Http\Controllers\EduwebController@newPatientAppointments');
+Route::get('/viewRequestDetails','App\Http\Controllers\EduwebController@viewRequestDetails');
+Route::get('/updateAppointment','App\Http\Controllers\EduwebController@updateAppointment');
+Route::get('/pharmacistAppointments','App\Http\Controllers\EduwebController@pharmacistAppointments');
+Route::get('/updateAppointmentStatus','App\Http\Controllers\EduwebController@updateAppointmentStatus');
+Route::get('/updateRequest','App\Http\Controllers\EduwebController@updateRequest');
+Route::get('/pharmacistRequests','App\Http\Controllers\EduwebController@pharmacistRequests');
+Route::get('/responseRequest','App\Http\Controllers\EduwebController@responseRequest');
+Route::post('/saveResponse','App\Http\Controllers\EduwebController@saveResponse');
 
 //Admin routes
 Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');

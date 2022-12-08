@@ -29,8 +29,8 @@
                                        <th>Pharmacist Name</th>
                                        <th>Mobile</th>
                                        <th>Email</th>
-                                       <th>Address</th>
-                                       <th>DOB</th>
+                                       <th>License Number</th>
+                                       <th>Pharma Council</th>
                                        <th>Status</th>
                                        <th>Action</th>
                                     </tr>
@@ -45,8 +45,8 @@
                                           <td>{{ $category->name }}</td>
                                           <td>{{ $category->mobile }}</td>
                                           <td>{{ $category->email }}</td>
-                                          <td>{{ $category->address }}</td>
-                                          <td>{{ $category->dob!=''?date('d-M-Y', strtotime($category->dob)):'--' }}</td>
+                                          <td>{{ $category->license_number!=''?$category->license_number:'--' }}</td>
+                                          <td>{{ $category->pharma_council_name!=''?$category->pharma_council_name:'--' }}</td>
                                           <td>{{ ucwords(strtolower($category->status)) }}</td>
                                           @if($category->status=='pending')
                                              <td> 

@@ -81,6 +81,8 @@
           success : function(result){	
               if(result=='invalid'){
                 alert("Invalid username or password");
+              } else if(result=='inactive'){
+                alert("Waiting for Admin approval it may take 24 hours to verify your profile and we will notify the status by Mail and SMS");
               } else {
                 if(result==2){
                   window.location.href="{{URL::to('/patientDashboard')}}";

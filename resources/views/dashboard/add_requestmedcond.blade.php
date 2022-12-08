@@ -51,7 +51,7 @@
   <div class="modal-dialog modal-dialog-top modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Medication</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Add Medical Condition</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <i aria-hidden="true" class="ki ki-close"></i>
           </button>
@@ -90,7 +90,28 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="{{ URL::to('public/assets/js/flatpickr.js') }}"></script>
+<script src="{{ URL::to('public/assets/js/typeahead.js') }}"></script>
   <script type="text/javascript">
+    $(function() {
+      $( "#request_medical_condition" ).typeahead({
+         source: function (query, result) {
+            $.ajax({
+               url: "{{URL::to('/searchMedConditions')}}",
+               data: 'query=' + query,            
+               dataType: "json",
+               success: function (data) {
+                  result($.map(data, function (item) {
+                     return item;
+                  }));
+               }
+            });
+         },
+         afterSelect: function(item) {
+            $("#request_medical_condition").val(item);
+            $('.typeahead').typeahead('close');
+         }
+      });
+   });
     $("#start_date").flatpickr({
       altInput: true,
       altFormat: "d/m/Y",

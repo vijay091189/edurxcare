@@ -40,7 +40,12 @@ class EduwebController extends Controller
     public function signupForm(Request $request){
         $input = $request->all();
         $data['type'] = $input['type'];
-        return view("frontend/signup_form")->with($data);
+        if($input['type']=='pharmacist'){
+            return view("frontend/pharmacist_signup_form")->with($data);
+        } else {
+            return view("frontend/signup_form")->with($data);
+        }
+        
     }
 
     public function registerUser(Request $request){
@@ -53,6 +58,8 @@ class EduwebController extends Controller
         $data['mobile'] = $input['mobile'];
         $data['email'] = $input['email_id'];
         $data['address'] = $input['address'];
+        $data['license_number'] = $input['license_number'];
+        $data['pharma_council_name'] = $input['pharmacy_council'];
         $data['is_deleted'] = 0;
         $data['created_date'] = date('Y-m-d H:i:s');
         $words = explode(" ", $input['full_name']);
@@ -60,7 +67,7 @@ class EduwebController extends Controller
         foreach ($words as $w) {
             $acronym .= mb_substr($w, 0, 1);
         }
-        $unique_code = $acronym.date('H:i:s');
+        $unique_code = $acronym.date('His');
         if($reg_type=='patient'){
             $data['role_id'] = 2;
             $data['status'] = 'approved';
@@ -91,10 +98,10 @@ class EduwebController extends Controller
         $username = $input['username'];
         $userpassword = $input['userpassword'];
         $encpassword = EncDecHelper::enc_string($userpassword);
-        $checkUserLogin = DB::select("select l.*, au.* from login l 
+        $checkUserLogin = DB::select("select l.*, au.name, au.status as approve_status from login l 
                                     inner join app_users au on au.user_id=l.user_id
                                     where l.username='".$username."' and l.password='".$encpassword."' and l.status=1");
-        if(count($checkUserLogin)>0){
+        if(count($checkUserLogin)>0 && $checkUserLogin[0]->approve_status=='approved'){
             $UserSessionData = array(
                                     'user_id'=>$checkUserLogin[0]->user_id,
                                     'loginid'=>$checkUserLogin[0]->loginid,
@@ -104,6 +111,8 @@ class EduwebController extends Controller
                                   );
             session()->put('LoginUserSession', $UserSessionData);
             echo $checkUserLogin[0]->role_id;
+        } else if(count($checkUserLogin)>0 && $checkUserLogin[0]->approve_status=='pending'){
+            echo 'inactive';
         } else {
             echo 'invalid';
         }
@@ -663,5 +672,196 @@ class EduwebController extends Controller
         $data['status'] = 'pending';
         $appointment_id = DB::table('appointments')->insertGetId($data);
         echo $appointment_id;
+    }
+
+    public function searchMedication(Request $request){
+        $input = $request->all();
+        $search_term = $input['query'];
+        $dataList = DB::select("select medicine from medicines_master where medicine like '%$search_term%'");
+        foreach ($dataList as $dataLi){
+            $finalArray[] = $dataLi->medicine;
+        }
+        echo json_encode($finalArray);
+    }
+
+    public function searchAllergies(Request $request){
+        $input = $request->all();
+        $search_term = $input['query'];
+        $dataList = DB::select("select allergy_name from allergies where allergy_name like '%$search_term%'");
+        foreach ($dataList as $dataLi){
+            $finalArray[] = $dataLi->allergy_name;
+        }
+        echo json_encode($finalArray);
+    }
+
+    public function searchMedConditions(Request $request){
+        $input = $request->all();
+        $search_term = $input['query'];
+        $dataList = DB::select("select medical_condition from medical_conditions where medical_condition like '%$search_term%'");
+        foreach ($dataList as $dataLi){
+            $finalArray[] = $dataLi->medical_condition;
+        }
+        echo json_encode($finalArray);
+    }
+
+    public function phamacistDashboard(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $user_id = $session_details['user_id'];
+            $data['patient_requests'] = DB::select("select pr.request_id,au.unique_id,au.name as patient_name, pr.comments, 
+                                                    pr.created_date,pr.modified_date from patient_requests pr
+                                                    inner join app_users au on au.user_id=pr.patient_id 
+                                                    where accepted_by is null and pr.status='pending' and pr.request_id not in (select request_id from 
+                                                    request_rejected_users where user_id='$user_id') order by created_date desc");
+            return view("dashboard/pharmacist_dashboard")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
+    }
+
+    public function viewRequestDetails(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $input = $request->all();
+            $request_id = $input['request_id'];
+            $data['request_id'] =$request_id;
+            $data['request_details'] = collect(DB::select("select a.comments, au.name as patient_name,au.unique_id,au.mobile, au.email, au.address, au.gender,
+                                                TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from patient_requests a 
+                                                inner join app_users au on au.user_id=a.patient_id 
+                                                where a.request_id='$request_id'"))->first();
+            $data['request_allergies'] = DB::select("select * from request_allergies where request_id='$request_id' and status=1");
+            $data['request_lab_documents'] = DB::select("select * from request_lab_documents where request_id='$request_id' and status=1");
+            $data['request_prescriptions'] = DB::select("select * from request_prescriptions where request_id='$request_id' and status=1");
+            $data['request_medications'] = DB::select("select * from request_medications where request_id='$request_id' and status=1");
+            $data['request_medical_conditions'] = DB::select("select * from request_medical_conditions where request_id='$request_id' and status=1");
+            return view("dashboard/view_request_details")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
+    }
+
+    public function newPatientAppointments(){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $data['appointments'] = DB::select("select a.appointment_id, au.name as patient_name, a.description, a.priority, a.appointment_date, 
+                                        a.appointment_time, au.unique_id,au.mobile, au.email, au.address,
+                                        TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from appointments a
+                                        inner join app_users au on au.user_id=a.patient_id
+                                        where a.status='pending' and accepted_by is null and appointment_id not in (select appointment_id from 
+                                        appointment_rejected_users where user_id='$user_id')");
+        return view("dashboard/new_appointments")->with($data);
+    }
+
+    public function updateAppointment(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $appointment_id = $input['appointment_id'];
+        $action = $input['action'];
+        if($action=='Reject'){
+            $insert_data['appointment_id'] = $appointment_id;
+            $insert_data['user_id'] = $user_id;
+            DB::table('appointment_rejected_users')->insert($insert_data);
+        } else {
+            $update_data['accepted_by'] = $user_id;
+            DB::table('appointments')->where(array('appointment_id'=>$appointment_id))->update($update_data);
+        }
+        echo 'success';
+    }
+
+    public function pharmacistAppointments(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $filter = isset($input['filter'])?$input['filter']:'pending';
+        $cur_date = date('Y-m-d');
+        $cond = "and a.status='$filter'";
+        $data['filter'] = $filter;
+        $data['appointments'] = DB::select("select a.appointment_id, au.name as patient_name, a.description, a.priority, a.appointment_date, 
+                                        a.appointment_time, au.unique_id,au.mobile, au.email, au.address, a.status,
+                                        TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from appointments a
+                                        inner join app_users au on au.user_id=a.patient_id
+                                        where accepted_by='$user_id' $cond");
+        return view("dashboard/pharmacist_appointments")->with($data);
+    }
+
+    public function updateAppointmentStatus(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $appointment_id = $input['appointment_id'];
+        $action = $input['action'];
+        if($action=='Complete'){
+            $update_data['status'] = 'completed';
+            DB::table('appointments')->where(array('appointment_id'=>$appointment_id))->update($update_data);
+        } else if($action=='Cancel'){
+            $update_data['status'] = 'cancelled';
+            DB::table('appointments')->where(array('appointment_id'=>$appointment_id))->update($update_data);
+        }
+        echo 'success';
+    }
+
+    public function updateRequest(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $input = $request->all();
+        $request_id = $input['request_id'];
+        $action = $input['action'];
+        if($action=='Reject'){
+            $insert_data['request_id'] = $request_id;
+            $insert_data['user_id'] = $user_id;
+            DB::table('request_rejected_users')->insert($insert_data);
+        } else {
+            $update_data['accepted_by'] = $user_id;
+            $update_data['status'] = 'accepted';
+            DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($update_data);
+        }
+        echo 'success';
+    }
+
+    public function pharmacistRequests(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $user_id = $session_details['user_id'];
+            $input = $request->all();
+            $filter = isset($input['filter'])?$input['filter']:'accepted';
+            $cond = "and pr.status='$filter'";
+            $data['filter'] = $filter;
+            $data['patient_requests'] = DB::select("select pr.request_id,au.unique_id,au.name as patient_name, pr.comments, 
+                                                    pr.created_date,pr.modified_date from patient_requests pr
+                                                    inner join app_users au on au.user_id=pr.patient_id 
+                                                    where accepted_by='$user_id' $cond order by created_date desc");
+            return view("dashboard/pharmacist_request")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
+    }
+
+    public function responseRequest(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $input = $request->all();
+            $request_id = $input['request_id'];
+            $data['request_id'] =$request_id;
+            $data['patient_requests'] = DB::select("select * from patient_requests where request_id='$request_id'");
+            return view("dashboard/response_request")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
+    }
+
+    public function saveResponse(Request $request){
+        $input = $request->all();
+        $request_id = $input['request_id'];
+        $data['usage'] = $input['usage'];
+        $data['directions'] = $input['directions'];
+        $data['side_effects'] = $input['side_effects'];
+        $data['manage_side_effects'] = $input['manage_side_effects'];
+        $data['self_care_measure'] = $input['self_care_measure'];
+        $data['drug_interactions'] = $input['drug_interactions'];
+        $data['follow_up_comments'] = $input['follow_up_comments'];
+        $data['response_comments'] = $input['response_comments'];
+        DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($data);
+        echo 'success';
     }
 }

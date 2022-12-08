@@ -18,7 +18,7 @@
                     <div vailgn="middle"><img src="{{ URL::to('public/dashboardassets/assets/images/tablet.jpg') }}" style="width:100px;"></div>
                     <div>
                       <h5 class="mb-1 mt-0"><b>{{ $request_med->medication_name }}</b></h5>
-                      <p class="mb-1"><strong>Diagnosis:</strong> {{ $request_med->medication_name }}</p>
+                      <p class="mb-1"><strong>Diagnosis:</strong> {{ $request_med->diagnosis }}</p>
                       <p class="mb-1"><strong>Timings:</strong> {{ ucwords(str_replace(',',', ',$request_med->frequency)) }}</p>
                       <p class="mb-1"><strong>Start Date:</strong> {{ date('d/m/Y', strtotime($request_med->start_date)) }}</p>
                     </div>
@@ -112,7 +112,28 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="{{ URL::to('public/assets/js/flatpickr.js') }}"></script>
+<script src="{{ URL::to('public/assets/js/typeahead.js') }}"></script>
   <script type="text/javascript">
+    $(function() {
+      $( "#medication_name" ).typeahead({
+         source: function (query, result) {
+            $.ajax({
+               url: "{{URL::to('/searchMedication')}}",
+               data: 'query=' + query,            
+               dataType: "json",
+               success: function (data) {
+                  result($.map(data, function (item) {
+                     return item;
+                  }));
+               }
+            });
+         },
+         afterSelect: function(item) {
+            $("#medication_name").val(item);
+            $('.typeahead').typeahead('close');
+         }
+      });
+   });
     $("#start_date").flatpickr({
       altInput: true,
       altFormat: "d/m/Y",
@@ -157,6 +178,7 @@
   }
 
   function add_medication(){ 
+    $('#medication_form').trigger('reset');
     $('#exampleModalSizeLg').modal();
   }
 
