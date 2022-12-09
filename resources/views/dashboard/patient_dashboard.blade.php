@@ -35,8 +35,8 @@
                   </table>
                 </div>
                 <div class="card-footer">
-                  <a type="button" class="" data-toggle="modal" data-target="#exampleModalCenter" style="cursor: pointer;">
-                    View Prescription
+                  <a href="{{ URL::to('/viewRequestResponse') }}?request_id={{ $patient_req->request_id }}" style="cursor: pointer; color: #000;">
+                    View Response
                   </a>
                 </div>
               </div>

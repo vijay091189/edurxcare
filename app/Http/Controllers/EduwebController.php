@@ -71,11 +71,11 @@ class EduwebController extends Controller
         if($reg_type=='patient'){
             $data['role_id'] = 2;
             $data['status'] = 'approved';
-            $unique_code = strtoupper($acronym.'P'.date('H:i:s'));
+            $unique_code = strtoupper($acronym.'P'.date('His'));
         } else {
             $data['role_id'] = 3;
             $data['status'] = 'pending';
-            $unique_code = strtoupper($acronym.'U'.date('H:i:s'));
+            $unique_code = strtoupper($acronym.'U'.date('His'));
         }
         $user_id = DB::table('app_users')->insertGetId($data);
         //update code
@@ -863,5 +863,18 @@ class EduwebController extends Controller
         $data['response_comments'] = $input['response_comments'];
         DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($data);
         echo 'success';
+    }
+
+    public function viewRequestResponse(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $input = $request->all();
+            $request_id = $input['request_id'];
+            $data['request_id'] =$request_id;
+            $data['patient_requests'] = DB::select("select * from patient_requests where request_id='$request_id'");
+            return view("dashboard/view_response_request")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
     }
 }

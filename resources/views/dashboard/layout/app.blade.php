@@ -88,14 +88,14 @@ $session_details = session()->get('LoginUserSession');
           </li>
         </ul>
         <ul class="nav navbar-toolbar top_bar">
-          @if($session_details['role_id']=='2'){
+          @if($session_details['role_id']=='2')
             <li class="nav-item top_color active">
               <a class="nav-link b-2" href="{{ URL::to('/newRequest') }}" style="">
                 <i class="site-menu-icon wb-user-circle" aria-hidden="true"></i>New Request
               </a>
             </li>
             <li class="nav-item top_color ">
-              <a class="nav-link b-2" href="{{ URL::to('/responses') }}" style="">
+              <a class="nav-link b-2" href="{{ URL::to('/patientDashboard') }}" style="">
                 <i class="fa-solid fa-reply"></i>Response from Pharmacist
               </a>
             </li>
@@ -157,7 +157,7 @@ $session_details = session()->get('LoginUserSession');
           <span class="site-menu-title">Notifications</span>
         </a>
       </li>
-      @if($session_details['role_id']=='2'){
+      @if($session_details['role_id']=='2')
         <li class="site-menu-item has-sub" data-placement="right" data-toggle="tooltip" title="My Requests">
           <a href="{{ URL::to('/patientDashboard') }}">
             <i class="fa-solid fa-backward"></i>
