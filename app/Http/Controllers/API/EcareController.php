@@ -26,6 +26,7 @@ class EcareController extends BaseController
         //check duplicate mobile
         $check_mobile = DB::select("select user_id from app_users where mobile='$mobile_number'");
         if(isset($check_mobile[0])){
+            $res_data['status_code'] = "500";
             $res_data['status'] = "Failed";
             $res_data['message'] = "Mobile number already exists";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -33,6 +34,7 @@ class EcareController extends BaseController
         //check email
         $check_email = DB::select("select user_id from app_users where email='$email_id'");
         if(isset($check_email[0])){
+            $res_data['status_code'] = "200";
             $res_data['status'] = "Failed";
             $res_data['message'] = "Email ID already exists";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -62,6 +64,7 @@ class EcareController extends BaseController
         $login_data['user_id'] = $user_id;
         $login_data['status'] = 1;
         DB::table('login')->insert($login_data);
+        $res_data['status_code'] = "200";
         $res_data['status'] = "Success";
         $res_data['message'] = "You have registered successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -86,6 +89,7 @@ class EcareController extends BaseController
             $res_data['address'] = (string)$checkUserLogin[0]->address;
             $res_data['status'] = 'Success';
             $res_data['message'] = 'Logged in successfully';
+            $res_data['status_code'] = '200';
         } else {
             $res_data['user_id'] = '';
             $res_data['role_id'] = '';
@@ -97,6 +101,7 @@ class EcareController extends BaseController
             $res_data['address'] = '';
             $res_data['status'] = 'Failed';
             $res_data['message'] = 'Invalid username or password';
+            $res_data['status_code'] = '500';
         }
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
@@ -114,6 +119,7 @@ class EcareController extends BaseController
         $res_data['mobile'] = (string)$get_user_details[0]->mobile;
         $res_data['email'] = (string)$get_user_details[0]->email;
         $res_data['address'] = (string)$get_user_details[0]->address;
+        $res_data['status_code'] = '200';
         $res_data['status'] = 'Success';
         $res_data['message'] = 'Logged in successfully';
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -131,6 +137,7 @@ class EcareController extends BaseController
         //check duplicate mobile
         $check_mobile = DB::select("select user_id from app_users where mobile='$mobile' and user_id!='$user_id'");
         if(isset($check_mobile[0])){
+            $res_data['status_code'] = '500';
             $res_data['status'] = "Failed";
             $res_data['message'] = "Mobile number already exists";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -138,6 +145,7 @@ class EcareController extends BaseController
         //check email
         $check_email = DB::select("select user_id from app_users where email='$email' and user_id!='$user_id'");
         if(isset($check_email[0])){
+            $res_data['status_code'] = '500';
             $res_data['status'] = "Failed";
             $res_data['message'] = "Email ID already exists";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -154,6 +162,7 @@ class EcareController extends BaseController
         $logindata['username'] = $mobile;
         $logindata['display_name'] = $name;
         DB::table('login')->where(array('user_id'=>$user_id))->update($logindata);
+        $res_data['status_code'] = '200';
         $res_data['status'] = "Success";
         $res_data['message'] = "Profile updated successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -171,10 +180,12 @@ class EcareController extends BaseController
             $new_encpassword = EncDecHelper::enc_string($new_password);
             $update_password['password'] = $new_encpassword;
             DB::table('login')->where(array('user_id'=>$user_id))->update($update_password);
+            $res_data['status_code'] = "200";
             $res_data['status'] = "Success";
             $res_data['message'] = "Password changed successfully";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
         } else {
+            $res_data['status_code'] = "500";
             $res_data['status'] = "Failed";
             $res_data['message'] = "Incorrect old password. Please try again";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -187,6 +198,7 @@ class EcareController extends BaseController
         $mobile = $input['mobile'];
         $res_data['user_id'] = '';
         $res_data['security_code'] = '';
+        $res_data['status_code'] = "500";
         $res_data['status'] = "Failed";
         $res_data['message'] = "Invalid Mobile Number or Email ID. Please try again";
         if($email!='' || $mobile!=''){
@@ -197,6 +209,7 @@ class EcareController extends BaseController
                 DB::table('app_users')->where(array('user_id'=>$get_user_details[0]->user_id))->update($update_code);
                 $res_data['user_id'] = (string)$get_user_details[0]->user_id;
                 $res_data['security_code'] = (string)$gen_code;
+                $res_data['status_code'] = "200";
                 $res_data['status'] = "Success";
                 $res_data['message'] = "Security code sent successfully";
             }
@@ -215,6 +228,7 @@ class EcareController extends BaseController
             $data[$key]['question'] = $life_style_q->question;
             $key++;
         }
+        $res_data['status_code'] = "200";
         $res_data['status'] = "Success";
         $res_data['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -234,6 +248,7 @@ class EcareController extends BaseController
             $insert_data['answer'] = $answer;
             DB::table('patient_lifestyle_answers')->insert($insert_data);
         }
+        $res_data['status_code'] = "200";
         $res_data['status'] = "Success";
         $res_data['message'] = "Life style details saved successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -247,6 +262,7 @@ class EcareController extends BaseController
         $new_encpassword = EncDecHelper::enc_string($new_password);
         $update_password['password'] = $new_encpassword;
         DB::table('login')->where(array('user_id'=>$user_id))->update($update_password);
+        $res_data['status_code'] = "200";
         $res_data['status'] = "Success";
         $res_data['message'] = "Password changed successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -262,6 +278,7 @@ class EcareController extends BaseController
             $data[$key]['name'] = (string)$search_d->name;
             $key++;
         }
+        $res_data['status_code'] = "200";
         $res_data['status'] = "Success";
         $res_data['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -277,6 +294,7 @@ class EcareController extends BaseController
             $data[$key]['name'] = (string)$search_d->name;
             $key++;
         }
+        $res_data['status_code'] = "200";
         $res_data['status'] = "Success";
         $res_data['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -292,6 +310,7 @@ class EcareController extends BaseController
             $data[$key]['name'] = (string)$search_d->name;
             $key++;
         }
+        $res_data['status_code'] = "200";
         $res_data['status'] = "Success";
         $res_data['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
