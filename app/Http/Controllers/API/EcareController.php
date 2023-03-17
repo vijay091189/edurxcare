@@ -205,11 +205,12 @@ class EcareController extends BaseController
                 $gen_code = rand(1111,9999);
                 $update_code['forgot_password_code'] = $gen_code;
                 DB::table('app_users')->where(array('user_id'=>$get_user_details[0]->user_id))->update($update_code);
-                $res_data['user_id'] = (string)$get_user_details[0]->user_id;
-                $res_data['security_code'] = (string)$gen_code;
+                $data['user_id'] = (string)$get_user_details[0]->user_id;
+                $data['security_code'] = (string)$gen_code;
+                $data['mesage'] = "Security code sent successfully";
                 //$res_data['status_code'] = "200";
                 $res_data['status'] = "200";
-                $res_data['status_message'] = "Security code sent successfully";
+                $res_data['status_message']['data'] = $data;
             }
         }
         return $this->sendResponse($res_data, 'Data fetched successfully.');
