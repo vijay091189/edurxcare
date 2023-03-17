@@ -194,11 +194,11 @@ class EcareController extends BaseController
         $input = $request->all();
         $email = $input['email'];
         $mobile = $input['mobile'];
-        $res_data['user_id'] = '';
-        $res_data['security_code'] = '';
+        $data['user_id'] = '';
+        $data['security_code'] = '';
         //$res_data['status_code'] = "500";
-        $res_data['status'] = "Failed";
-        $res_data['status_message'] = "Invalid Mobile Number or Email ID. Please try again";
+        $res_data['status'] = "500";
+        $res_data['status_message']['data'] = "Invalid Mobile Number or Email ID. Please try again";
         if($email!='' || $mobile!=''){
             $get_user_details = DB::select("SELECT user_id FROM app_users where mobile='$mobile' or email='$email'");
             if(isset($get_user_details[0])){
