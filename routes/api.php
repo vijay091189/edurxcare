@@ -37,8 +37,8 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('patient_requests', 'App\Http\Controllers\API\EcareController@patient_requests');
 	Route::post('/patientRecommendations','App\Http\Controllers\API\EcareController@patientRecommendations');
 	Route::post('/patientFaqs','App\Http\Controllers\API\EcareController@patientFaqs');
-	Route::post('/patientNotifications','App\Http\Controllers\API\EcareControlle@patientNotifications');
-	Route::post('/pillReminders','App\Http\Controllers\API\EcareControlle@pillReminders');
-	Route::post('/viewRequestResponse','App\Http\Controllers\API\EcareControlle@viewRequestResponse');
-	Route::post('/patientAppointments','App\Http\Controllers\API\EcareControlle@patientAppointments');
+	Route::post('/patientNotifications','App\Http\Controllers\API\EcareController@patientNotifications');
+	Route::post('/pillReminders','App\Http\Controllers\API\EcareController@pillReminders');
+	Route::post('/viewRequestResponse','App\Http\Controllers\API\EcareController@viewRequestResponse');
+	Route::post('/patientAppointments','App\Http\Controllers\API\EcareController@patientAppointments');
 });
