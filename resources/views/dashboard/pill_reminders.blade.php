@@ -32,7 +32,7 @@
                   <div vailgn="middle"><img src="{{ URL::to('public/dashboardassets/assets/images/tablet.jpg') }}" style="width:100px;"></div>
                     <div>
                       <h5 class="mb-1 mt-0"><b>{{ $request_med->medication_name }}</b></h5>
-                      <p class="mb-1"><strong>Diagnosis:</strong> {{ $request_med->medication_name }}</p>
+                      <p class="mb-1"><strong>Diagnosis:</strong> {{ $request_med->diagnosis }}</p>
                       <p class="mb-1"><strong>Timings:</strong> {{ ucwords(str_replace(',',', ',$request_med->frequency)) }}</p>
                       <p class="mb-1"><strong>Start Date:</strong> {{ date('d/m/Y', strtotime($request_med->start_date)) }}</p>
                     </div>

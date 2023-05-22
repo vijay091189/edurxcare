@@ -10,9 +10,14 @@ use DateTime;
 use DateTimeZone;
 use App\Helpers\EncDecHelper;
 use App\Helpers\Helper as Helper; 
+use App\EcareDetails;
 
 class EcareController extends BaseController
 {
+    public function __construct(){
+        $this->ecareDetails = new EcareDetails();
+    }
+
     public function user_registration(Request $request){
         $input = $request->all();
         $name = isset($input['name'])?$input['name']:'';
@@ -318,5 +323,127 @@ class EcareController extends BaseController
     public function save_request(Request $request){
         print_r($_REQUEST);
         print_r($_FILES);
+    }
+
+    public function patient_requests(Request $request){
+        $input = $request->all();
+        $patient_id = $input['user_id'];
+        $patient_requests = $this->ecareDetails->patient_requests($patient_id);
+        $key=0;
+        $data = array();
+        foreach($patient_requests as $patient_req){
+            $data[$key]['request_id'] = (string)$patient_req->request_id;
+            $data[$key]['requested_date'] = date('d-m-Y', strtotime($patient_req->created_date));
+            $data[$key]['comments'] = $patient_req->comments;
+            $data[$key]['status'] = $patient_req->status;
+            $data[$key]['last_updated'] = date('d-m-Y h:i A', strtotime($patient_req->modified_date));
+            $data[$key]['pharmacist_name'] = '--';
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function patientRecommendations(Request $request){
+        $input = $request->all();
+        $patientRecommendations = $this->ecareDetails->patientRecommendations();
+        $key=0;
+        $data = array();
+        foreach($patientRecommendations as $patient_req){
+            $data[$key]['recommendation'] = $patient_req->recommendation;
+            $data[$key]['date'] = date('d/m/Y h:i A', strtotime($patient_req->created_date));
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function patientFaqs(Request $request){
+        $input = $request->all();
+        $patientFaqs = $this->ecareDetails->patientFaqs();
+        $key=0;
+        $data = array();
+        foreach($patientFaqs as $patient_req){
+            $data[$key]['question'] = $patient_req->question;
+            $data[$key]['answer'] = $patient_req->answer;
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function patientNotifications(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $details = $this->ecareDetails->patientNotifications($user_id);
+        $key=0;
+        $data = array();
+        foreach($details as $patient_req){
+            $data[$key]['notification'] = $patient_req->notification;
+            $data[$key]['created_date'] = date('d/m/Y h:i A', strtotime($patient_req->created_date));
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function pillReminders(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $details = $this->ecareDetails->pillReminders($user_id);
+        $key=0;
+        $data = array();
+        foreach($details as $request_med){
+            $data[$key]['medication_name'] = $request_med->medication_name;
+            $data[$key]['diagnosis'] = $request_med->diagnosis;
+            $data[$key]['frequency'] = ucwords(str_replace(',',', ',$request_med->frequency));
+            $data[$key]['created_date'] = date('d/m/Y', strtotime($request_med->start_date));
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function viewRequestResponse(Request $request){
+        $input = $request->all();
+        $request_id = $input['request_id'];
+        $request_med = $this->ecareDetails->viewRequestResponse($request_id);
+        $data['use'] = $request_med->usage!=''?$request_med->usage:'';
+        $data['directions'] = $request_med->directions?$request_med->directions:'';
+        $data['side_effects'] = $request_med->side_effects?$request_med->side_effects:'';
+        $data['managing_side_effects'] = $request_med->manage_side_effects?$request_med->manage_side_effects:'';
+        $data['self_care_measures'] = $request_med->self_care_measure?$request_med->self_care_measure:'';
+        $data['drug_interactions'] = $request_med->drug_interactions?$request_med->drug_interactions:'';
+        $data['follow_up'] = $request_med->follow_up_comments?$request_med->follow_up_comments:'';
+        $data['additional_comments'] = $request_med->response_comments?$request_med->response_comments:'';
+        $res_data['status'] = "200";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function patientAppointments(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $filter = isset($input['filter'])?$input['filter']:'today';
+        $cur_date = date('Y-m-d');
+        $details = $this->ecareDetails->patientAppointments($user_id,$filter,$cur_date);
+        $key=0;
+        $data = array();
+        foreach($details as $appoint){
+            $data[$key]['appointment_date'] = date('d-m-Y', strtotime($appoint->appointment_date)).' '.date('h:i A', strtotime($appoint->appointment_time));
+            $data[$key]['priority'] = ucwords($appoint->priority);
+            $data[$key]['status'] = ucwords($appoint->status);
+            $data[$key]['condition'] = $appoint->description;
+            $data[$key]['accepted_pharmacist'] = $appoint->accepted_by!=''?$appoint->accepted_by:'--';
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 }

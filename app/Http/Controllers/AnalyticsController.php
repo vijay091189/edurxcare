@@ -8,10 +8,12 @@ use DateTime;
 use DateTimeZone;
 use App\Helpers\EncDecHelper;
 use App\Helpers\Helper as Helper;
+use App\EcareDetails;
 
 class AnalyticsController extends Controller
 {
     public function __construct(){
+      $this->ecareDetails = new EcareDetails();
     }
     /**
      * @method reports

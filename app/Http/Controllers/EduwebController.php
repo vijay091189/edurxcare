@@ -11,9 +11,14 @@ use DateTime;
 use DateTimeZone;
 use App\Helpers\EncDecHelper;
 use App\Helpers\Helper as Helper; 
+use App\EcareDetails;
 
 class EduwebController extends Controller
 {
+    public function __construct(){
+        $this->ecareDetails = new EcareDetails();
+    }
+
     public function homepage(Request $request){
         return view("frontend/homepage");
     }
@@ -122,7 +127,8 @@ class EduwebController extends Controller
         $session_details = session()->get('LoginUserSession');
         if(isset($session_details['loginid']) && $session_details['loginid']!=''){
             $patient_id = $session_details['user_id'];
-            $data['patient_requests'] = DB::select("select * from patient_requests where patient_id='$patient_id' order by created_date desc");
+            //$data['patient_requests'] = DB::select("select * from patient_requests where patient_id='$patient_id' order by created_date desc");
+            $data['patient_requests'] = $this->ecareDetails->patient_requests($patient_id);
             return view("dashboard/patient_dashboard")->with($data);
         } else {
             return Redirect::to('loginpage');
@@ -462,7 +468,8 @@ class EduwebController extends Controller
         $session_details = session()->get('LoginUserSession');
         $user_id = $session_details['user_id'];
         $input = $request->all();
-        $data['details'] = DB::select("select * from recommendations where status='1'");
+        //$data['details'] = DB::select("select * from recommendations where status='1'");
+        $data['details'] = $this->ecareDetails->patientRecommendations();
         return view("dashboard/patient_recommendations")->with($data);
     }
 
@@ -470,7 +477,8 @@ class EduwebController extends Controller
         $session_details = session()->get('LoginUserSession');
         $user_id = $session_details['user_id'];
         $input = $request->all();
-        $data['details'] = DB::select("select * from faqs where status='1'");
+        //$data['details'] = DB::select("select * from faqs where status='1'");
+        $data['details'] = $this->ecareDetails->patientFaqs();
         return view("dashboard/patient_faqs")->with($data);
     }
 
@@ -525,7 +533,8 @@ class EduwebController extends Controller
     public function pillReminders(Request $request){
         $session_details = session()->get('LoginUserSession');
         $user_id = $session_details['user_id'];
-        $data['request_medications'] = DB::select("select * from patient_medications where patient_id='$user_id' and status=1");
+        //$data['request_medications'] = DB::select("select * from patient_medications where patient_id='$user_id' and status=1");
+        $data['request_medications'] = $this->ecareDetails->pillReminders($user_id);
         return view("dashboard/pill_reminders")->with($data);
     }
 
@@ -535,17 +544,8 @@ class EduwebController extends Controller
         $input = $request->all();
         $filter = isset($input['filter'])?$input['filter']:'today';
         $cur_date = date('Y-m-d');
-        if($filter=='today'){
-            $cond = "and appointment_date='$cur_date'";
-        } else if($filter=='past'){
-            $cond = "and appointment_date<'$cur_date'";
-        } else {
-            $cond = "and appointment_date>'$cur_date'";
-        }
         $data['filter'] = $filter;
-        $data['appointments'] = DB::select("select au.name as accepted_by, description, appointment_date, appointment_time, priority, a.status from appointments a
-                                            left join app_users au on au.user_id=a.accepted_by
-                                            where patient_id='$user_id' $cond");
+        $data['appointments'] = $this->ecareDetails->patientAppointments($user_id,$filter,$cur_date);
         return view("dashboard/patient_appointments")->with($data);
     }
 
@@ -871,7 +871,8 @@ class EduwebController extends Controller
             $input = $request->all();
             $request_id = $input['request_id'];
             $data['request_id'] =$request_id;
-            $data['patient_requests'] = DB::select("select * from patient_requests where request_id='$request_id'");
+            //$data['patient_requests'] = DB::select("select * from patient_requests where request_id='$request_id'");
+            $data['patient_requests'] = $this->ecareDetails->viewRequestResponse($request_id);
             return view("dashboard/view_response_request")->with($data);
         } else {
             return Redirect::to('loginpage');

@@ -33,4 +33,10 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('seacrh_allergies', 'App\Http\Controllers\API\EcareController@seacrh_allergies');
 	Route::post('search_medicalconditions', 'App\Http\Controllers\API\EcareController@search_medicalconditions');
 	Route::post('save_request', 'App\Http\Controllers\API\EcareController@save_request');
+	Route::post('patient_requests', 'App\Http\Controllers\API\EcareController@patient_requests');
+	Route::post('/patientRecommendations','App\Http\Controllers\API\EcareController@patientRecommendations');
+	Route::post('/patientFaqs','App\Http\Controllers\API\EcareController@patientFaqs');
+	Route::get('/patientNotifications','App\Http\Controllers\API\EcareControlle@patientNotifications');
+	Route::get('/pillReminders','App\Http\Controllers\API\EcareControlle@pillReminders');
+	Route::get('/viewRequestResponse','App\Http\Controllers\API\EcareControlle@viewRequestResponse');
 });
