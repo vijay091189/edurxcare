@@ -39,4 +39,5 @@ Route::middleware('auth:api')->group( function () {
 	Route::get('/patientNotifications','App\Http\Controllers\API\EcareControlle@patientNotifications');
 	Route::get('/pillReminders','App\Http\Controllers\API\EcareControlle@pillReminders');
 	Route::get('/viewRequestResponse','App\Http\Controllers\API\EcareControlle@viewRequestResponse');
+	Route::get('/patientAppointments','App\Http\Controllers\API\EcareControlle@patientAppointments');
 });
