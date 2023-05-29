@@ -446,4 +446,47 @@ class EcareController extends BaseController
         $res_data['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
+
+    public function saveAppointment(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $data['patient_id'] = $user_id;
+        $data['appointment_type'] = $input['appointment_type'];
+        $data['appointment_date'] = $input['appointment_date'];
+        $data['appointment_time'] = date('H:i:s',strtotime($input['appointment_time']));
+        $data['description'] = $input['condition'];
+        $data['priority'] = $input['priority'];
+        $data['created_by'] = $user_id;
+        $data['created_date'] = date('Y-m-d H:i:s');
+        $data['status'] = 'pending';
+        $appointment_id = DB::table('appointments')->insertGetId($data);
+        $res_data['status'] = "200";
+        $res_data['status_message'] = "Appointment saved successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function saveReviewRating(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $data['rating'] = $input['rating'];
+        $data['review'] = $input['sugestions'];
+        $data['description'] = $input['feedback'];
+        $data['user_id'] = $user_id;
+        $data['status'] = 1;
+        $data['created_date'] = date('Y-m-d H:i:s');
+        DB::table('review_rating')->insert($data);
+        $res_data['status'] = "200";
+        $res_data['status_message'] = "Review and Rating saved successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function saveReferFriend(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $input = $request->all();
+        $email_id = $input['email_id'];
+        $res_data['status'] = "200";
+        $res_data['status_message'] = "Referred your friend successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
 }
