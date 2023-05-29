@@ -439,6 +439,7 @@ class EcareController extends BaseController
             $data[$key]['priority'] = ucwords($appoint->priority);
             $data[$key]['status'] = ucwords($appoint->status);
             $data[$key]['condition'] = $appoint->description;
+            $data[$key]['appointment_type'] = $appoint->appointment_typ;
             $data[$key]['accepted_pharmacist'] = $appoint->accepted_by!=''?$appoint->accepted_by:'--';
             $key++;
         }
@@ -451,7 +452,7 @@ class EcareController extends BaseController
         $input = $request->all();
         $user_id = $input['user_id'];
         $data['patient_id'] = $user_id;
-        $data['appointment_type'] = $input['appointment_type'];
+        $data['appointment_type'] = $input['appointment_typ'];
         $data['appointment_date'] = $input['appointment_date'];
         $data['appointment_time'] = date('H:i:s',strtotime($input['appointment_time']));
         $data['description'] = $input['condition'];
