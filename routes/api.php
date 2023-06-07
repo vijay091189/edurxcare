@@ -44,4 +44,24 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('/saveAppointment','App\Http\Controllers\API\EcareController@saveAppointment');
 	Route::post('/saveReviewRating','App\Http\Controllers\API\EcareController@saveReviewRating');
 	Route::post('/saveReferFriend','App\Http\Controllers\API\EcareController@saveReferFriend');
+	//save request methods
+	Route::post('/newRequest','App\Http\Controllers\API\EcareController@newRequest');
+	Route::post('/addMedications','App\Http\Controllers\API\EcareController@addMedications');
+	Route::post('/addAllergy','App\Http\Controllers\API\EcareController@addAllergy');
+	Route::post('/addMedConditions','App\Http\Controllers\API\EcareController@addMedConditions');
+	Route::post('/uploadLabReports','App\Http\Controllers\API\EcareController@uploadLabReports');
+	Route::post('/uploadPrescriptions','App\Http\Controllers\API\EcareController@uploadPrescriptions');
+	//request list methods
+	Route::post('/newRequestDetails','App\Http\Controllers\API\EcareController@newRequestDetails');
+	Route::post('/reqMedicationsList','App\Http\Controllers\API\EcareController@reqMedicationsList');
+	Route::post('/reqAllergyList','App\Http\Controllers\API\EcareController@reqAllergyList');
+	Route::post('/reqMedConditions','App\Http\Controllers\API\EcareController@reqMedConditions');
+	Route::post('/reqLabReports','App\Http\Controllers\API\EcareController@reqLabReports');
+	Route::post('/reqPrescriptions','App\Http\Controllers\API\EcareController@reqPrescriptions');
+	//delete methods
+	Route::get('/deleteRequestMedication','App\Http\Controllers\EduwebController@deleteRequestMedication');
+	Route::get('/deleteRequestAllergy','App\Http\Controllers\EduwebController@deleteRequestAllergy');
+	Route::get('/deleteRequestMedcond','App\Http\Controllers\EduwebController@deleteRequestMedcond');
+	Route::get('/deleteLabReport','App\Http\Controllers\EduwebController@deleteLabReport');
+	Route::get('/deletePrescription','App\Http\Controllers\EduwebController@deletePrescription');
 });
