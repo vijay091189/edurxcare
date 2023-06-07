@@ -90,8 +90,8 @@ class EcareController extends BaseController
             $res_data['mobile'] = (string)$checkUserLogin[0]->mobile;
             $res_data['email'] = (string)$checkUserLogin[0]->email;
             $res_data['address'] = (string)$checkUserLogin[0]->address;
-            $res_data['status'] = "200";
-            $res_data['status_message'] = 'Logged in successfully';
+            $response_data['status'] = "200";
+            $response_data['status_message'] = $res_data;
             //$res_data['status_code'] = '200';
         } else {
             $res_data['user_id'] = '';
@@ -102,11 +102,11 @@ class EcareController extends BaseController
             $res_data['mobile'] = '';
             $res_data['email'] = '';
             $res_data['address'] = '';
-            $res_data['status'] = 'Failed';
-            $res_data['status_message'] = 'Invalid username or password';
+            $response_data['status'] = '500';
+            $response_data['status_message'] = $res_data;
             //$res_data['status_code'] = '500';
         }
-        return $this->sendResponse($res_data, 'Data fetched successfully.');
+        return $this->sendResponse($response_data, 'Data fetched successfully.');
     }
 
     public function edit_profile(Request $request){
@@ -123,9 +123,9 @@ class EcareController extends BaseController
         $res_data['email'] = (string)$get_user_details[0]->email;
         $res_data['address'] = (string)$get_user_details[0]->address;
         //$res_data['status_code'] = '200';
-        $res_data['status'] = "200";
-        $res_data['status_message'] = 'Logged in successfully';
-        return $this->sendResponse($res_data, 'Data fetched successfully.');
+        $response_data['status'] = "200";
+        $response_data['status_message'] = $res_data;
+        return $this->sendResponse($response_data, 'Data fetched successfully.');
     }
 
     public function update_profile(Request $request){
@@ -141,7 +141,7 @@ class EcareController extends BaseController
         $check_mobile = DB::select("select user_id from app_users where mobile='$mobile' and user_id!='$user_id'");
         if(isset($check_mobile[0])){
             //$res_data['status_code'] = '500';
-            $res_data['status'] = "Failed";
+            $res_data['status'] = "500";
             $res_data['status_message'] = "Mobile number already exists";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
         }
@@ -149,7 +149,7 @@ class EcareController extends BaseController
         $check_email = DB::select("select user_id from app_users where email='$email' and user_id!='$user_id'");
         if(isset($check_email[0])){
             //$res_data['status_code'] = '500';
-            $res_data['status'] = "Failed";
+            $res_data['status'] = "500";
             $res_data['status_message'] = "Email ID already exists";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
         }
@@ -189,7 +189,7 @@ class EcareController extends BaseController
             return $this->sendResponse($res_data, 'Data fetched successfully.');
         } else {
             //$res_data['status_code'] = "500";
-            $res_data['status'] = "Failed";
+            $res_data['status'] = "500";
             $res_data['status_message'] = "Incorrect old password. Please try again";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
         }
@@ -203,7 +203,7 @@ class EcareController extends BaseController
         $data['security_code'] = '';
         //$res_data['status_code'] = "500";
         $res_data['status'] = "500";
-        $res_data['status_message']['data'] = "Invalid Mobile Number or Email ID. Please try again";
+        $res_data['status_message'] = "Invalid Mobile Number or Email ID. Please try again";
         if($email!='' || $mobile!=''){
             $get_user_details = DB::select("SELECT user_id FROM app_users where mobile='$mobile' or email='$email'");
             if(isset($get_user_details[0])){
@@ -215,7 +215,7 @@ class EcareController extends BaseController
                 $data['mesage'] = "Security code sent successfully";
                 //$res_data['status_code'] = "200";
                 $res_data['status'] = "200";
-                $res_data['status_message']['data'] = $data;
+                $res_data['status_message'] = $data;
             }
         }
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -234,7 +234,7 @@ class EcareController extends BaseController
         }
         //$res_data['status_code'] = "200";
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -284,7 +284,7 @@ class EcareController extends BaseController
         }
         //$res_data['status_code'] = "200";
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -300,7 +300,7 @@ class EcareController extends BaseController
         }
         //$res_data['status_code'] = "200";
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -316,7 +316,7 @@ class EcareController extends BaseController
         }
         //$res_data['status_code'] = "200";
         $res_data['status'] = "200";
-        $res_data['status_messsage']['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -341,7 +341,7 @@ class EcareController extends BaseController
             $key++;
         }
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -356,7 +356,7 @@ class EcareController extends BaseController
             $key++;
         }
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -371,7 +371,7 @@ class EcareController extends BaseController
             $key++;
         }
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -387,7 +387,7 @@ class EcareController extends BaseController
             $key++;
         }
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -405,7 +405,7 @@ class EcareController extends BaseController
             $key++;
         }
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -422,7 +422,7 @@ class EcareController extends BaseController
         $data['follow_up'] = $request_med->follow_up_comments?$request_med->follow_up_comments:'';
         $data['additional_comments'] = $request_med->response_comments?$request_med->response_comments:'';
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -439,12 +439,12 @@ class EcareController extends BaseController
             $data[$key]['priority'] = ucwords($appoint->priority);
             $data[$key]['status'] = ucwords($appoint->status);
             $data[$key]['condition'] = $appoint->description;
-            $data[$key]['appointment_type'] = $appoint->appointment_typ;
+            $data[$key]['appointment_type'] = $appoint->appointment_type;
             $data[$key]['accepted_pharmacist'] = $appoint->accepted_by!=''?$appoint->accepted_by:'--';
             $key++;
         }
         $res_data['status'] = "200";
-        $res_data['data'] = $data;
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -452,7 +452,7 @@ class EcareController extends BaseController
         $input = $request->all();
         $user_id = $input['user_id'];
         $data['patient_id'] = $user_id;
-        $data['appointment_type'] = $input['appointment_typ'];
+        $data['appointment_type'] = $input['appointment_type'];
         $data['appointment_date'] = $input['appointment_date'];
         $data['appointment_time'] = date('H:i:s',strtotime($input['appointment_time']));
         $data['description'] = $input['condition'];
