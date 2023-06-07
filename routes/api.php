@@ -59,9 +59,11 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('/reqLabReports','App\Http\Controllers\API\EcareController@reqLabReports');
 	Route::post('/reqPrescriptions','App\Http\Controllers\API\EcareController@reqPrescriptions');
 	//delete methods
-	Route::get('/deleteRequestMedication','App\Http\Controllers\EduwebController@deleteRequestMedication');
-	Route::get('/deleteRequestAllergy','App\Http\Controllers\EduwebController@deleteRequestAllergy');
-	Route::get('/deleteRequestMedcond','App\Http\Controllers\EduwebController@deleteRequestMedcond');
-	Route::get('/deleteLabReport','App\Http\Controllers\EduwebController@deleteLabReport');
-	Route::get('/deletePrescription','App\Http\Controllers\EduwebController@deletePrescription');
+	Route::post('/deleteRequestMedication','App\Http\Controllers\API\EcareController@deleteRequestMedication');
+	Route::post('/deleteRequestAllergy','App\Http\Controllers\API\EcareController@deleteRequestAllergy');
+	Route::post('/deleteRequestMedcond','App\Http\Controllers\API\EcareController@deleteRequestMedcond');
+	Route::post('/deleteLabReport','App\Http\Controllers\API\EcareController@deleteLabReport');
+	Route::post('/deletePrescription','App\Http\Controllers\API\EcareController@deletePrescription');
+	//Sumbit request
+	Route::post('/submitRequest','App\Http\Controllers\API\EcareController@submitRequest');
 });

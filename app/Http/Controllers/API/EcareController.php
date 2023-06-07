@@ -498,7 +498,7 @@ class EcareController extends BaseController
         $data['created_date'] = date('Y-m-d H:i:s');
         $data['modified_date'] = date('Y-m-d H:i:s');
         $vir_request_id = DB::table('virtual_patient_requests')->insertGetId($data);
-        $vir_data['vir_request_id'] = $vir_request_id;
+        $vir_data['vir_request_id'] = (string)$vir_request_id;
         $res_data['status'] = "200";
         $res_data['status_message'] = $vir_data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -509,12 +509,12 @@ class EcareController extends BaseController
         $data['request_id'] = $input['vir_request_id'];
         $data['medication_name'] = $input['medication_name'];
         $data['diagnosis'] = $input['diagnosis'];
-        $data['frequency'] = implode(',',$input['frequency']);
+        $data['frequency'] = $input['frequency'];
         $data['start_date'] = $input['start_date'];
         $data['created_date'] = date('Y-m-d H:i:s');
         $data['status'] = 1;
         DB::table('virtual_request_medications')->insertGetId($data);
-        $vir_data['vir_request_id'] = $input['vir_request_id'];
+        $vir_data['vir_request_id'] = (string)$input['vir_request_id'];
         $res_data['status'] = "200";
         $res_data['status_message'] = $vir_data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -528,7 +528,7 @@ class EcareController extends BaseController
         $data['created_date'] = date('Y-m-d H:i:s');
         $data['status'] = 1;
         DB::table('virtual_request_allergies')->insertGetId($data);
-        $vir_data['vir_request_id'] = $input['vir_request_id'];
+        $vir_data['vir_request_id'] = (string)$input['vir_request_id'];
         $res_data['status'] = "200";
         $res_data['status_message'] = $vir_data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -542,7 +542,7 @@ class EcareController extends BaseController
         $data['created_date'] = date('Y-m-d H:i:s');
         $data['status'] = 1;
         DB::table('virtual_request_medical_conditions')->insertGetId($data);
-        $vir_data['vir_request_id'] = $input['vir_request_id'];
+        $vir_data['vir_request_id'] = (string)$input['vir_request_id'];
         $res_data['status'] = "200";
         $res_data['status_message'] = $vir_data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -565,7 +565,7 @@ class EcareController extends BaseController
         $data['created_date'] = date('Y-m-d H:i:s');
         $data['status'] = 1;
         DB::table('virtual_request_lab_documents')->insertGetId($data);
-        $vir_data['vir_request_id'] = $input['vir_request_id'];
+        $vir_data['vir_request_id'] = (string)$input['vir_request_id'];
         $res_data['status'] = "200";
         $res_data['status_message'] = $vir_data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -588,7 +588,7 @@ class EcareController extends BaseController
         $data['created_date'] = date('Y-m-d H:i:s');
         $data['status'] = 1;
         DB::table('virtual_request_prescriptions')->insertGetId($data);
-        $vir_data['vir_request_id'] = $input['vir_request_id'];
+        $vir_data['vir_request_id'] = (string)$input['vir_request_id'];
         $res_data['status'] = "200";
         $res_data['status_message'] = $vir_data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
@@ -603,7 +603,7 @@ class EcareController extends BaseController
         } else {
             $patient_request = '';
         }
-        $data['vir_request_id'] = $vir_request_id;
+        $data['vir_request_id'] = (string)$vir_request_id;
         $data['comments'] = $patient_request;
         $res_data['status'] = "200";
         $res_data['status_message']['data'] = $data;
@@ -660,7 +660,7 @@ class EcareController extends BaseController
             $data[$key]['request_medical_condition'] = $request_med->request_medical_condition;
             $data[$key]['request_med_decription'] = $request_med->request_med_decription;
             $data[$key]['created_date'] = date('d/m/Y h:i A', strtotime($request_med->created_date));
-            $data[$key]['request_medical_cond_id'] = (string)$request_med->request_medication_id;
+            $data[$key]['request_medical_cond_id'] = (string)$request_med->request_medical_cond_id;
             $key++;
         }
         $res_data['status'] = "200";
@@ -685,7 +685,7 @@ class EcareController extends BaseController
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
-    public function reqPrescriptions(Request $request){0.
+    public function reqPrescriptions(Request $request){
         $input = $request->all();
         $vir_request_id = $input['vir_request_id'];
         $data['vir_request_id'] = $vir_request_id;
@@ -718,7 +718,7 @@ class EcareController extends BaseController
         $data['status'] = 0;
         DB::table('virtual_request_allergies')->where(array('request_allergy_id'=>$allergy_id))->update($data);
         $res_data['status'] = "200";
-        $res_data['status_message'] = "Medication Deleted successfully";
+        $res_data['status_message'] = "Allergy Deleted successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -728,7 +728,7 @@ class EcareController extends BaseController
         $data['status'] = 0;
         DB::table('virtual_request_medical_conditions')->where(array('request_medical_cond_id'=>$medcond_id))->update($data);
         $res_data['status'] = "200";
-        $res_data['status_message'] = "Medication Deleted successfully";
+        $res_data['status_message'] = "Medical Condition Deleted successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -738,7 +738,7 @@ class EcareController extends BaseController
         $data['status'] = 0;
         DB::table('virtual_request_lab_documents')->where(array('request_lab_docs_id'=>$report_id))->update($data);
         $res_data['status'] = "200";
-        $res_data['status_message'] = "Medication Deleted successfully";
+        $res_data['status_message'] = "Lab Report Deleted successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -748,7 +748,7 @@ class EcareController extends BaseController
         $data['status'] = 0;
         DB::table('virtual_request_prescriptions')->where(array('request_presc_id'=>$report_id))->update($data);
         $res_data['status'] = "200";
-        $res_data['status_message'] = "Medication Deleted successfully";
+        $res_data['status_message'] = "Prescription Deleted successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 
@@ -771,7 +771,7 @@ class EcareController extends BaseController
         $request_id = DB::table('patient_requests')->insertGetId($reqdata);
         //update code
         $updatedata['unique_id'] = 'REQ'.date('ymdHis').'-'.$request_id;
-        DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($request_id);
+        DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($updatedata);
         //insert medications
         foreach($medications_data as $medications_dat){
             $meddata['request_id'] = $request_id;
@@ -819,7 +819,7 @@ class EcareController extends BaseController
             $presdata['status'] = 1;
             DB::table('request_prescriptions')->insertGetId($presdata);
         }
-        $vir_data['request_id'] = $request_id;
+        $vir_data['request_id'] = (string)$request_id;
         $res_data['status'] = "200";
         $res_data['status_message'] = $vir_data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');

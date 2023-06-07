@@ -379,7 +379,7 @@ class EduwebController extends Controller
         $request_id = DB::table('patient_requests')->insertGetId($reqdata);
         //update code
         $updatedata['unique_id'] = 'REQ'.date('ymdHis').'-'.$request_id;
-        DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($request_id);
+        DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($updatedata);
         //insert medications
         foreach($medications_data as $medications_dat){
             $meddata['request_id'] = $request_id;

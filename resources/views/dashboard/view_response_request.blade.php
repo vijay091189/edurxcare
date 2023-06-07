@@ -12,7 +12,7 @@
   <div class="page">
     <div class="page-content container-fluid">
       <div class="d-flex justify-content-between">
-        <h4 style="color: #232e74;padding-left:38px;"><strong>View Response {{ isset($patient_requests[0])?' : '.$patient_requests[0]->unique_id:'' }}</strong></h4>
+        <h4 style="color: #232e74;padding-left:38px;"><strong>View Response {{ isset($patient_requests)?' : '.$patient_requests->unique_id:'' }}</strong></h4>
       </div>
       <form id="save_response" id="save_response" method="post">
         <input type="hidden" id="request_id" name="request_id" value="{{ $request_id }}">
@@ -22,7 +22,7 @@
               <div class="card-body">
                 <h5 class="card-title"><strong>Use</strong></h5>
                 <div class="card-text p-8">
-                    {{ isset($patient_requests[0])?$patient_requests[0]->usage:'' }}
+                    {{ isset($patient_requests)?$patient_requests->usage:'' }}
                 </div>
               </div>
             </div>
@@ -32,7 +32,7 @@
               <div class="card-body">
                 <h5 class="card-title"><strong>Directions</strong></h5>
                 <div class="card-text p-8">
-                    {{ isset($patient_requests[0])?$patient_requests[0]->directions:'' }}
+                    {{ isset($patient_requests)?$patient_requests->directions:'' }}
                 </div>
               </div>
             </div>
@@ -44,7 +44,7 @@
               <div class="card-body">
                 <h5 class="card-title"><strong>Side Effects</strong></h5>
                 <div class="card-text p-8">
-                    {{ isset($patient_requests[0])?$patient_requests[0]->side_effects:'' }}
+                    {{ isset($patient_requests)?$patient_requests->side_effects:'' }}
                 </div>
               </div>
             </div>
@@ -54,7 +54,7 @@
               <div class="card-body">
                 <h5 class="card-title"><strong>Managing Side Effects</strong></h5>
                 <div class="card-text p-8">
-                    {{ isset($patient_requests[0])?$patient_requests[0]->manage_side_effects:'' }}
+                    {{ isset($patient_requests)?$patient_requests->manage_side_effects:'' }}
                 </div>
               </div>
             </div>
@@ -66,7 +66,7 @@
               <div class="card-body">
                 <h5 class="card-title"><strong>Self Care Measures</strong></h5>
                 <div class="card-text p-8">
-                    {{ isset($patient_requests[0])?$patient_requests[0]->self_care_measure:'' }}
+                    {{ isset($patient_requests)?$patient_requests->self_care_measure:'' }}
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@
               <div class="card-body">
                 <h5 class="card-title"><strong>Drug Interactions</strong></h5>
                 <div class="card-text p-8">
-                    {{ isset($patient_requests[0])?$patient_requests[0]->drug_interactions:'' }}
+                    {{ isset($patient_requests)?$patient_requests->drug_interactions:'' }}
                 </div>
               </div>
             </div>
@@ -88,7 +88,7 @@
               <div class="card-body">
                 <h5 class="card-title"><strong>Follow up with pharmacist/physcian</strong></h5>
                 <div class="card-text p-8">
-                    {{ isset($patient_requests[0])?$patient_requests[0]->follow_up_comments:'' }}
+                    {{ isset($patient_requests)?$patient_requests->follow_up_comments:'' }}
                 </div>
               </div>
             </div>
@@ -98,7 +98,7 @@
               <div class="card-body">
                 <h5 class="card-title"><strong>Additional Comments</strong></h5>
                 <div class="card-text p-8">
-                    {{ isset($patient_requests[0])?$patient_requests[0]->response_comments:'' }}
+                    {{ isset($patient_requests)?$patient_requests->response_comments:'' }}
                 </div>
               </div>
             </div>
