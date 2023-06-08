@@ -91,6 +91,7 @@ class EcareController extends BaseController
             $res_data['email'] = (string)$checkUserLogin[0]->email;
             $res_data['address'] = (string)$checkUserLogin[0]->address;
             $response_data['status'] = "200";
+            $response_data['message'] = "Login Successful";
             $response_data['status_message'] = $res_data;
             //$res_data['status_code'] = '200';
         } else {
@@ -103,6 +104,7 @@ class EcareController extends BaseController
             $res_data['email'] = '';
             $res_data['address'] = '';
             $response_data['status'] = '500';
+            $response_data['message'] = "Invalid Username or Password";
             $response_data['status_message'] = $res_data;
             //$res_data['status_code'] = '500';
         }
