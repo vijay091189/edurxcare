@@ -38,7 +38,7 @@ class EcareController extends BaseController
         //check email
         $check_email = DB::select("select user_id from app_users where email='$email_id'");
         if(isset($check_email[0])){
-            $res_data['status'] = "200";
+            $res_data['status'] = "500";
             $res_data['status_message'] = "Email ID already exists";
             return $this->sendResponse($res_data, 'Data fetched successfully.');
         }
@@ -824,6 +824,22 @@ class EcareController extends BaseController
         $vir_data['request_id'] = (string)$request_id;
         $res_data['status'] = "200";
         $res_data['status_message'] = $vir_data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function savePatientMedication(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $data['patient_id'] = $user_id;
+        $data['medication_name'] = $input['medication_name'];
+        $data['diagnosis'] = $input['diagnosis'];
+        $data['frequency'] = $input['frequency'];
+        $data['start_date'] = $input['start_date'];
+        $data['created_date'] = date('Y-m-d H:i:s');
+        $data['status'] = 1;
+        $medication_id = DB::table('patient_medications')->insertGetId($data);
+        $res_data['status'] = "200";
+        $res_data['status_message'] = "Medication saved successfully";
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 }

@@ -66,4 +66,5 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('/deletePrescription','App\Http\Controllers\API\EcareController@deletePrescription');
 	//Sumbit request
 	Route::post('/submitRequest','App\Http\Controllers\API\EcareController@submitRequest');
+	Route::post('/savePatientMedication','App\Http\Controllers\API\EcareController@savePatientMedication');
 });
