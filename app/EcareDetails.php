@@ -11,7 +11,7 @@ use DateTimeZone, DatePeriod, DateInterval;
 class EcareDetails extends Model
 {
     public function patient_requests($patient_id){
-        $patient_requests = DB::select("select pr.*, au.name from patient_requests pr 
+        $patient_requests = DB::select("select pr.*, au.name,au.address from patient_requests pr 
                                         left join app_users au on au.user_id=pr.accepted_by
                                         where pr.patient_id='$patient_id' order by pr.created_date desc");
         return $patient_requests;
