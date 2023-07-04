@@ -215,7 +215,9 @@
         return false;
       }
       $.ajax({
+        type : "POST",
         url : post_url,
+        data : formData,
         success : function(result){	
             alert("Appointment accepted successfully");
             location.reload(true);
