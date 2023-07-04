@@ -200,6 +200,7 @@
       $('#patient_uniqueid').html(patient_id);
       $('#appointment_date').html(appoint_date);
       $('#appointment_time').val(appoint_time);
+      $('#appointment_id').val(appointment_id);
       $('#acceptAppointmentModal').modal('show');
     }
   }
@@ -209,6 +210,7 @@
       formData = new FormData($('#appointments_form')[0]);
       formData.append( "_token", '{{csrf_token()}}' ); 
       var post_url = "{{URL::to('/updateAppointmentSlots')}}";
+      var appointment_id = $('#appointment_id').val();
       var appointment_time = $('#appointment_time').val();
       if(appointment_time==''){
         alert("Please select appointment time");
@@ -218,6 +220,8 @@
         type : "POST",
         url : post_url,
         data : formData,
+        contentType: false,
+        processData: false,
         success : function(result){	
             alert("Appointment accepted successfully");
             location.reload(true);

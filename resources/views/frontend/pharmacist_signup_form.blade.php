@@ -40,7 +40,8 @@
                         <select class="form-control" id="location_id" name="location_id">
                           <option value="">-Select Location-</option>
                           @foreach($locations as $location)
-                          <option value="{{ $location->location_id }}">{{ $location->location_name }}</option>
+                            <option value="{{ $location->location_id }}">{{ $location->location_name }}</option>
+                          @endforeach
                         </select>
                       </div>
                       <div class="form-group col-md-6 mb-4">

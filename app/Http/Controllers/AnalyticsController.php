@@ -513,16 +513,17 @@ class AnalyticsController extends Controller
         if(count($check_exists)>0){
           echo 'exist'; die;
         } else {
-          $insert_data['location_name'] = $location_name;
+          $insert_data['location_name'] = ucwords(strtolower($location_name));
+          $insert_data['status'] = 1;
           DB::table('locations')->insert($insert_data);
         }
       } else {
-        $check_exists = DB::select("select id from allergies where allergy_name='$location_name' and id!='$location_id'");
+        $check_exists = DB::select("select location_id from locations where location_name='$location_name' and location_id!='$location_id'");
         if(count($check_exists)>0){
           echo 'exist'; die;
         } else {
-          $update_data['location_name'] = $location_name;
-          DB::table('allergies')->where(array('id'=>$location_id))->update($location_name);
+          $update_data['location_name'] = ucwords(strtolower($location_name));
+          DB::table('locations')->where(array('location_id'=>$location_id))->update($update_data);
         }
       }
       echo 'Inserted';

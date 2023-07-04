@@ -183,7 +183,7 @@ function savecategory(){
          if(id==''){
             alert("Location saved successfully");
          } else {
-            alert("location updated successfully");
+            alert("Location updated successfully");
          }
          location.reload();
       }
