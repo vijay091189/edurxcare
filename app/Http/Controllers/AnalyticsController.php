@@ -425,7 +425,7 @@ class AnalyticsController extends Controller
       $option_2 = $input['option_2'];
       $option_3 = $input['option_3'];
       $option_4 = $input['option_4'];
-
+      $correct_answer = $input['correct_answer'];
       if($category_id==''){
         $check_exists = DB::select("select id from pharmacist_questions where question='$question'");
         if(count($check_exists)>0){
@@ -436,6 +436,8 @@ class AnalyticsController extends Controller
           $insert_data['option_2'] = $option_2;
           $insert_data['option_3'] = $option_3;
           $insert_data['option_4'] = $option_4;
+          $correct_option_value = 'option_'.$correct_answer;
+          $insert_data['correct_answer'] = $input[$correct_option_value];
           DB::table('pharmacist_questions')->insert($insert_data);
         }
       } else {
@@ -487,6 +489,56 @@ class AnalyticsController extends Controller
       "status"=>$status
     );
     DB::table('pharmacist_questions')->where(array('id'=>$category_id))->update($data);
+    echo 'updated';
+  }
+
+  public function locationsList(){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $data['categories']=DB::select("select * from locations where status=1");
+      return view("reports/locationsList")->with($data);
+    } else {
+      return Redirect::to('edurxcare_admin');
+    }
+  }
+
+  public function saveLocation(Request $request){
+    $session_details = session()->get('LoginUserSession');
+    if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+      $input = $request->all();
+      $location_id = $input['location_id'];
+      $location_name = $input['location_name'];
+      if($location_id==''){
+        $check_exists = DB::select("select location_id from locations where location_name='$location_name'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $insert_data['location_name'] = $location_name;
+          DB::table('locations')->insert($insert_data);
+        }
+      } else {
+        $check_exists = DB::select("select id from allergies where allergy_name='$location_name' and id!='$location_id'");
+        if(count($check_exists)>0){
+          echo 'exist'; die;
+        } else {
+          $update_data['location_name'] = $location_name;
+          DB::table('allergies')->where(array('id'=>$location_id))->update($location_name);
+        }
+      }
+      echo 'Inserted';
+    } else {
+      return Redirect::to('edurxcare_admin');
+    }
+  }
+
+  public function deleteLocation(Request $request){
+    $input = $request->all();
+    $category_id = $input['category_id'];
+    $status = $input['status'];
+    $data=array(
+      "status"=>$status
+    );
+    DB::table('locations')->where(array('location_id'=>$category_id))->update($data);
     echo 'updated';
   }
 }

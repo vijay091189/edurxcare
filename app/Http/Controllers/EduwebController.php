@@ -46,6 +46,7 @@ class EduwebController extends Controller
         $input = $request->all();
         $data['type'] = $input['type'];
         if($input['type']=='pharmacist'){
+            $data['locations'] = DB::select("select * from locations where status=1");
             return view("frontend/pharmacist_signup_form")->with($data);
         } else {
             return view("frontend/signup_form")->with($data);
@@ -62,6 +63,7 @@ class EduwebController extends Controller
         $data['dob'] = $input['dob'];
         $data['mobile'] = $input['mobile'];
         $data['email'] = $input['email_id'];
+        $data['location_id'] = $input['location_id'];
         $data['address'] = $input['address'];
         $data['license_number'] = $input['license_number'];
         $data['pharma_council_name'] = $input['pharmacy_council'];
@@ -748,7 +750,7 @@ class EduwebController extends Controller
                                         TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from appointments a
                                         inner join app_users au on au.user_id=a.patient_id
                                         where a.status='pending' and accepted_by is null and appointment_id not in (select appointment_id from 
-                                        appointment_rejected_users where user_id='$user_id')");
+                                        appointment_rejected_users where user_id='$user_id') order by a.appointment_date desc");
         return view("dashboard/new_appointments")->with($data);
     }
 
@@ -874,6 +876,21 @@ class EduwebController extends Controller
             //$data['patient_requests'] = DB::select("select * from patient_requests where request_id='$request_id'");
             $data['patient_requests'] = $this->ecareDetails->viewRequestResponse($request_id);
             return view("dashboard/view_response_request")->with($data);
+        } else {
+            return Redirect::to('loginpage');
+        }
+    }
+
+    public function updateAppointmentSlots(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $user_id = $session_details['user_id'];
+            $input = $request->all();
+            $appointment_id = $input['appointment_id'];
+            $update_data['appointment_time'] = date('H:i:s',strtotime($input['appointment_time']));
+            $update_data['accepted_by'] = $user_id;
+            DB::table('appointments')->where(array('appointment_id'=>$appointment_id))->update($update_data);
+            echo 'success';
         } else {
             return Redirect::to('loginpage');
         }

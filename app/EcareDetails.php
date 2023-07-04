@@ -11,7 +11,9 @@ use DateTimeZone, DatePeriod, DateInterval;
 class EcareDetails extends Model
 {
     public function patient_requests($patient_id){
-        $patient_requests = DB::select("select * from patient_requests where patient_id='$patient_id' order by created_date desc");
+        $patient_requests = DB::select("select pr.*, au.name from patient_requests pr 
+                                        left join app_users au on au.user_id=pr.accepted_by
+                                        where pr.patient_id='$patient_id' order by pr.created_date desc");
         return $patient_requests;
     }
 
@@ -48,7 +50,7 @@ class EcareDetails extends Model
         } else {
             $cond = "and appointment_date>'$cur_date'";
         }
-        $data = DB::select("select au.name as accepted_by, description, appointment_date, appointment_time, priority, a.status from appointments a
+        $data = DB::select("select au.name as accepted_by, description, appointment_date, appointment_time, priority, a.status,au.address from appointments a
                                             left join app_users au on au.user_id=a.accepted_by
                                             where patient_id='$user_id' $cond");
         return $data;

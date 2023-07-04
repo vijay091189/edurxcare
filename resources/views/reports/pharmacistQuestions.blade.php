@@ -145,6 +145,20 @@
             </div>
          </div>
          <div class="form-group row">
+            <div class="col-sm-3">
+               <label>Correct Option <span class="text-danger">*</span></label>
+            </div>
+            <div class="col-sm-6">
+               <select class="form-control" name="correct_answer" id="correct_answer">
+                  <option value="">Select Correct Option</option>
+                  <option value="1">Option 1</option>
+                  <option value="2">Option 2</option>
+                  <option value="3">Option 3</option>
+                  <option value="4">Option 4</option>
+               </select>
+            </div>
+         </div>
+         <div class="form-group row">
             <div class="col-sm-12" style="float: left; width: 100%; text-align: center" >
                <button type="button" class="btn btn-primary" id="saveMeds" onclick="savecategory();">Submit</button>
                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -221,12 +235,17 @@ function savecategory(){
    var option_2 = $('#option_2').val();
    var option_3 = $('#option_3').val();
    var option_4 = $('#option_4').val();
+   var correct_answer = $('#correct_answer').val();
    if(question==''){
       alert("Please enter question");
       return false;
    }
    if(option_1=='' && option_2=='' && option_3=='' && option_4==''){
       alert("Please enter atleast one option");
+      return false;
+   }
+   if(correct_answer==''){
+      alert("Please select correct option");
       return false;
    }
    $.ajax({

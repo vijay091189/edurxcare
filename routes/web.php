@@ -82,6 +82,7 @@ Route::get('/pharmacistRequests','App\Http\Controllers\EduwebController@pharmaci
 Route::get('/responseRequest','App\Http\Controllers\EduwebController@responseRequest');
 Route::post('/saveResponse','App\Http\Controllers\EduwebController@saveResponse');
 Route::get('/viewRequestResponse','App\Http\Controllers\EduwebController@viewRequestResponse');
+Route::post('/updateAppointmentSlots','App\Http\Controllers\EduwebController@updateAppointmentSlots');
 
 //Admin routes
 Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');
@@ -114,6 +115,11 @@ Route::get('/deletePatientQuestion','App\Http\Controllers\AnalyticsController@de
 Route::get('/deletePharmacistQuestion','App\Http\Controllers\AnalyticsController@deletePharmacistQuestion');
 Route::get('/appUsersList','App\Http\Controllers\AnalyticsController@appUsersList');
 Route::get('/logout','App\Http\Controllers\AnalyticsController@logout');
+Route::get('/locationsList','App\Http\Controllers\AnalyticsController@locationsList');
+Route::post('/saveLocation','App\Http\Controllers\AnalyticsController@saveLocation');
+Route::get('/deleteLocation','App\Http\Controllers\AnalyticsController@deleteLocation');
+
+
 
 
 

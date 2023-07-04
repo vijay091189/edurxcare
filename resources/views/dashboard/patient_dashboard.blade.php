@@ -30,7 +30,12 @@
                     <tr>
                       <td style="padding-right: 3px;"><b>Pharmacist Name</b></td>
                       <td style="padding-right: 3px;">:</td>
-                      <td>--</td>
+                      <td>{{ isset($patient_req->name)?$patient_req->name:'--' }}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding-right: 3px;"><b>Pharmacist Address</b></td>
+                      <td style="padding-right: 3px;">:</td>
+                      <td>{{ isset($patient_req->address)?$patient_req->address:'--' }}</td>
                     </tr>
                   </table>
                 </div>

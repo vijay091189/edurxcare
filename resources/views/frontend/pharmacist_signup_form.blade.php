@@ -37,6 +37,13 @@
                         <input type="text" class="form-control" placeholder="Email-id" id="email_id" name="email_id">
                       </div>
                       <div class="form-group col-md-6 mb-4">
+                        <select class="form-control" id="location_id" name="location_id">
+                          <option value="">-Select Location-</option>
+                          @foreach($locations as $location)
+                          <option value="{{ $location->location_id }}">{{ $location->location_name }}</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-6 mb-4">
                         <input type="text" class="form-control" placeholder="Address" id="address" name="address">
                       </div>
                       <div class="form-group col-md-6 mb-4">
@@ -101,6 +108,7 @@
     var dob = $('#dob').val();
     var mobile = $('#mobile').val();
     var email = $('#email_id').val();
+    var location_id = $('#location_id').val();
     var address = $('#address').val();
     var license_number = $('#license_number').val();
     var pharmacy_council = $('#pharmacy_council').val();
@@ -132,6 +140,10 @@
     }
     if(!validateEmail(email)) { 
       alert("Please enter valid Email ID");
+      return false;
+    }
+    if(location_id==''){
+      alert("Please select location");
       return false;
     }
     if(address==''){

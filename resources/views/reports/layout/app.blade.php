@@ -220,6 +220,11 @@ $last_element = end($split_url);
                            <i class="icon-arrow-right"></i><span> Appointments</span>
                            </a>                
                         </li>
+                        <li <?php if(in_array('locationsList',$split_url)){ echo 'class="active"';} ?>>
+                           <a class="waves-effect waves-dark" href="{{ URl::to('/locationsList') }}">
+                           <i class="icon-arrow-right"></i><span> Locations</span>
+                           </a>                
+                        </li>
                      </ul>               
                   </li>
                </ul>

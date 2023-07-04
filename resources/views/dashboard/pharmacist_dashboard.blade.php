@@ -13,11 +13,11 @@
                 <h5 class="card-title">Date : {{ date('d-m-Y', strtotime($patient_req->created_date)) }}</h5>
                 <div class="card-text">
                   <table>
-                    <tr>
+                    <!-- <tr>
                       <td style="padding-right: 3px;"><b>Patient Name</b></td>
                       <td style="padding-right: 3px;">:</td>
                       <td>{{ $patient_req->patient_name }}</td>
-                    </tr>
+                    </tr> -->
                     <tr>
                       <td style="padding-right: 3px;"><b>Patient ID</b></td>
                       <td style="padding-right: 3px;">:</td>
