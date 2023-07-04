@@ -48,6 +48,11 @@
                       <td style="padding-right: 3px;">:</td>
                       <td>{{ $appoint->accepted_by!=''?$appoint->accepted_by:'--' }}</td>
                     </tr>
+                    <tr>
+                      <td style="padding-right: 3px;"><b>Address</b></td>
+                      <td style="padding-right: 3px;">:</td>
+                      <td>{{ $appoint->location_name!=''?$appoint->location_name.', '.$appoint->address:'--' }}</td>
+                    </tr>
                   </table>
                 </div>
               </div>

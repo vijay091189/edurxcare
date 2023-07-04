@@ -50,8 +50,10 @@ class EcareDetails extends Model
         } else {
             $cond = "and appointment_date>'$cur_date'";
         }
-        $data = DB::select("select au.name as accepted_by, description, appointment_date, appointment_time, priority, a.status,au.address from appointments a
+        $data = DB::select("select au.name as accepted_by, description, appointment_date, appointment_time, priority, a.status,
+                                            au.address, l.location_name from appointments a
                                             left join app_users au on au.user_id=a.accepted_by
+                                            left join locations l on l.location_id=au.location_id
                                             where patient_id='$user_id' $cond");
         return $data;
     }
