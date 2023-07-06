@@ -63,7 +63,7 @@ class EcareController extends BaseController
             $insert_data1['role_id'] = 2;
             $insert_data1['status'] = 'approved';
             $unique_code = strtoupper($acronym.'P'.date('His'));
-            $user_id = DB::table('app_users')->insertGetId($data);
+            $user_id = DB::table('app_users')->insertGetId($insert_data1);
             //insert patient data
             $pat_data['patient_id'] = $user_id;
             $pat_data['height_cms'] = $input['height_cms'];
@@ -72,14 +72,14 @@ class EcareController extends BaseController
             $pat_data['is_patient_answered'] = 0;
             DB::table('patient_details')->insertGetId($pat_data);
         } else {
-            $data['location_id'] = $input['location_id'];
-            $data['license_number'] = $input['license_number'];
-            $data['license_expiry_date'] = $input['license_expiry_date']!=''?$input['license_expiry_date']:NULL;
-            $data['pharma_council_name'] = $input['pharmacy_council'];
-            $data['role_id'] = 3;
-            $data['status'] = 'pending';
+            $insert_data1['location_id'] = $input['location_id'];
+            $insert_data1['license_number'] = $input['license_number'];
+            $insert_data1['license_expiry_date'] = $input['license_expiry_date']!=''?$input['license_expiry_date']:NULL;
+            $insert_data1['pharma_council_name'] = $input['pharma_council_name'];
+            $insert_data1['role_id'] = 3;
+            $insert_data1['status'] = 'pending';
             $unique_code = strtoupper($acronym.'U'.date('His'));
-            $user_id = DB::table('app_users')->insertGetId($data);
+            $user_id = DB::table('app_users')->insertGetId($insert_data1);
         }
         //update code
         $updatedata['unique_id'] = $unique_code.'-'.$user_id;
@@ -474,7 +474,7 @@ class EcareController extends BaseController
             $data[$key]['priority'] = ucwords($appoint->priority);
             $data[$key]['status'] = ucwords($appoint->status);
             $data[$key]['condition'] = $appoint->description;
-            $data[$key]['appointment_type'] = $appoint->appointment_type;
+            //$data[$key]['appointment_type'] = $appoint->appointment_type;
             $data[$key]['accepted_pharmacist'] = $appoint->accepted_by!=''?$appoint->accepted_by:'--';
             $data[$key]['address'] = $appoint->location_name!=''?$appoint->location_name.','.$appoint->address:'--';
             $key++;
