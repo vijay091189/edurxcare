@@ -47,17 +47,43 @@ class EcareController extends BaseController
         $role_id = isset($get_role_details[0])?$get_role_details[0]->role_id:'';
         $insert_data1['name'] = $name;
         $insert_data1['gender'] = $gender;
-        $insert_data1['role_id'] = $role_id;
-        $insert_data1['gender'] = $gender;
         $insert_data1['dob'] = $dob;
         $insert_data1['email'] = $email_id;
         $insert_data1['mobile'] = $mobile_number;
         $insert_data1['address'] = $address;
         $insert_data1['is_deleted'] = 0;
-        $insert_data1['status'] = $role_id==2?'approved':'pending';
         $insert_data1['created_date'] = date('Y-m-d H:i:s');
-        $user_id = DB::table('app_users')->insertGetId($insert_data1);
-
+        $words = explode(" ", $name);
+        $acronym = "";
+        foreach ($words as $w) {
+            $acronym .= mb_substr($w, 0, 1);
+        }
+        $unique_code = $acronym.date('His');
+        if($role_id=='2'){
+            $insert_data1['role_id'] = 2;
+            $insert_data1['status'] = 'approved';
+            $unique_code = strtoupper($acronym.'P'.date('His'));
+            $user_id = DB::table('app_users')->insertGetId($data);
+            //insert patient data
+            $pat_data['patient_id'] = $user_id;
+            $pat_data['height_cms'] = $input['height_cms'];
+            $pat_data['weight'] = $input['weight'];
+            $pat_data['blood_group'] = $input['blood_group'];
+            $pat_data['is_patient_answered'] = 0;
+            DB::table('patient_details')->insertGetId($pat_data);
+        } else {
+            $data['location_id'] = $input['location_id'];
+            $data['license_number'] = $input['license_number'];
+            $data['license_expiry_date'] = $input['license_expiry_date']!=''?$input['license_expiry_date']:NULL;
+            $data['pharma_council_name'] = $input['pharmacy_council'];
+            $data['role_id'] = 3;
+            $data['status'] = 'pending';
+            $unique_code = strtoupper($acronym.'U'.date('His'));
+            $user_id = DB::table('app_users')->insertGetId($data);
+        }
+        //update code
+        $updatedata['unique_id'] = $unique_code.'-'.$user_id;
+        DB::table('app_users')->where(array('user_id'=>$user_id))->update($updatedata);
         //insert into login table
         $encpassword = EncDecHelper::enc_string($password);
         $login_data['username'] = $mobile_number;
@@ -78,9 +104,10 @@ class EcareController extends BaseController
         $username = $input['username'];
         $userpassword = $input['password'];
         $encpassword = EncDecHelper::enc_string($userpassword);
-        $checkUserLogin = DB::select("select l.*, au.* from login l 
-                                    inner join app_users au on au.user_id=l.user_id
-                                    where l.username='".$username."' and l.password='".$encpassword."' and l.status=1");
+        $checkUserLogin = DB::select("select l.*, au.name, au.status as approve_status,role_name,au.is_patient_answered from login l 
+                                        inner join app_users au on au.user_id=l.user_id
+                                        inner join roles r on r.role_id=au.role_id
+                                        where l.username='".$username."' and l.password='".$encpassword."' and l.status=1");
         if(isset($checkUserLogin[0])){
             $res_data['user_id'] = (string)$checkUserLogin[0]->user_id;
             $res_data['role_id'] = (string)$checkUserLogin[0]->role_id;
@@ -90,6 +117,9 @@ class EcareController extends BaseController
             $res_data['mobile'] = (string)$checkUserLogin[0]->mobile;
             $res_data['email'] = (string)$checkUserLogin[0]->email;
             $res_data['address'] = (string)$checkUserLogin[0]->address;
+            $res_data['role_name'] = (string)$checkUserLogin[0]->role_name;
+            $res_data['is_patient_answered'] = $checkUserLogin[0]->is_patient_answered==1?'yes':'no';
+
             $response_data['status'] = "200";
             $response_data['message'] = "Login Successful";
             $response_data['status_message'] = $res_data;
@@ -103,6 +133,9 @@ class EcareController extends BaseController
             $res_data['mobile'] = '';
             $res_data['email'] = '';
             $res_data['address'] = '';
+            $res_data['role_name'] = '';
+            $res_data['is_patient_answered'] = '';
+
             $response_data['status'] = '500';
             $response_data['message'] = "Invalid Username or Password";
             $response_data['status_message'] = $res_data;
@@ -443,6 +476,7 @@ class EcareController extends BaseController
             $data[$key]['condition'] = $appoint->description;
             $data[$key]['appointment_type'] = $appoint->appointment_type;
             $data[$key]['accepted_pharmacist'] = $appoint->accepted_by!=''?$appoint->accepted_by:'--';
+            $data[$key]['address'] = $appoint->location_name!=''?$appoint->location_name.','.$appoint->address:'--';
             $key++;
         }
         $res_data['status'] = "200";
@@ -459,6 +493,7 @@ class EcareController extends BaseController
         $data['appointment_time'] = date('H:i:s',strtotime($input['appointment_time']));
         $data['description'] = $input['condition'];
         $data['priority'] = $input['priority'];
+        $data['location_id'] = isset($input['location_id'])?$input['location_id']:NULL;
         $data['created_by'] = $user_id;
         $data['created_date'] = date('Y-m-d H:i:s');
         $data['status'] = 'pending';
@@ -840,6 +875,53 @@ class EcareController extends BaseController
         $medication_id = DB::table('patient_medications')->insertGetId($data);
         $res_data['status'] = "200";
         $res_data['status_message'] = "Medication saved successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function locationsList(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $locations = DB::select("select * from locations where status=1");
+        $key=0;
+        $data = array();
+        foreach($locations as $location){
+            $data[$key]['location_name'] = $location->location_name;
+            $data[$key]['location_id'] = (string)$location->location_id;
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message']['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function bloodGroups(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $data[0]['value'] = 'O +ve';
+        $data[0]['label'] = 'O +ve';
+
+        $data[1]['value'] = 'O -ve';
+        $data[1]['label'] = 'O -ve';
+
+        $data[2]['value'] = 'A +ve';
+        $data[2]['label'] = 'A +ve';
+
+        $data[3]['value'] = 'A -ve';
+        $data[3]['label'] = 'A -ve';
+
+        $data[4]['value'] = 'B +ve';
+        $data[4]['label'] = 'B +ve';
+
+        $data[5]['value'] = 'B -ve';
+        $data[5]['label'] = 'B -ve';
+
+        $data[6]['value'] = 'AB +ve';
+        $data[6]['label'] = 'AB +ve';
+
+        $data[7]['value'] = 'AB +ve';
+        $data[7]['label'] = 'AB +ve';
+        $res_data['status'] = "200";
+        $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
 }

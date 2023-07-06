@@ -73,15 +73,13 @@ class EduwebController extends Controller
         }
         $unique_code = $acronym.date('His');
         if($reg_type=='patient'){
-          
             $data['role_id'] = 2;
             $data['status'] = 'approved';
             $unique_code = strtoupper($acronym.'P'.date('His'));
             $user_id = DB::table('app_users')->insertGetId($data);
             //insert patient data
             $pat_data['patient_id'] = $user_id;
-            $pat_data['height_feet'] = $input['height_feet'];
-            $pat_data['height_inches'] = $input['height_inches'];
+            $pat_data['height_cms'] = $input['height_cms'];
             $pat_data['weight'] = $input['weight'];
             $pat_data['blood_group'] = $input['blood_group'];
             $pat_data['is_patient_answered'] = 0;
@@ -116,7 +114,7 @@ class EduwebController extends Controller
         $username = $input['username'];
         $userpassword = $input['userpassword'];
         $encpassword = EncDecHelper::enc_string($userpassword);
-        $checkUserLogin = DB::select("select l.*, au.name, au.status as approve_status,role_name from login l 
+        $checkUserLogin = DB::select("select l.*, au.name, au.status as approve_status,role_name,au.is_patient_answered from login l 
                                     inner join app_users au on au.user_id=l.user_id
                                     inner join roles r on r.role_id=au.role_id
                                     where l.username='".$username."' and l.password='".$encpassword."' and l.status=1");
@@ -130,12 +128,22 @@ class EduwebController extends Controller
                                     'display_name'=>$checkUserLogin[0]->name
                                   );
             session()->put('LoginUserSession', $UserSessionData);
-            echo $checkUserLogin[0]->role_id;
+            $data['user_id'] = $checkUserLogin[0]->user_id;
+            $data['role_id'] = $checkUserLogin[0]->role_id;
+            $data['is_patient_answered'] = $checkUserLogin[0]->is_patient_answered;
+            $data['status'] = 'success';
         } else if(count($checkUserLogin)>0 && $checkUserLogin[0]->approve_status=='pending'){
-            echo 'inactive';
+            $data['user_id'] = '';
+            $data['role_id'] = '';
+            $data['is_patient_answered'] = '';
+            $data['status'] = 'inactive';
         } else {
-            echo 'invalid';
+            $data['user_id'] = '';
+            $data['role_id'] = '';
+            $data['is_patient_answered'] = '';
+            $data['status'] = 'invalid';
         }
+        echo json_encode($data);
     }
 
     public function patientDashboard(Request $request){

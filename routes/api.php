@@ -44,6 +44,8 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('/saveAppointment','App\Http\Controllers\API\EcareController@saveAppointment');
 	Route::post('/saveReviewRating','App\Http\Controllers\API\EcareController@saveReviewRating');
 	Route::post('/saveReferFriend','App\Http\Controllers\API\EcareController@saveReferFriend');
+	Route::post('/locationsList','App\Http\Controllers\API\EcareController@locationsList');
+	Route::post('/bloodGroups','App\Http\Controllers\API\EcareController@bloodGroups');
 	//save request methods
 	Route::post('/newRequest','App\Http\Controllers\API\EcareController@newRequest');
 	Route::post('/addMedications','App\Http\Controllers\API\EcareController@addMedications');
