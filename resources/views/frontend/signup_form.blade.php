@@ -39,6 +39,51 @@
                       <div class="form-group col-md-6 mb-4">
                         <input type="text" class="form-control" placeholder="Address" id="address" name="address">
                       </div>
+                      <div class="form-group col-md-3 mb-4">
+                        <select class="form-control" id="height_feet" name="height_feet">
+                          <option value="">-Select Height(Feet)-</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-3 mb-4">
+                        <select class="form-control" id="height_inches" name="height_inches">
+                          <option value="">-Select Height(Inches)-</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-6 mb-4">
+                        <select class="form-control" id="blood_group" name="blood_group">
+                          <option value="">-Select Blood Group-</option>
+                          <option value="O +ve">O +ve</option>
+                          <option value="O -ve">O -ve</option>
+                          <option value="A +ve">A +ve</option>
+                          <option value="A -ve">A -ve</option>
+                          <option value="B +ve">B +ve</option>
+                          <option value="B -ve">B -ve</option>
+                          <option value="AB +ve">AB +ve</option>
+                          <option value="AB -ve">AB -ve</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-6 mb-4">
+                        <input type="text" class="form-control" placeholder="Weight" id="weight" name="weight">
+                      </div>
                       <div class="col-md-6 form-group mb-4">
                         <div class="input-group" id="show_hide_password">
                           <input class="form-control" type="password" placeholder="Password" id="new_password" name="new_password">

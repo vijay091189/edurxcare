@@ -63,10 +63,7 @@ class EduwebController extends Controller
         $data['dob'] = $input['dob'];
         $data['mobile'] = $input['mobile'];
         $data['email'] = $input['email_id'];
-        $data['location_id'] = $input['location_id'];
         $data['address'] = $input['address'];
-        $data['license_number'] = $input['license_number'];
-        $data['pharma_council_name'] = $input['pharmacy_council'];
         $data['is_deleted'] = 0;
         $data['created_date'] = date('Y-m-d H:i:s');
         $words = explode(" ", $input['full_name']);
@@ -76,15 +73,29 @@ class EduwebController extends Controller
         }
         $unique_code = $acronym.date('His');
         if($reg_type=='patient'){
+          
             $data['role_id'] = 2;
             $data['status'] = 'approved';
             $unique_code = strtoupper($acronym.'P'.date('His'));
+            $user_id = DB::table('app_users')->insertGetId($data);
+            //insert patient data
+            $pat_data['patient_id'] = $user_id;
+            $pat_data['height_feet'] = $input['height_feet'];
+            $pat_data['height_inches'] = $input['height_inches'];
+            $pat_data['weight'] = $input['weight'];
+            $pat_data['blood_group'] = $input['blood_group'];
+            $pat_data['is_patient_answered'] = 0;
+            DB::table('patient_details')->insertGetId($pat_data);
         } else {
+            $data['location_id'] = $input['location_id'];
+            $data['license_number'] = $input['license_number'];
+            $data['license_expiry_date'] = $input['license_expiry_date']!=''?$input['license_expiry_date']:NULL;
+            $data['pharma_council_name'] = $input['pharmacy_council'];
             $data['role_id'] = 3;
             $data['status'] = 'pending';
             $unique_code = strtoupper($acronym.'U'.date('His'));
+            $user_id = DB::table('app_users')->insertGetId($data);
         }
-        $user_id = DB::table('app_users')->insertGetId($data);
         //update code
         $updatedata['unique_id'] = $unique_code.'-'.$user_id;
         DB::table('app_users')->where(array('user_id'=>$user_id))->update($updatedata);
@@ -105,8 +116,9 @@ class EduwebController extends Controller
         $username = $input['username'];
         $userpassword = $input['userpassword'];
         $encpassword = EncDecHelper::enc_string($userpassword);
-        $checkUserLogin = DB::select("select l.*, au.name, au.status as approve_status from login l 
+        $checkUserLogin = DB::select("select l.*, au.name, au.status as approve_status,role_name from login l 
                                     inner join app_users au on au.user_id=l.user_id
+                                    inner join roles r on r.role_id=au.role_id
                                     where l.username='".$username."' and l.password='".$encpassword."' and l.status=1");
         if(count($checkUserLogin)>0 && $checkUserLogin[0]->approve_status=='approved'){
             $UserSessionData = array(
@@ -114,6 +126,7 @@ class EduwebController extends Controller
                                     'loginid'=>$checkUserLogin[0]->loginid,
                                     'username'=>$checkUserLogin[0]->username,
                                     'role_id'=>$checkUserLogin[0]->role_id,
+                                    'role_name'=>$checkUserLogin[0]->role_name,
                                     'display_name'=>$checkUserLogin[0]->name
                                   );
             session()->put('LoginUserSession', $UserSessionData);
@@ -547,6 +560,7 @@ class EduwebController extends Controller
         $filter = isset($input['filter'])?$input['filter']:'today';
         $cur_date = date('Y-m-d');
         $data['filter'] = $filter;
+        $data['locations'] = DB::select("select * from locations where status=1");
         $data['appointments'] = $this->ecareDetails->patientAppointments($user_id,$filter,$cur_date);
         return view("dashboard/patient_appointments")->with($data);
     }
@@ -669,6 +683,7 @@ class EduwebController extends Controller
         $data['appointment_time'] = date('H:i:s',strtotime($input['appointment_time']));
         $data['description'] = $input['condition'];
         $data['priority'] = $input['priority'];
+        $data['location_id'] = $input['location_id'];
         $data['created_by'] = $user_id;
         $data['created_date'] = date('Y-m-d H:i:s');
         $data['status'] = 'pending';
@@ -746,11 +761,12 @@ class EduwebController extends Controller
         $session_details = session()->get('LoginUserSession');
         $user_id = $session_details['user_id'];
         $data['appointments'] = DB::select("select a.appointment_id, au.name as patient_name, a.description, a.priority, a.appointment_date, 
-                                        a.appointment_time, au.unique_id,au.mobile, au.email, au.address,
-                                        TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from appointments a
-                                        inner join app_users au on au.user_id=a.patient_id
-                                        where a.status='pending' and accepted_by is null and appointment_id not in (select appointment_id from 
-                                        appointment_rejected_users where user_id='$user_id') order by a.appointment_date desc");
+                                            a.appointment_time, au.unique_id,au.mobile, au.email, au.address,
+                                            TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from appointments a
+                                            inner join app_users au on au.user_id=a.patient_id
+                                            where a.status='pending' and accepted_by is null and appointment_id not in (select appointment_id from 
+                                            appointment_rejected_users where user_id='$user_id') and a.location_id in (select location_id from 
+                                            app_users where user_id='$user_id') order by a.appointment_date desc");
         return view("dashboard/new_appointments")->with($data);
     }
 
@@ -853,18 +869,76 @@ class EduwebController extends Controller
     }
 
     public function saveResponse(Request $request){
-        $input = $request->all();
-        $request_id = $input['request_id'];
-        $data['usage'] = $input['usage'];
-        $data['directions'] = $input['directions'];
-        $data['side_effects'] = $input['side_effects'];
-        $data['manage_side_effects'] = $input['manage_side_effects'];
-        $data['self_care_measure'] = $input['self_care_measure'];
-        $data['drug_interactions'] = $input['drug_interactions'];
-        $data['follow_up_comments'] = $input['follow_up_comments'];
-        $data['response_comments'] = $input['response_comments'];
-        DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($data);
-        echo 'success';
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $input = $request->all();
+            $request_id = $input['request_id'];
+            $user_id = $session_details['user_id'];
+            $get_requestdetails =  collect(DB::select("select * from patient_requests where request_id='$request_id'"))->first();
+            $data['usage'] = $input['usage'];
+            $data['directions'] = $input['directions'];
+            $data['side_effects'] = $input['side_effects'];
+            $data['manage_side_effects'] = $input['manage_side_effects'];
+            $data['self_care_measure'] = $input['self_care_measure'];
+            $data['drug_interactions'] = $input['drug_interactions'];
+            $data['follow_up_comments'] = $input['follow_up_comments'];
+            $data['response_comments'] = $input['response_comments'];
+            DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($data);
+            $changes=0;
+            $changes_array = array();
+            if($input['usage']!=$get_requestdetails->usage){
+                $changes_array[] = 'Use';
+                $changes = $changes+1;
+            }
+            if($input['directions']!=$get_requestdetails->directions){
+                $changes_array[] = 'Directions';
+                $changes = $changes+1;
+            }
+            if($input['side_effects']!=$get_requestdetails->side_effects){
+                $changes_array[] = 'Side Effects';
+                $changes = $changes+1;
+            }
+            if($input['manage_side_effects']!=$get_requestdetails->manage_side_effects){
+                $changes_array[] = 'Managing Side Effects';
+                $changes = $changes+1;
+            }
+            if($input['self_care_measure']!=$get_requestdetails->self_care_measure){
+                $changes_array[] = 'Self Care Measures';
+                $changes = $changes+1;
+            }
+            if($input['drug_interactions']!=$get_requestdetails->drug_interactions){
+                $changes_array[] = 'Drug Interactions';
+                $changes = $changes+1;
+            }
+            if($input['follow_up_comments']!=$get_requestdetails->follow_up_comments){
+                $changes_array[] = 'Follow up with pharmacist/physcian';
+                $changes = $changes+1;
+            }
+            if($input['response_comments']!=$get_requestdetails->response_comments){
+                $changes_array[] = 'Additional Comments';
+                $changes = $changes+1;
+            }
+            if($changes>0){
+                $changes_str = implode(', ',$changes_array);
+                //insert history log
+                $history_log['request_id'] = $request_id;
+                $history_log['usage'] = $input['usage'];
+                $history_log['directions'] = $input['directions'];
+                $history_log['side_effects'] = $input['side_effects'];
+                $history_log['manage_side_effects'] = $input['manage_side_effects'];
+                $history_log['self_care_measure'] = $input['self_care_measure'];
+                $history_log['drug_interactions'] = $input['drug_interactions'];
+                $history_log['follow_up_comments'] = $input['follow_up_comments'];
+                $history_log['response_comments'] = $input['response_comments'];
+                $history_log['response_comments'] = 'Modified '.$changes_str;
+                $history_log['updated_by'] = $user_id;
+                $history_log['updated_date'] = date('Y-m-d H:i:s');
+                DB::table('request_response_history')->insert($history_log);
+            }
+            echo 'success';
+        } else {
+            return Redirect::to('loginpage');
+        }
     }
 
     public function viewRequestResponse(Request $request){

@@ -45,6 +45,11 @@
     input[type="checkbox"] {
       display: inline-block !important;
     }
+    .header_menu_ddl{
+      line-height: 30px;
+      padding: 10px;
+      margin-left: -45px;
+    }
   </style>
   <script>
     Breakpoints();
@@ -122,10 +127,26 @@ $session_details = session()->get('LoginUserSession');
             </a>
           </li>
         </ul>
+        
         <!-- End Navbar Toolbar -->
         <!-- Navbar Toolbar Right -->
         <!-- End Navbar Toolbar Right -->
       </div>
+      <div class="navbar-custom-menu">
+          <ul class="top-nav" style="list-style:none;">
+            <!-- User Menu-->
+            <li class="dropdown">
+                <a href="#!" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle drop" style="color: #5b3e3e;font-size: 16px;">
+                  <!-- <span><img class="img-circle " src="{{ url('/') }}/public/assets/images/nouser.png" style="width:40px;" alt="User Image"></span> -->
+                  <span>Hi {{ $session_details['display_name'] }}({{ $session_details['role_name'] }}) <i class=" icofont icofont-simple-down"></i></span>
+                </a>
+                <ul class="dropdown-menu settings-menu header_menu_ddl">
+                  <li><a href="{{ URL::to('/userChangePassword') }}"><i class="icon-lock"></i> Change Password</a></li> 
+                  <li><a href="{{ URl::to('/userlogout') }}"><i class="icon-logout"></i> Logout</a></li>
+                </ul>
+            </li>
+          </ul>
+        </div>
       <!-- End Navbar Collapse -->
       <!-- Site Navbar Seach -->
       <div class="collapse navbar-search-overlap" id="site-navbar-search">
@@ -140,7 +161,9 @@ $session_details = session()->get('LoginUserSession');
         </form>
       </div>
       <!-- End Site Navbar Seach -->
+      
     </div>
+    
   </nav>
   <div class="site-menubar">
     <ul class="site-menu">

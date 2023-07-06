@@ -116,6 +116,19 @@
             </div>
             <div class="form-group row">
                 <div class="col-sm-4">
+                  <label>Location<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-sm-6">
+                  <select class="form-control" id="location_id" name="location_id">
+                    <option value="">-Select Location-</option>
+                    @foreach($locations as $location)
+                      <option value="{{ $location->location_id }}">{{ $location->location_name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4">
                   <label>Priority<span class="text-danger">*</span></label>
                 </div>
                 <div class="col-sm-6">
@@ -164,6 +177,8 @@
     var condition = $('#condition').val();
     var appointment_date = $('#appointment_date').val();
     var appointment_time = $('#appointment_time').val();
+    var location_id = $('#location_id').val();
+    
     var priority = $('#priority').val();
     if(appointment_type==''){
       alert("Please select appointment type");
@@ -181,7 +196,10 @@
       alert("Please select appointment time");
       return false;
     }
-   
+    if(location_id==''){
+      alert("Please select preferred location");
+      return false;
+    }
     $.ajax({
         type : "POST",
         url : post_url,

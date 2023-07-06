@@ -28,7 +28,7 @@
                         </select>
                       </div>
                       <div class="form-group col-md-6 mb-4">
-                        <input type="text" class="form-control" placeholder="DOB" id="dob" name="dob">
+                        <input type="text" class="form-control datepicker" placeholder="DOB" id="dob" name="dob">
                       </div>
                       <div class="form-group col-md-6 mb-4">
                         <input type="number" class="form-control" placeholder="Mobile Number" id="mobile" name="mobile">
@@ -49,6 +49,9 @@
                       </div>
                       <div class="form-group col-md-6 mb-4">
                         <input type="text" class="form-control" placeholder="Registration/License Number" id="license_number" name="license_number">
+                      </div>
+                      <div class="form-group col-md-6 mb-4">
+                        <input type="text" class="form-control datepicker" placeholder="License Expiry Date" id="license_expiry_date" name="license_expiry_date">
                       </div>
                       <div class="form-group col-md-6 mb-4">
                         <input type="text" class="form-control" placeholder="State Pharmacy Council" id="pharmacy_council" name="pharmacy_council">
@@ -94,7 +97,7 @@
 <script type="text/javascript" src="{{ URL::to('public/assets/js/flatpickr.js') }}"></script>
 
 <script type="text/javascript">
-    $("#dob").flatpickr({
+    $(".datepicker").flatpickr({
       altInput: true,
       altFormat: "d/m/Y",
       dateFormat: "Y-m-d"
@@ -152,14 +155,14 @@
       return false;
     }
 
-    if(license_number==''){
-      alert("Please enter Registration/License number");
-      return false;
-    }
-    if(pharmacy_council==''){
-      alert("Please enter pharma council name");
-      return false;
-    }
+    // if(license_number==''){
+    //   alert("Please enter Registration/License number");
+    //   return false;
+    // }
+    // if(pharmacy_council==''){
+    //   alert("Please enter pharma council name");
+    //   return false;
+    // }
     if(new_password==''){
       alert("Please enter new password");
       return false;
