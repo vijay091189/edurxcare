@@ -83,6 +83,7 @@ Route::get('/responseRequest','App\Http\Controllers\EduwebController@responseReq
 Route::post('/saveResponse','App\Http\Controllers\EduwebController@saveResponse');
 Route::get('/viewRequestResponse','App\Http\Controllers\EduwebController@viewRequestResponse');
 Route::post('/updateAppointmentSlots','App\Http\Controllers\EduwebController@updateAppointmentSlots');
+Route::get('/patientLifestyle','App\Http\Controllers\EduwebController@patientLifestyle');
 
 //Admin routes
 Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');

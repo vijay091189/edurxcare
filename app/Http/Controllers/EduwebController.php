@@ -977,4 +977,11 @@ class EduwebController extends Controller
             return Redirect::to('loginpage');
         }
     }
+
+    public function patientLifestyle(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        $user_id = $session_details['user_id'];
+        $data['questions'] = DB::select("select * from patient_questions where status=1");
+        return view("dashboard/patientLifestyle")->with($data);
+    }
 }
