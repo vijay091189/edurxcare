@@ -981,7 +981,29 @@ class EduwebController extends Controller
     public function patientLifestyle(Request $request){
         $session_details = session()->get('LoginUserSession');
         $user_id = $session_details['user_id'];
-        $data['questions'] = DB::select("select * from patient_questions where status=1");
+        $data['questions'] = DB::select("select * from patient_lifestyle_questions where status=1");
         return view("dashboard/patientLifestyle")->with($data);
+    }
+
+    public function saveLifestyleAnswers(Request $request){
+        $session_details = session()->get('LoginUserSession');
+        if(isset($session_details['loginid']) && $session_details['loginid']!=''){
+            $question_data = DB::select("select * from patient_lifestyle_questions where status=1");
+            $user_id = $session_details['user_id'];
+            $input = $request->all();
+            foreach($question_data as $get_question){
+                $insert_data['user_id'] = $user_id;
+                $insert_data['question'] = $get_question->question;
+                $question_key = 'question_'.$get_question->question_id;
+                $insert_data['answer'] = $input[$question_key];
+                DB::table('patient_lifestyle_answers')->insert($insert_data);
+            }
+             //answers status
+            $updatedata['is_patient_answered'] = 1;
+            DB::table('app_users')->where(array('user_id'=>$user_id))->update($updatedata);
+            echo 'success';
+        } else {
+            return Redirect::to('loginpage');
+        }
     }
 }

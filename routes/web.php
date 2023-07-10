@@ -84,6 +84,7 @@ Route::post('/saveResponse','App\Http\Controllers\EduwebController@saveResponse'
 Route::get('/viewRequestResponse','App\Http\Controllers\EduwebController@viewRequestResponse');
 Route::post('/updateAppointmentSlots','App\Http\Controllers\EduwebController@updateAppointmentSlots');
 Route::get('/patientLifestyle','App\Http\Controllers\EduwebController@patientLifestyle');
+Route::post('/saveLifestyleAnswers','App\Http\Controllers\EduwebController@saveLifestyleAnswers');
 
 //Admin routes
 Route::get('/edurxcare_admin','App\Http\Controllers\AnalyticsController@adminLogin');
@@ -119,31 +120,3 @@ Route::get('/logout','App\Http\Controllers\AnalyticsController@logout');
 Route::get('/locationsList','App\Http\Controllers\AnalyticsController@locationsList');
 Route::post('/saveLocation','App\Http\Controllers\AnalyticsController@saveLocation');
 Route::get('/deleteLocation','App\Http\Controllers\AnalyticsController@deleteLocation');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
