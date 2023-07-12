@@ -1006,4 +1006,19 @@ class EduwebController extends Controller
             return Redirect::to('loginpage');
         }
     }
+
+    public function downloadRequestData(Request $req){
+		try{
+			$pdf = \PDF::loadView('dashboard/print_request_data')->setPaper(array(0,0,720,950), 'potrait');
+			$pdf->setOptions(['isPhpEnabled' => true]);
+			$pdf->setOptions(['setIsHtml5ParserEnabled' => true]);
+			$pdf->setOptions(['setChroot' => base_path()]);
+			$pdf->setOptions(['setIsRemoteEnabled' => true]);
+			//$pdf = \PDF::loadView('treatment/print-treatment-plan', $data)->setPaper(array(0,0,720,950), 'potrait');
+			return $pdf->download('TCM_30-Day-Closure_Report.pdf');
+		   } catch ( Exception $e ) {
+				$e->getMessage ();
+				return 0;
+		   }
+	}
 }
