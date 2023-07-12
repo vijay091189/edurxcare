@@ -1009,7 +1009,19 @@ class EduwebController extends Controller
 
     public function downloadRequestData(Request $req){
 		try{
-			$pdf = \PDF::loadView('dashboard/print_request_data')->setPaper(array(0,0,720,950), 'potrait');
+            $input = $req->all();
+            $request_id = $input['request_id'];
+            $data['request_id'] =$request_id;
+            $data['request_details'] = collect(DB::select("select a.comments, au.name as patient_name,au.unique_id,au.mobile, au.email, au.address, au.gender,
+                                                TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from patient_requests a 
+                                                inner join app_users au on au.user_id=a.patient_id 
+                                                where a.request_id='$request_id'"))->first();
+            $data['request_allergies'] = DB::select("select * from request_allergies where request_id='$request_id' and status=1");
+            $data['request_lab_documents'] = DB::select("select * from request_lab_documents where request_id='$request_id' and status=1");
+            $data['request_prescriptions'] = DB::select("select * from request_prescriptions where request_id='$request_id' and status=1");
+            $data['request_medications'] = DB::select("select * from request_medications where request_id='$request_id' and status=1");
+            $data['request_medical_conditions'] = DB::select("select * from request_medical_conditions where request_id='$request_id' and status=1");
+			$pdf = \PDF::loadView('dashboard/print_request_data',$data)->setPaper(array(0,0,720,950), 'potrait');
 			$pdf->setOptions(['isPhpEnabled' => true]);
 			$pdf->setOptions(['setIsHtml5ParserEnabled' => true]);
 			$pdf->setOptions(['setChroot' => base_path()]);
