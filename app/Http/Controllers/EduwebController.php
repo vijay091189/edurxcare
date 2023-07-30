@@ -1021,13 +1021,14 @@ class EduwebController extends Controller
             $data['request_prescriptions'] = DB::select("select * from request_prescriptions where request_id='$request_id' and status=1");
             $data['request_medications'] = DB::select("select * from request_medications where request_id='$request_id' and status=1");
             $data['request_medical_conditions'] = DB::select("select * from request_medical_conditions where request_id='$request_id' and status=1");
+            //return view("dashboard/print_request_data")->with($data);
 			$pdf = \PDF::loadView('dashboard/print_request_data',$data)->setPaper(array(0,0,720,950), 'potrait');
 			$pdf->setOptions(['isPhpEnabled' => true]);
 			$pdf->setOptions(['setIsHtml5ParserEnabled' => true]);
 			$pdf->setOptions(['setChroot' => base_path()]);
 			$pdf->setOptions(['setIsRemoteEnabled' => true]);
 			//$pdf = \PDF::loadView('treatment/print-treatment-plan', $data)->setPaper(array(0,0,720,950), 'potrait');
-			return $pdf->download('TCM_30-Day-Closure_Report.pdf');
+			return $pdf->download('Request_Details.pdf');
 		   } catch ( Exception $e ) {
 				$e->getMessage ();
 				return 0;

@@ -10,7 +10,8 @@
           <div class="col-lg-6 col-md-6">
             <div class="card" style="">
               <div class="card-body">
-                <h5 class="card-title">Date : {{ date('d-m-Y', strtotime($patient_req->created_date)) }}</h5>
+                <h5 class="card-title">Date : {{ date('d-m-Y', strtotime($patient_req->created_date)) }} <a href="{{ URL::to('/downloadRequestData') }}?request_id={{ $patient_req->request_id }}" class="btn btn-primary" style="border-radius: 10px;background-color: #00aaca;border: 1px solid #00aaca;float: right;margin-top: -10px;">Download PDF</a></h5>
+                <!-- <div class="card-title"></div> -->
                 <div class="card-text">
                   <table>
                     <tr>
