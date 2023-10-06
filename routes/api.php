@@ -69,4 +69,17 @@ Route::middleware('auth:api')->group( function () {
 	//Sumbit request
 	Route::post('/submitRequest','App\Http\Controllers\API\EcareController@submitRequest');
 	Route::post('/savePatientMedication','App\Http\Controllers\API\EcareController@savePatientMedication');
+
+	//Pharmacist APIs
+	Route::post('/allNewRequests','App\Http\Controllers\API\EcareController@allNewRequests');
+
+	Route::post('/viewRequestDetails','App\Http\Controllers\API\EcareController@viewRequestDetails');
+	Route::post('/updateRequest','App\Http\Controllers\API\EcareController@updateRequest');
+	Route::post('/pharmacistRequests','App\Http\Controllers\API\EcareController@pharmacistRequests');
+	Route::post('/responseRequest','App\Http\Controllers\API\EcareController@responseRequest');
+	Route::post('/saveResponse','App\Http\Controllers\API\EcareController@saveResponse');
+	Route::post('/pharmacistAppointments','App\Http\Controllers\API\EcareController@pharmacistAppointments');
+	Route::post('/updateAppointmentStatus','App\Http\Controllers\API\EcareController@updateAppointmentStatus');
+	Route::post('/newPatientAppointments','App\Http\Controllers\API\EcareController@newPatientAppointments');
+	Route::post('/updateNewAppointment','App\Http\Controllers\API\EcareController@updateNewAppointment');
 });

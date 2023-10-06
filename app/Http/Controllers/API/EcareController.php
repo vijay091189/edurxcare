@@ -288,6 +288,8 @@ class EcareController extends BaseController
             $insert_data['answer'] = $answer;
             DB::table('patient_lifestyle_answers')->insert($insert_data);
         }
+        $update_password['is_patient_answered'] = 1;
+        DB::table('app_users')->where(array('user_id'=>$user_id))->update($update_password);
         //$res_data['status_code'] = "200";
         $res_data['status'] = "200";
         $res_data['status_message'] = "Life style details saved successfully";
@@ -921,6 +923,324 @@ class EcareController extends BaseController
 
         $data[7]['value'] = 'AB +ve';
         $data[7]['label'] = 'AB +ve';
+        $res_data['status'] = "200";
+        $res_data['status_message']['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function allNewRequests(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $patient_requests = DB::select("select pr.request_id,au.unique_id,au.name as patient_name, pr.comments, 
+                                                pr.created_date,pr.modified_date from patient_requests pr
+                                                inner join app_users au on au.user_id=pr.patient_id 
+                                                where accepted_by is null and pr.status='pending' and pr.request_id not in (select request_id from 
+                                                request_rejected_users where user_id='$user_id') order by created_date desc");
+        $data=array();
+        $key=0;
+        foreach($patient_requests as $patient_req){
+            $data[$key]['request_id'] = (string)$patient_req->request_id;
+            $data[$key]['created_date'] = date('d-m-Y', strtotime($patient_req->created_date));
+            $data[$key]['patient_id'] = $patient_req->unique_id;
+            $data[$key]['comments'] = $patient_req->comments;
+            $data[$key]['status'] = 'Pending';
+            $data[$key]['modified_date'] = date('d-m-Y h:i A', strtotime($patient_req->modified_date));
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message']['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function pharmacistRequests(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $filter = isset($input['filter'])?$input['filter']:'accepted';
+        $cond = "and pr.status='$filter'";
+        $patient_requests = DB::select("select pr.request_id,au.unique_id,au.name as patient_name, pr.comments, 
+                                                pr.created_date,pr.modified_date from patient_requests pr
+                                                inner join app_users au on au.user_id=pr.patient_id 
+                                                where accepted_by='$user_id' $cond order by created_date desc");
+        $data=array();
+        $key=0;
+        foreach($patient_requests as $patient_req){
+            $data[$key]['request_id'] = (string)$patient_req->request_id;
+            $data[$key]['patient_id'] = $patient_req->unique_id;
+            $data[$key]['comments'] = $patient_req->comments;
+            $data[$key]['name'] = $patient_req->patient_name;
+            $data[$key]['created_date'] = date('d-m-Y', strtotime($patient_req->created_date));
+            $data[$key]['modified_date'] = date('d-m-Y h:i A', strtotime($patient_req->modified_date));
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message']['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function pharmacistAppointments(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $filter = isset($input['filter'])?$input['filter']:'pending';
+        $cur_date = date('Y-m-d');
+        $cond = "and a.status='$filter'";
+        $appointments = DB::select("select a.appointment_id, au.name as patient_name, a.description, a.priority, a.appointment_date, 
+                                        a.appointment_time, au.unique_id,au.mobile, au.email, au.address, a.status,
+                                        TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from appointments a
+                                        inner join app_users au on au.user_id=a.patient_id
+                                        where accepted_by='$user_id' $cond");
+        $data=array();
+        $key=0;
+        foreach($appointments as $patient_req){
+            $data[$key]['appointment_id'] = (string)$patient_req->appointment_id;
+            $data[$key]['appointment_date'] = date('d-m-Y', strtotime($patient_req->appointment_date)).' '.date('h:i A', strtotime($patient_req->appointment_time));
+            $data[$key]['patient_name'] = $patient_req->patient_name;
+            $data[$key]['mobile'] = $patient_req->mobile;
+            $data[$key]['patient_id'] = $patient_req->unique_id;
+            $data[$key]['priority'] = $patient_req->priority;
+            $data[$key]['condition'] = $patient_req->description;
+            $data[$key]['email'] = $patient_req->email;
+            $data[$key]['patient_age'] = $patient_req->patient_age;
+            $data[$key]['address'] = $patient_req->address;
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message']['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function newPatientAppointments(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $appointments = DB::select("select a.appointment_id, au.name as patient_name, a.description, a.priority, a.appointment_date, 
+                                    a.appointment_time, au.unique_id,au.mobile, au.email, au.address,
+                                    TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from appointments a
+                                    inner join app_users au on au.user_id=a.patient_id
+                                    where a.status='pending' and accepted_by is null and appointment_id not in (select appointment_id from 
+                                    appointment_rejected_users where user_id='$user_id') and a.location_id in (select location_id from 
+                                    app_users where user_id='$user_id') order by a.appointment_date desc");
+        $data=array();
+        $key=0;
+        foreach($appointments as $patient_req){
+            $data[$key]['appointment_id'] = (string)$patient_req->appointment_id;
+            $data[$key]['appointment_date'] = date('d-m-Y', strtotime($patient_req->appointment_date)).' '.date('h:i A', strtotime($patient_req->appointment_time));
+            $data[$key]['patient_name'] = $patient_req->patient_name;
+            $data[$key]['mobile'] = $patient_req->mobile;
+            $data[$key]['patient_id'] = $patient_req->unique_id;
+            $data[$key]['priority'] = $patient_req->priority;
+            $data[$key]['condition'] = $patient_req->description;
+            $data[$key]['email'] = $patient_req->email;
+            $data[$key]['patient_age'] = $patient_req->patient_age;
+            $data[$key]['address'] = $patient_req->address;
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message']['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function updateRequest(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $request_id = $input['request_id'];
+        $action = $input['action'];
+        if($action=='Reject'){
+            $insert_data['request_id'] = $request_id;
+            $insert_data['user_id'] = $user_id;
+            DB::table('request_rejected_users')->insert($insert_data);
+        } else {
+            $update_data['accepted_by'] = $user_id;
+            $update_data['status'] = 'accepted';
+            DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($update_data);
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message'] = "Status updated successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function saveResponse(Request $request){
+        $input = $request->all();
+        $request_id = $input['request_id'];
+        $user_id = $input['user_id'];
+        $get_requestdetails =  collect(DB::select("select * from patient_requests where request_id='$request_id'"))->first();
+        $data['usage'] = $input['usage'];
+        $data['directions'] = $input['directions'];
+        $data['side_effects'] = $input['side_effects'];
+        $data['manage_side_effects'] = $input['manage_side_effects'];
+        $data['self_care_measure'] = $input['self_care_measure'];
+        $data['drug_interactions'] = $input['drug_interactions'];
+        $data['follow_up_comments'] = $input['follow_up_comments'];
+        $data['response_comments'] = $input['response_comments'];
+        DB::table('patient_requests')->where(array('request_id'=>$request_id))->update($data);
+        $changes=0;
+        $changes_array = array();
+        if($input['usage']!=$get_requestdetails->usage){
+            $changes_array[] = 'Use';
+            $changes = $changes+1;
+        }
+        if($input['directions']!=$get_requestdetails->directions){
+            $changes_array[] = 'Directions';
+            $changes = $changes+1;
+        }
+        if($input['side_effects']!=$get_requestdetails->side_effects){
+            $changes_array[] = 'Side Effects';
+            $changes = $changes+1;
+        }
+        if($input['manage_side_effects']!=$get_requestdetails->manage_side_effects){
+            $changes_array[] = 'Managing Side Effects';
+            $changes = $changes+1;
+        }
+        if($input['self_care_measure']!=$get_requestdetails->self_care_measure){
+            $changes_array[] = 'Self Care Measures';
+            $changes = $changes+1;
+        }
+        if($input['drug_interactions']!=$get_requestdetails->drug_interactions){
+            $changes_array[] = 'Drug Interactions';
+            $changes = $changes+1;
+        }
+        if($input['follow_up_comments']!=$get_requestdetails->follow_up_comments){
+            $changes_array[] = 'Follow up with pharmacist/physcian';
+            $changes = $changes+1;
+        }
+        if($input['response_comments']!=$get_requestdetails->response_comments){
+            $changes_array[] = 'Additional Comments';
+            $changes = $changes+1;
+        }
+        if($changes>0){
+            $changes_str = implode(', ',$changes_array);
+            //insert history log
+            $history_log['request_id'] = $request_id;
+            $history_log['usage'] = $input['usage'];
+            $history_log['directions'] = $input['directions'];
+            $history_log['side_effects'] = $input['side_effects'];
+            $history_log['manage_side_effects'] = $input['manage_side_effects'];
+            $history_log['self_care_measure'] = $input['self_care_measure'];
+            $history_log['drug_interactions'] = $input['drug_interactions'];
+            $history_log['follow_up_comments'] = $input['follow_up_comments'];
+            $history_log['response_comments'] = $input['response_comments'];
+            $history_log['response_comments'] = 'Modified '.$changes_str;
+            $history_log['updated_by'] = $user_id;
+            $history_log['updated_date'] = date('Y-m-d H:i:s');
+            DB::table('request_response_history')->insert($history_log);
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message'] = "Response saved successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function updateAppointmentStatus(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $appointment_id = $input['appointment_id'];
+        $action = $input['action'];
+        if($action=='Complete'){
+            $update_data['status'] = 'completed';
+            DB::table('appointments')->where(array('appointment_id'=>$appointment_id))->update($update_data);
+        } else if($action=='Cancel'){
+            $update_data['status'] = 'cancelled';
+            DB::table('appointments')->where(array('appointment_id'=>$appointment_id))->update($update_data);
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message'] = "Status updated successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function updateNewAppointment(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $appointment_id = $input['appointment_id'];
+        $action = $input['action'];
+        if($action=='Reject'){
+            $insert_data['appointment_id'] = $appointment_id;
+            $insert_data['user_id'] = $user_id;
+            DB::table('appointment_rejected_users')->insert($insert_data);
+        } else {
+            $update_data['accepted_by'] = $user_id;
+            DB::table('appointments')->where(array('appointment_id'=>$appointment_id))->update($update_data);
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message'] = "Status updated successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function responseRequest(Request $request){
+        $input = $request->all();
+        $request_id = $input['request_id'];
+        $patient_requests = DB::select("select * from patient_requests where request_id='$request_id'");
+        $data['usage'] = isset($patient_requests[0]) && $patient_requests[0]->usage!=''?$patient_requests[0]->usage:'';
+        $data['directions'] = isset($patient_requests[0]) && $patient_requests[0]->directions!=''?$patient_requests[0]->directions:'';
+        $data['side_effects'] = isset($patient_requests[0]) && $patient_requests[0]->side_effects!=''?$patient_requests[0]->side_effects:'';
+        $data['manage_side_effects'] = isset($patient_requests[0]) && $patient_requests[0]->manage_side_effects!=''?$patient_requests[0]->manage_side_effects:'';
+        $data['self_care_measure'] = isset($patient_requests[0]) && $patient_requests[0]->self_care_measure!=''?$patient_requests[0]->self_care_measure:'';
+        $data['drug_interactions'] = isset($patient_requests[0]) && $patient_requests[0]->drug_interactions!=''?$patient_requests[0]->drug_interactions:'';
+        $data['follow_up_comments'] = isset($patient_requests[0]) && $patient_requests[0]->follow_up_comments!=''?$patient_requests[0]->follow_up_comments:'';
+        $data['response_comments'] = isset($patient_requests[0]) && $patient_requests[0]->response_comments!=''?$patient_requests[0]->response_comments:'';
+        $res_data['status'] = "200";
+        $res_data['status_message']['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function viewRequestDetails(Request $request){
+        $input = $request->all();
+        $request_id = $input['request_id'];
+        $request_details = collect(DB::select("select a.comments, au.name as patient_name,au.unique_id,au.mobile, au.email, au.address, au.gender,
+                                            TIMESTAMPDIFF(YEAR, au.dob, CURDATE()) AS patient_age from patient_requests a 
+                                            inner join app_users au on au.user_id=a.patient_id 
+                                            where a.request_id='$request_id'"))->first();
+        $request_allergies = DB::select("select * from request_allergies where request_id='$request_id' and status=1");
+        $request_lab_documents = DB::select("select * from request_lab_documents where request_id='$request_id' and status=1");
+        $request_prescriptions = DB::select("select * from request_prescriptions where request_id='$request_id' and status=1");
+        $request_medications = DB::select("select * from request_medications where request_id='$request_id' and status=1");
+        $request_medical_conditions = DB::select("select * from request_medical_conditions where request_id='$request_id' and status=1");
+        $data['patient_name'] = ucwords($request_details->patient_name);
+        $data['unique_id'] = $request_details->unique_id;
+        $data['condition'] = $request_details->comments;
+        $data['email'] = $request_details->email;
+        $data['patient_age'] = $request_details->patient_age;
+        $data['address'] = $request_details->address;
+        $medication_history=array();
+        $mkey=0;
+        foreach($request_medications as $request_med){
+            $medication_history[$mkey]['medication_name']=$request_med->medication_name;
+            $medication_history[$mkey]['diagnosis']=$request_med->diagnosis;
+            $medication_history[$mkey]['frequency']=ucwords(str_replace(',',', ',$request_med->frequency));
+            $medication_history[$mkey]['start_date']=date('d/m/Y', strtotime($request_med->start_date));
+            $mkey++;
+        }
+        $data['medication_history'] = $medication_history;
+
+        $allergies_data=array();
+        $alkey=0;
+        foreach($request_allergies as $request_med){
+            $allergies_data[$alkey]['allergy_name']=$request_med->allergy_name;
+            $allergies_data[$alkey]['allergy_description']=$request_med->allergy_description;
+            $alkey++;
+        }
+        $data['allergies_data'] = $allergies_data;
+
+        $medication_data=array();
+        $mdkey=0;
+        foreach($request_medical_conditions as $request_med){
+            $medication_data[$mdkey]['request_medical_condition']=$request_med->request_medical_condition;
+            $medication_data[$mdkey]['request_med_decription']=$request_med->request_med_decription;
+            $mdkey++;
+        }
+        $data['medication_data'] = $medication_data;
+
+        $prescription_data=array();
+        $pskey=0;
+        foreach($request_prescriptions as $request_med){
+            $prescription_data[$pskey]['file_path']=url('/').'/public/prescriptions/'.$request_med->file_path;;
+            $pskey++;
+        }
+        $data['prescription_data'] = $prescription_data;
+
+        $lareports_data=array();
+        $lrkey=0;
+        foreach($request_lab_documents as $request_med){
+            $lareports_data[$lrkey]['file_path']=url('/').'/public/labreports/'.$request_med->file_path;
+            $lrkey++;
+        }
+        $data['labreports_data'] = $lareports_data;
         $res_data['status'] = "200";
         $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
