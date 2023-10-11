@@ -54,7 +54,7 @@
                                           <td>{{ $category->option_3 }}</td>
                                           <td>{{ $category->option_4 }}</td>
                                           <td>
-                                             <a href="#!" onclick="edit_category('{{ $category->id }}','{{ $category->question }}','{{ $category->option_1 }}','{{ $category->option_2 }}','{{ $category->option_3 }}','{{ $category->option_4 }}');">
+                                             <a href="#!" onclick="edit_category('{{ $category->id }}','{{ $category->question }}','{{ $category->option_1 }}','{{ $category->option_2 }}','{{ $category->option_3 }}','{{ $category->option_4 }}','{{ $category->correct_answer_option }}');">
                                                 <i class="icon-pencil"></i>
                                              </a>
                                           </td>
@@ -210,16 +210,18 @@ function modalpopup(){
    $('#option_2').val('');
    $('#option_3').val('');
    $('#option_4').val('');
+   $('#correct_answer').val('');
    $('#exampleModalLabel').html('Add Question');
    $('#exampleModalSizeLg').modal();
 }
-function edit_category(category_id,question,option1,option2,option3,option4){
+function edit_category(category_id,question,option1,option2,option3,option4,correct_answer_option){
    $('#id').val(category_id);
    $('#question').val(question);
    $('#option_1').val(option1);
    $('#option_2').val(option2);
    $('#option_3').val(option3);
    $('#option_4').val(option4);
+   $('#correct_answer').val(correct_answer_option);
    $('#exampleModalLabel').html('Edit Question');
    $('#exampleModalSizeLg').modal();
 }

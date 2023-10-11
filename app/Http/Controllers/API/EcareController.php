@@ -1245,4 +1245,45 @@ class EcareController extends BaseController
         $res_data['status_message']['data'] = $data;
         return $this->sendResponse($res_data, 'Data fetched successfully.');
     }
+
+    public function pharmacistQuestionsList(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $appointments = DB::select("SELECT * FROM pharmacist_questions where status=1 order by RAND() limit 10");
+        $data=array();
+        $key=0;
+        foreach($appointments as $patient_req){
+            $data[$key]['question_id'] = (string)$patient_req->id;
+            $data[$key]['question'] = $patient_req->question;
+            $data[$key]['option_1'] = $patient_req->option_1;
+            $data[$key]['option_2'] = $patient_req->option_2;
+            $data[$key]['option_3'] = $patient_req->option_3;
+            $data[$key]['option_4'] = $patient_req->option_4;
+            $data[$key]['correct_answer'] = $patient_req->correct_answer;
+            $key++;
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message']['data'] = $data;
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
+
+    public function savePharmacistQuestion(Request $request){
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $data = $input['data'];
+        $cur_date=date('Y-m-d H:i:s');
+        foreach($data as $qdat){
+            $insert_data['user_id'] = $user_id;
+            $insert_data['question_id'] = $qdat['question_id'];
+            $insert_data['question'] = $qdat['question'];
+            $insert_data['answer'] = $qdat['answer'];
+            $insert_data['correct_answer'] = $qdat['correct_answer'];
+            $insert_data['is_correct'] = ($qdat['answer']==$qdat['correct_answer'])?1:0;
+            $insert_data['created_date'] = $cur_date;
+            DB::table('pharmacist_answers')->insert($insert_data);
+        }
+        $res_data['status'] = "200";
+        $res_data['status_message'] = "Questions updated successfully";
+        return $this->sendResponse($res_data, 'Data fetched successfully.');
+    }
 }

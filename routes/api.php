@@ -82,4 +82,6 @@ Route::middleware('auth:api')->group( function () {
 	Route::post('/updateAppointmentStatus','App\Http\Controllers\API\EcareController@updateAppointmentStatus');
 	Route::post('/newPatientAppointments','App\Http\Controllers\API\EcareController@newPatientAppointments');
 	Route::post('/updateNewAppointment','App\Http\Controllers\API\EcareController@updateNewAppointment');
+	Route::post('/pharmacistQuestionsList','App\Http\Controllers\API\EcareController@pharmacistQuestionsList');
+	Route::post('/savePharmacistQuestion','App\Http\Controllers\API\EcareController@savePharmacistQuestion');
 });

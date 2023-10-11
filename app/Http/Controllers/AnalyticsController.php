@@ -438,6 +438,7 @@ class AnalyticsController extends Controller
           $insert_data['option_4'] = $option_4;
           $correct_option_value = 'option_'.$correct_answer;
           $insert_data['correct_answer'] = $input[$correct_option_value];
+          $insert_data['correct_answer_option'] = $correct_answer;
           DB::table('pharmacist_questions')->insert($insert_data);
         }
       } else {
